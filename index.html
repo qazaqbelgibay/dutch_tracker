@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f0f14">
+<link rel="manifest" href="manifest.json">
+<title>Dutch B1 Tracker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #0f0f14;
+  --bg2: #16161e;
+  --bg3: #1e1e28;
+  --bg4: #282836;
+  --text: #e8e6e3;
+  --text2: #9a9a9a;
+  --text3: #5a5a6a;
+  --amber: #e8a020;
+  --amber2: #c88a10;
+  --amber-glow: rgba(232, 160, 32, 0.15);
+  --teal: #2dd4a8;
+  --teal-dim: rgba(45, 212, 168, 0.15);
+  --red: #f04060;
+  --red-dim: rgba(240, 64, 96, 0.1);
+  --blue: #4090f0;
+  --blue-dim: rgba(64, 144, 240, 0.15);
+  --purple: #a070f0;
+  --purple-dim: rgba(160, 112, 240, 0.15);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --nav-height: 72px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.light-mode {
+  --bg: #f4f2ef;
+  --bg2: #ffffff;
+  --bg3: #eae8e4;
+  --bg4: #ddd;
+  --text: #1a1a1a;
+  --text2: #666;
+  --text3: #aaa;
+  --amber-glow: rgba(232, 160, 32, 0.1);
+  --teal-dim: rgba(45, 212, 168, 0.1);
+  --red-dim: rgba(240, 64, 96, 0.06);
+  --blue-dim: rgba(64, 144, 240, 0.1);
+  --purple-dim: rgba(160, 112, 240, 0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.header {
+  padding: calc(12px + var(--safe-top)) 20px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.header h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--amber);
+  letter-spacing: -0.5px;
+}
+.header-right { display: flex; gap: 8px; align-items: center; }
+.theme-btn {
+  background: none; border: none; color: var(--text2);
+  font-size: 20px; cursor: pointer; padding: 6px;
+  border-radius: 8px; transition: background 0.2s;
+}
+.theme-btn:active { background: var(--bg3); }
+
+/* ── Content Area ── */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 16px 16px;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* ── Tab Views ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── Bottom Nav ── */
+.nav {
+  display: flex;
+  background: var(--bg2);
+  border-top: 1px solid var(--bg4);
+  padding: 6px 8px calc(6px + var(--safe-bottom));
+  flex-shrink: 0;
+  gap: 4px;
+}
+.nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px 6px;
+  border: none;
+  background: none;
+  color: var(--text3);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s;
+  font-family: 'DM Sans', system-ui;
+}
+.nav-btn .icon { font-size: 22px; line-height: 1; }
+.nav-btn.active { color: var(--amber); background: var(--amber-glow); }
+.nav-btn:active { transform: scale(0.92); }
+
+/* ── Cards ── */
+.card {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--bg3);
+}
+.card-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 10px;
+}
+
+/* ── Countdown ── */
+.countdown {
+  background: linear-gradient(135deg, var(--bg3), var(--bg2));
+  border: 1px solid var(--amber);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.countdown::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, var(--amber-glow), transparent 70%);
+  pointer-events: none;
+}
+.countdown-days {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--amber);
+  line-height: 1;
+}
+.countdown-label {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 4px;
+  font-weight: 500;
+}
+.countdown-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 6px;
+}
+
+/* ── Stats Row ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.stat-box {
+  background: var(--bg2);
+  border: 1px solid var(--bg3);
+  border-radius: var(--radius-sm);
+  padding: 12px 10px;
+  text-align: center;
+}
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 10px;
+  color: var(--text2);
+  margin-top: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Skill Bars ── */
+.skill-bar-wrap { margin-bottom: 10px; }
+.skill-bar-wrap:last-child { margin-bottom: 0; }
+.skill-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.skill-bar-name {
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.skill-bar-name .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.skill-bar-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text2);
+}
+.skill-bar-track {
+  height: 8px;
+  background: var(--bg4);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  min-width: 2px;
+}
+
+/* ── Quick Log ── */
+.log-section { margin-bottom: 16px; }
+.log-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.log-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.log-btn {
+  background: var(--bg3);
+  border: 1px solid var(--bg4);
+  border-radius: var(--radius-sm);
+  padding: 14px 6px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  line-height: 1.2;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.log-btn:active {
+  transform: scale(0.93);
+  background: var(--amber);
+  color: #000;
+  border-color: var(--amber);
+}
+.log-btn .unit {
+  display: block;
+  font-size: 9px;
+  color: var(--text3);
+  font-weight: 500;
+  margin-top: 2px;
+  font-family: 'DM Sans', system-ui;
+}
+.log-btn:active .unit { color: rgba(0,0,0,0.5); }
+
+.log-grid-wide {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+/* ── Custom Input Modal ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 100;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--bg2);
+  border-radius: 20px 20px 0 0;
+  padding: 24px 20px calc(24px + var(--safe-bottom));
+  width: 100%;
+  max-width: 480px;
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.modal-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 2px solid var(--bg4);
+  border-radius: 10px;
+  padding: 14px;
+  color: var(--text);
+  font-size: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 12px;
+  outline: none;
+}
+.modal-input:focus { border-color: var(--amber); }
+.modal-btns { display: flex; gap: 8px; }
+.modal-btn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', system-ui;
+}
+.modal-btn.cancel { background: var(--bg3); color: var(--text2); }
+.modal-btn.confirm { background: var(--amber); color: #000; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  top: calc(16px + var(--safe-top));
+  left: 50%;
+  transform: translateX(-50%) translateY(-120%);
+  background: var(--teal);
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 200;
+  transition: transform 0.3s ease;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── History / Charts ── */
+.chart-container {
+  height: 180px;
+  position: relative;
+  margin: 8px 0;
+}
+.chart-canvas { width: 100%; height: 100%; }
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--bg3);
+}
+.history-item:last-child { border: none; }
+.history-date { font-size: 13px; font-weight: 600; }
+.history-hours {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--amber);
+}
+
+/* ── Period Selector ── */
+.period-selector {
+  display: flex;
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 14px;
+}
+.period-btn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  background: none;
+  color: var(--text2);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-family: 'DM Sans', system-ui;
+}
+.period-btn.active {
+  background: var(--bg2);
+  color: var(--text);
+}
+
+/* ── Anki Section ── */
+.anki-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.anki-field label {
+  display: block;
+  font-size: 11px;
+  color: var(--text2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.anki-field input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--bg4);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text);
+  font-size: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+}
+.anki-field input:focus { border-color: var(--amber); }
+.anki-save-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  background: var(--teal);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', system-ui;
+}
+.anki-save-btn:active { transform: scale(0.97); }
+
+/* ── Settings ── */
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--bg3);
+}
+.setting-row:last-child { border: none; }
+.setting-label { font-size: 14px; font-weight: 500; }
+.setting-desc { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.toggle {
+  width: 48px; height: 28px;
+  background: var(--bg4);
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+.toggle.on { background: var(--amber); }
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: white;
+  top: 3px; left: 3px;
+  transition: transform 0.2s;
+}
+.toggle.on::after { transform: translateX(20px); }
+
+.danger-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1px solid var(--red);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  font-family: 'DM Sans', system-ui;
+}
+.danger-btn:active { opacity: 0.7; }
+
+/* ── Undo Bar ── */
+.undo-bar {
+  position: fixed;
+  bottom: calc(var(--nav-height) + 12px + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--bg3);
+  border: 1px solid var(--bg4);
+  padding: 10px 16px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 50;
+  transition: transform 0.3s ease;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.undo-bar.show { transform: translateX(-50%) translateY(0); }
+.undo-btn {
+  background: var(--amber);
+  color: #000;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', system-ui;
+}
+
+/* ── Week Heatmap ── */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+.week-cell {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--bg3);
+}
+.week-cell .day-name { color: var(--text3); font-size: 9px; }
+.week-cell .day-hours {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  margin-top: 1px;
+}
+.week-cell.good { background: var(--teal-dim); }
+.week-cell.good .day-hours { color: var(--teal); }
+.week-cell.mid { background: var(--amber-glow); }
+.week-cell.mid .day-hours { color: var(--amber); }
+.week-cell.low { background: var(--red-dim); }
+.week-cell.low .day-hours { color: var(--red); }
+.week-cell.empty .day-hours { color: var(--text3); }
+.week-cell.today { border: 2px solid var(--amber); }
+
+/* ── Scroll ── */
+.content::-webkit-scrollbar { width: 0; }
+
+/* ── Animations ── */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.card { animation: fadeIn 0.3s ease; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <!-- Header -->
+  <div class="header">
+    <h1>NL_TRACKER</h1>
+    <div class="header-right">
+      <button class="theme-btn" id="themeToggle" onclick="toggleTheme()">☀️</button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="content">
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="view active" id="viewDashboard">
+      <!-- Countdown -->
+      <div class="countdown">
+        <div class="countdown-days" id="countdownDays">--</div>
+        <div class="countdown-label">dagen tot CNaVT B1</div>
+        <div class="countdown-date">10 mei 2026</div>
+      </div>
+
+      <!-- Today's Stats -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-value" id="todayHours" style="color:var(--amber)">0.0</div>
+          <div class="stat-label">Uren</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="todayVocab" style="color:var(--teal)">0</div>
+          <div class="stat-label">Woorden</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="streakCount" style="color:var(--red)">0</div>
+          <div class="stat-label">Streak 🔥</div>
+        </div>
+      </div>
+
+      <!-- Skills Today -->
+      <div class="card">
+        <div class="card-title">Vaardigheden vandaag</div>
+        <div id="skillBarsToday"></div>
+      </div>
+
+      <!-- This Week Heatmap -->
+      <div class="card">
+        <div class="card-title">Deze week</div>
+        <div class="week-grid" id="weekGrid"></div>
+      </div>
+
+      <!-- Anki Today -->
+      <div class="card">
+        <div class="card-title">Anki vandaag</div>
+        <div class="stats-row" style="margin-bottom:0">
+          <div class="stat-box">
+            <div class="stat-value" id="ankiCards" style="color:var(--blue);font-size:20px">0</div>
+            <div class="stat-label">Kaarten</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="ankiTime" style="color:var(--purple);font-size:20px">0</div>
+            <div class="stat-label">Min</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="ankiRetention" style="color:var(--teal);font-size:20px">--%</div>
+            <div class="stat-label">Retentie</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cumulative Skills -->
+      <div class="card">
+        <div class="card-title">Totaal per vaardigheid</div>
+        <div id="skillBarsTotal"></div>
+      </div>
+    </div>
+
+    <!-- ═══ QUICK LOG ═══ -->
+    <div class="view" id="viewLog">
+      <!-- Listening -->
+      <div class="log-section">
+        <div class="log-section-title"><span style="color:var(--teal)">🎧</span> Luisteren</div>
+        <div class="log-grid">
+          <button class="log-btn" onclick="quickLog('listening',15)">+15<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('listening',30)">+30<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('listening',45)">+45<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('listening',60)">+60<span class="unit">min</span></button>
+        </div>
+      </div>
+
+      <!-- Reading -->
+      <div class="log-section">
+        <div class="log-section-title"><span style="color:var(--blue)">📖</span> Lezen</div>
+        <div class="log-grid">
+          <button class="log-btn" onclick="quickLog('reading',15)">+15<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('reading',30)">+30<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('reading',45)">+45<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('reading',60)">+60<span class="unit">min</span></button>
+        </div>
+      </div>
+
+      <!-- Writing -->
+      <div class="log-section">
+        <div class="log-section-title"><span style="color:var(--purple)">✍️</span> Schrijven</div>
+        <div class="log-grid">
+          <button class="log-btn" onclick="quickLog('writing',15)">+15<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('writing',30)">+30<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('writing',45)">+45<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('writing',60)">+60<span class="unit">min</span></button>
+        </div>
+      </div>
+
+      <!-- Grammar -->
+      <div class="log-section">
+        <div class="log-section-title"><span style="color:var(--amber)">📐</span> Grammatica</div>
+        <div class="log-grid">
+          <button class="log-btn" onclick="quickLog('grammar',15)">+15<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('grammar',30)">+30<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('grammar',45)">+45<span class="unit">min</span></button>
+          <button class="log-btn" onclick="quickLog('grammar',60)">+60<span class="unit">min</span></button>
+        </div>
+      </div>
+
+      <!-- Custom time -->
+      <div class="log-section">
+        <div class="log-section-title">⚡ Aangepaste tijd</div>
+        <div class="log-grid">
+          <button class="log-btn" onclick="openCustom('listening')">🎧<span class="unit">custom</span></button>
+          <button class="log-btn" onclick="openCustom('reading')">📖<span class="unit">custom</span></button>
+          <button class="log-btn" onclick="openCustom('writing')">✍️<span class="unit">custom</span></button>
+          <button class="log-btn" onclick="openCustom('grammar')">📐<span class="unit">custom</span></button>
+        </div>
+      </div>
+
+      <!-- Vocabulary -->
+      <div class="log-section">
+        <div class="log-section-title"><span style="color:var(--teal)">📝</span> Nieuwe woorden</div>
+        <div class="log-grid">
+          <button class="log-btn" onclick="addVocab(10)">+10<span class="unit">woorden</span></button>
+          <button class="log-btn" onclick="addVocab(25)">+25<span class="unit">woorden</span></button>
+          <button class="log-btn" onclick="addVocab(50)">+50<span class="unit">woorden</span></button>
+          <button class="log-btn" onclick="addVocab(100)">+100<span class="unit">woorden</span></button>
+        </div>
+      </div>
+
+      <!-- Anki Session -->
+      <div class="log-section">
+        <div class="card" style="margin-bottom:0">
+          <div class="card-title">Anki sessie loggen</div>
+          <div class="anki-inputs">
+            <div class="anki-field">
+              <label>Kaarten</label>
+              <input type="number" id="ankiCardsInput" placeholder="0" inputmode="numeric">
+            </div>
+            <div class="anki-field">
+              <label>Minuten</label>
+              <input type="number" id="ankiTimeInput" placeholder="0" inputmode="numeric">
+            </div>
+            <div class="anki-field">
+              <label>Retentie %</label>
+              <input type="number" id="ankiRetInput" placeholder="90" inputmode="numeric" max="100">
+            </div>
+          </div>
+          <button class="anki-save-btn" onclick="saveAnki()">Anki sessie opslaan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STATS ═══ -->
+    <div class="view" id="viewStats">
+      <div class="period-selector">
+        <button class="period-btn active" onclick="setPeriod('week',this)">Week</button>
+        <button class="period-btn" onclick="setPeriod('month',this)">Maand</button>
+        <button class="period-btn" onclick="setPeriod('all',this)">Alles</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Studietijd (uren/dag)</div>
+        <div class="chart-container">
+          <canvas id="hoursChart" class="chart-canvas"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Nieuwe woorden per dag</div>
+        <div class="chart-container">
+          <canvas id="vocabChart" class="chart-canvas"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Vaardigheid verdeling</div>
+        <div class="chart-container">
+          <canvas id="skillChart" class="chart-canvas"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Dagelijkse geschiedenis</div>
+        <div id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- ═══ SETTINGS ═══ -->
+    <div class="view" id="viewSettings">
+      <div class="card">
+        <div class="card-title">Instellingen</div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Donkere modus</div>
+            <div class="setting-desc">Schakel tussen licht en donker</div>
+          </div>
+          <button class="toggle" id="darkToggle" onclick="toggleTheme()"></button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Dagelijks doel (uren)</div>
+            <div class="setting-desc">Standaard: 2 uur</div>
+          </div>
+          <input type="number" id="goalInput" value="2" min="0.5" max="8" step="0.5"
+            style="width:60px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;text-align:center;outline:none;"
+            onchange="updateGoal(this.value)">
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Woorden doel per dag</div>
+            <div class="setting-desc">Standaard: 50 woorden</div>
+          </div>
+          <input type="number" id="vocabGoalInput" value="50" min="10" max="200" step="10"
+            style="width:60px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;text-align:center;outline:none;"
+            onchange="updateVocabGoal(this.value)">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Gegevens</div>
+        <button class="danger-btn" onclick="exportData()">📤 Gegevens exporteren (JSON)</button>
+        <button class="danger-btn" style="background:var(--blue-dim);color:var(--blue);border-color:var(--blue);margin-top:8px" onclick="importData()">📥 Gegevens importeren</button>
+        <button class="danger-btn" style="margin-top:8px" onclick="resetData()">⚠️ Alle gegevens wissen</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Installatie als app</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6">
+          <p style="margin-bottom:8px"><strong style="color:var(--text)">Android (Chrome):</strong><br>
+          Menu (⋮) → "Add to Home screen" / "Toevoegen aan startscherm"</p>
+          <p style="margin-bottom:8px"><strong style="color:var(--text)">iPhone (Safari):</strong><br>
+          Deel-knop (↑) → "Zet op beginscherm"</p>
+          <p style="color:var(--text3);font-size:11px;margin-top:8px">
+          De app werkt dan volledig offline, geen internet nodig.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="nav">
+    <button class="nav-btn active" onclick="switchTab('Dashboard',this)">
+      <span class="icon">📊</span>Overzicht
+    </button>
+    <button class="nav-btn" onclick="switchTab('Log',this)">
+      <span class="icon">⚡</span>Loggen
+    </button>
+    <button class="nav-btn" onclick="switchTab('Stats',this)">
+      <span class="icon">📈</span>Stats
+    </button>
+    <button class="nav-btn" onclick="switchTab('Settings',this)">
+      <span class="icon">⚙️</span>Meer
+    </button>
+  </nav>
+</div>
+
+<!-- Custom Input Modal -->
+<div class="modal-overlay" id="customModal">
+  <div class="modal">
+    <h3 id="modalTitle">Aangepaste tijd</h3>
+    <input type="number" class="modal-input" id="modalInput" placeholder="Minuten" inputmode="numeric">
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal()">Annuleer</button>
+      <button class="modal-btn confirm" onclick="confirmCustom()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Undo Bar -->
+<div class="undo-bar" id="undoBar">
+  <span id="undoText"></span>
+  <button class="undo-btn" onclick="undoLast()">Ongedaan</button>
+</div>
+
+<!-- Hidden file input for import -->
+<input type="file" id="fileImport" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<script>
+// ══════════════════════════════════════════════════
+// DATABASE (IndexedDB)
+// ══════════════════════════════════════════════════
+const DB_NAME = 'DutchTrackerDB';
+const DB_VERSION = 1;
+let db;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('logs')) {
+        const s = d.createObjectStore('logs', { keyPath: 'id', autoIncrement: true });
+        s.createIndex('date', 'date');
+        s.createIndex('skill', 'skill');
+      }
+      if (!d.objectStoreNames.contains('vocab')) {
+        const s = d.createObjectStore('vocab', { keyPath: 'id', autoIncrement: true });
+        s.createIndex('date', 'date');
+      }
+      if (!d.objectStoreNames.contains('anki')) {
+        const s = d.createObjectStore('anki', { keyPath: 'id', autoIncrement: true });
+        s.createIndex('date', 'date');
+      }
+      if (!d.objectStoreNames.contains('settings')) {
+        d.createObjectStore('settings', { keyPath: 'key' });
+      }
+    };
+    req.onsuccess = e => { db = e.target.result; resolve(db); };
+    req.onerror = e => reject(e.target.error);
+  });
+}
+
+function dbPut(store, data) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    const s = tx.objectStore(store);
+    const r = s.put(data);
+    r.onsuccess = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+  });
+}
+
+function dbDelete(store, id) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    const r = tx.objectStore(store).delete(id);
+    r.onsuccess = () => resolve();
+    r.onerror = () => reject(r.error);
+  });
+}
+
+function dbGetAll(store) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readonly');
+    const r = tx.objectStore(store).getAll();
+    r.onsuccess = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+  });
+}
+
+function dbGet(store, key) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readonly');
+    const r = tx.objectStore(store).get(key);
+    r.onsuccess = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+  });
+}
+
+function dbClear(store) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    const r = tx.objectStore(store).clear();
+    r.onsuccess = () => resolve();
+    r.onerror = () => reject(r.error);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════
+const today = () => new Date().toISOString().split('T')[0];
+const SKILL_COLORS = {
+  listening: { color: 'var(--teal)', bg: 'var(--teal-dim)', label: 'Luisteren', icon: '🎧' },
+  reading:   { color: 'var(--blue)', bg: 'var(--blue-dim)', label: 'Lezen', icon: '📖' },
+  writing:   { color: 'var(--purple)', bg: 'var(--purple-dim)', label: 'Schrijven', icon: '✍️' },
+  grammar:   { color: 'var(--amber)', bg: 'var(--amber-glow)', label: 'Grammatica', icon: '📐' }
+};
+const EXAM_DATE = new Date('2026-05-10T00:00:00');
+let hourGoal = 2;
+let vocabGoal = 50;
+let lastAction = null;
+let currentPeriod = 'week';
+let customSkill = null;
+
+function daysUntilExam() {
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  return Math.max(0, Math.ceil((EXAM_DATE - now) / 86400000));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+function showUndo(text, action) {
+  lastAction = action;
+  const bar = document.getElementById('undoBar');
+  document.getElementById('undoText').textContent = text;
+  bar.classList.add('show');
+  clearTimeout(bar._timer);
+  bar._timer = setTimeout(() => { bar.classList.remove('show'); lastAction = null; }, 5000);
+}
+
+async function undoLast() {
+  if (!lastAction) return;
+  await lastAction();
+  lastAction = null;
+  document.getElementById('undoBar').classList.remove('show');
+  showToast('Ongedaan gemaakt!');
+  refreshAll();
+}
+
+// ══════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════
+function switchTab(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view' + name).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('content').scrollTop = 0;
+  if (name === 'Dashboard') refreshDashboard();
+  if (name === 'Stats') refreshStats();
+}
+
+// ══════════════════════════════════════════════════
+// QUICK LOG
+// ══════════════════════════════════════════════════
+async function quickLog(skill, minutes) {
+  const entry = { date: today(), skill, minutes, timestamp: Date.now() };
+  const id = await dbPut('logs', entry);
+  const s = SKILL_COLORS[skill];
+  showToast(`${s.icon} +${minutes} min ${s.label}`);
+  showUndo(`${s.icon} +${minutes}min`, () => dbDelete('logs', id));
+  refreshAll();
+}
+
+async function addVocab(count) {
+  const entry = { date: today(), count, timestamp: Date.now() };
+  const id = await dbPut('vocab', entry);
+  showToast(`📝 +${count} woorden`);
+  showUndo(`📝 +${count} woorden`, () => dbDelete('vocab', id));
+  refreshAll();
+}
+
+async function saveAnki() {
+  const cards = parseInt(document.getElementById('ankiCardsInput').value) || 0;
+  const time = parseInt(document.getElementById('ankiTimeInput').value) || 0;
+  const ret = parseInt(document.getElementById('ankiRetInput').value) || 0;
+  if (cards === 0 && time === 0) { showToast('Vul iets in!'); return; }
+  const entry = { date: today(), cards, time, retention: ret, timestamp: Date.now() };
+  const id = await dbPut('anki', entry);
+  document.getElementById('ankiCardsInput').value = '';
+  document.getElementById('ankiTimeInput').value = '';
+  document.getElementById('ankiRetInput').value = '';
+  showToast(`📚 Anki sessie opgeslagen`);
+  showUndo(`📚 Anki sessie`, () => dbDelete('anki', id));
+  refreshAll();
+}
+
+// ── Custom Modal ──
+function openCustom(skill) {
+  customSkill = skill;
+  const s = SKILL_COLORS[skill];
+  document.getElementById('modalTitle').textContent = `${s.icon} ${s.label} — aangepaste tijd`;
+  document.getElementById('modalInput').value = '';
+  document.getElementById('customModal').classList.add('show');
+  setTimeout(() => document.getElementById('modalInput').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('customModal').classList.remove('show');
+  customSkill = null;
+}
+
+function confirmCustom() {
+  const val = parseInt(document.getElementById('modalInput').value);
+  if (!val || val <= 0) { showToast('Vul een getal in!'); return; }
+  quickLog(customSkill, val);
+  closeModal();
+}
+
+// ══════════════════════════════════════════════════
+// DASHBOARD REFRESH
+// ══════════════════════════════════════════════════
+async function refreshDashboard() {
+  const d = today();
+
+  // Countdown
+  document.getElementById('countdownDays').textContent = daysUntilExam();
+
+  // Logs
+  const logs = await dbGetAll('logs');
+  const todayLogs = logs.filter(l => l.date === d);
+  const totalMin = todayLogs.reduce((s, l) => s + l.minutes, 0);
+  document.getElementById('todayHours').textContent = (totalMin / 60).toFixed(1);
+
+  // Vocab
+  const vocabs = await dbGetAll('vocab');
+  const todayVocab = vocabs.filter(v => v.date === d).reduce((s, v) => s + v.count, 0);
+  document.getElementById('todayVocab').textContent = todayVocab;
+
+  // Streak
+  const streak = calcStreak(logs);
+  document.getElementById('streakCount').textContent = streak;
+
+  // Skills today
+  renderSkillBars('skillBarsToday', todayLogs, hourGoal * 60);
+
+  // Week heatmap
+  renderWeekGrid(logs);
+
+  // Anki today
+  const ankis = await dbGetAll('anki');
+  const todayAnki = ankis.filter(a => a.date === d);
+  const totalCards = todayAnki.reduce((s, a) => s + a.cards, 0);
+  const totalAnkiTime = todayAnki.reduce((s, a) => s + a.time, 0);
+  const avgRet = todayAnki.length ? todayAnki.reduce((s, a) => s + a.retention, 0) / todayAnki.length : 0;
+  document.getElementById('ankiCards').textContent = totalCards;
+  document.getElementById('ankiTime').textContent = totalAnkiTime;
+  document.getElementById('ankiRetention').textContent = avgRet ? Math.round(avgRet) + '%' : '--%';
+
+  // Total skills
+  renderSkillBars('skillBarsTotal', logs, null, true);
+}
+
+function calcStreak(logs) {
+  const dates = [...new Set(logs.map(l => l.date))].sort().reverse();
+  if (dates.length === 0) return 0;
+  const d = today();
+  let streak = 0;
+  let checkDate = new Date(d);
+
+  // If no study today, start checking from yesterday
+  if (!dates.includes(d)) {
+    checkDate.setDate(checkDate.getDate() - 1);
+  }
+
+  for (let i = 0; i < 1000; i++) {
+    const ds = checkDate.toISOString().split('T')[0];
+    if (dates.includes(ds)) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+function renderSkillBars(containerId, logs, maxMin, showTotal) {
+  const container = document.getElementById(containerId);
+  const skills = ['listening', 'reading', 'writing', 'grammar'];
+  let totalAll = 0;
+  const mins = {};
+  skills.forEach(s => {
+    mins[s] = logs.filter(l => l.skill === s).reduce((sum, l) => sum + l.minutes, 0);
+    totalAll += mins[s];
+  });
+
+  const maxVal = maxMin || Math.max(totalAll, 1);
+
+  container.innerHTML = skills.map(s => {
+    const m = mins[s];
+    const sc = SKILL_COLORS[s];
+    const pct = maxMin ? Math.min(100, (m / maxMin) * 100 * 4) : (totalAll ? (m / totalAll) * 100 : 0);
+    const timeStr = showTotal
+      ? (m >= 60 ? `${(m/60).toFixed(1)}u` : `${m}min`)
+      : `${m}min`;
+    return `
+      <div class="skill-bar-wrap">
+        <div class="skill-bar-header">
+          <div class="skill-bar-name"><span class="dot" style="background:${sc.color}"></span>${sc.label}</div>
+          <div class="skill-bar-time">${timeStr}</div>
+        </div>
+        <div class="skill-bar-track">
+          <div class="skill-bar-fill" style="width:${Math.max(pct, m > 0 ? 3 : 0)}%;background:${sc.color}"></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderWeekGrid(logs) {
+  const grid = document.getElementById('weekGrid');
+  const d = today();
+  const todayDate = new Date(d);
+  const dayOfWeek = todayDate.getDay();
+  const monday = new Date(todayDate);
+  monday.setDate(todayDate.getDate() - ((dayOfWeek + 6) % 7));
+
+  const dayNames = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
+  let html = '';
+
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    const ds = date.toISOString().split('T')[0];
+    const dayMins = logs.filter(l => l.date === ds).reduce((s, l) => s + l.minutes, 0);
+    const hours = (dayMins / 60).toFixed(1);
+    const isToday = ds === d;
+    const isFuture = date > todayDate;
+
+    let cls = 'empty';
+    if (!isFuture && dayMins > 0) {
+      if (dayMins >= hourGoal * 60) cls = 'good';
+      else if (dayMins >= hourGoal * 30) cls = 'mid';
+      else cls = 'low';
+    }
+
+    html += `
+      <div class="week-cell ${cls} ${isToday ? 'today' : ''}">
+        <span class="day-name">${dayNames[i]}</span>
+        <span class="day-hours">${isFuture ? '–' : hours}</span>
+      </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════
+// STATS / CHARTS
+// ══════════════════════════════════════════════════
+function setPeriod(p, btn) {
+  currentPeriod = p;
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  refreshStats();
+}
+
+async function refreshStats() {
+  const logs = await dbGetAll('logs');
+  const vocabs = await dbGetAll('vocab');
+
+  const now = new Date();
+  let startDate;
+  if (currentPeriod === 'week') {
+    startDate = new Date(now); startDate.setDate(now.getDate() - 6);
+  } else if (currentPeriod === 'month') {
+    startDate = new Date(now); startDate.setDate(now.getDate() - 29);
+  } else {
+    const allDates = logs.map(l => l.date);
+    startDate = allDates.length ? new Date(allDates.sort()[0]) : new Date(now);
+  }
+  startDate.setHours(0,0,0,0);
+
+  // Build date range
+  const dates = [];
+  const d = new Date(startDate);
+  const endDate = new Date(now);
+  endDate.setHours(0,0,0,0);
+  while (d <= endDate) {
+    dates.push(d.toISOString().split('T')[0]);
+    d.setDate(d.getDate() + 1);
+  }
+
+  // Hours per day
+  const hoursData = dates.map(dt => {
+    const mins = logs.filter(l => l.date === dt).reduce((s, l) => s + l.minutes, 0);
+    return mins / 60;
+  });
+
+  // Vocab per day
+  const vocabData = dates.map(dt => {
+    return vocabs.filter(v => v.date === dt).reduce((s, v) => s + v.count, 0);
+  });
+
+  // Skill distribution
+  const skillTotals = {};
+  ['listening', 'reading', 'writing', 'grammar'].forEach(s => {
+    const filtered = logs.filter(l => {
+      return l.date >= dates[0] && l.date <= dates[dates.length - 1] && l.skill === s;
+    });
+    skillTotals[s] = filtered.reduce((sum, l) => sum + l.minutes, 0);
+  });
+
+  drawBarChart('hoursChart', dates, hoursData, 'var(--amber)', hourGoal);
+  drawBarChart('vocabChart', dates, vocabData, 'var(--teal)');
+  drawDonutChart('skillChart', skillTotals);
+  renderHistory(dates, logs, vocabs);
+}
+
+function drawBarChart(canvasId, labels, data, color, goalLine) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+
+  const w = rect.width;
+  const h = rect.height;
+  const pad = { top: 10, right: 10, bottom: 28, left: 36 };
+  const chartW = w - pad.left - pad.right;
+  const chartH = h - pad.top - pad.bottom;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const maxVal = Math.max(...data, goalLine || 0, 1) * 1.2;
+  const barW = Math.min(chartW / labels.length * 0.7, 20);
+  const gap = chartW / labels.length;
+
+  // Get computed styles
+  const style = getComputedStyle(document.documentElement);
+  const textColor = style.getPropertyValue('--text3').trim() || '#5a5a6a';
+  const gridColor = style.getPropertyValue('--bg3').trim() || '#1e1e28';
+  const barColor = style.getPropertyValue(color.replace('var(', '').replace(')', '')).trim() || color;
+
+  // Grid lines
+  ctx.strokeStyle = gridColor;
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + chartH - (chartH * i / 4);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(w - pad.right, y);
+    ctx.stroke();
+    ctx.fillStyle = textColor;
+    ctx.font = '10px JetBrains Mono, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText((maxVal * i / 4).toFixed(1), pad.left - 4, y + 3);
+  }
+
+  // Goal line
+  if (goalLine) {
+    const goalY = pad.top + chartH - (chartH * goalLine / maxVal);
+    ctx.strokeStyle = 'rgba(240,64,96,0.5)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, goalY);
+    ctx.lineTo(w - pad.right, goalY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(240,64,96,0.7)';
+    ctx.font = '9px JetBrains Mono, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('doel', w - pad.right - 24, goalY - 4);
+  }
+
+  // Bars
+  data.forEach((val, i) => {
+    const x = pad.left + i * gap + (gap - barW) / 2;
+    const barH = (val / maxVal) * chartH;
+    const y = pad.top + chartH - barH;
+
+    const isToday = labels[i] === today();
+    ctx.fillStyle = barColor;
+    ctx.globalAlpha = isToday ? 1 : 0.7;
+    ctx.beginPath();
+    const r = Math.min(3, barW / 2);
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + barW - r, y);
+    ctx.quadraticCurveTo(x + barW, y, x + barW, y + r);
+    ctx.lineTo(x + barW, pad.top + chartH);
+    ctx.lineTo(x, pad.top + chartH);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Date labels (show every Nth)
+    const showEvery = labels.length > 14 ? Math.ceil(labels.length / 7) : (labels.length > 7 ? 2 : 1);
+    if (i % showEvery === 0 || isToday) {
+      ctx.fillStyle = isToday ? barColor : textColor;
+      ctx.font = `${isToday ? 'bold ' : ''}9px DM Sans, system-ui`;
+      ctx.textAlign = 'center';
+      const dateLabel = labels[i].slice(5).replace('-', '/');
+      ctx.fillText(dateLabel, x + barW / 2, h - pad.bottom + 14);
+    }
+  });
+}
+
+function drawDonutChart(canvasId, skillTotals) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+
+  const w = rect.width;
+  const h = rect.height;
+  ctx.clearRect(0, 0, w, h);
+
+  const total = Object.values(skillTotals).reduce((s, v) => s + v, 0);
+  if (total === 0) {
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text3').trim();
+    ctx.font = '13px DM Sans, system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('Nog geen data', w / 2, h / 2);
+    return;
+  }
+
+  const style = getComputedStyle(document.documentElement);
+  const colors = {
+    listening: style.getPropertyValue('--teal').trim(),
+    reading: style.getPropertyValue('--blue').trim(),
+    writing: style.getPropertyValue('--purple').trim(),
+    grammar: style.getPropertyValue('--amber').trim()
+  };
+
+  const cx = w * 0.35;
+  const cy = h / 2;
+  const outerR = Math.min(cx - 10, cy - 10);
+  const innerR = outerR * 0.55;
+
+  let angle = -Math.PI / 2;
+  Object.entries(skillTotals).forEach(([skill, mins]) => {
+    if (mins === 0) return;
+    const slice = (mins / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, outerR, angle, angle + slice);
+    ctx.arc(cx, cy, innerR, angle + slice, angle, true);
+    ctx.closePath();
+    ctx.fillStyle = colors[skill];
+    ctx.fill();
+    angle += slice;
+  });
+
+  // Center text
+  ctx.fillStyle = style.getPropertyValue('--text').trim();
+  ctx.font = 'bold 18px JetBrains Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${(total / 60).toFixed(1)}u`, cx, cy + 2);
+  ctx.fillStyle = style.getPropertyValue('--text3').trim();
+  ctx.font = '10px DM Sans, system-ui';
+  ctx.fillText('totaal', cx, cy + 16);
+
+  // Legend
+  const legendX = w * 0.65;
+  let ly = 20;
+  Object.entries(SKILL_COLORS).forEach(([skill, info]) => {
+    const mins = skillTotals[skill] || 0;
+    const pct = total ? Math.round(mins / total * 100) : 0;
+    ctx.fillStyle = colors[skill];
+    ctx.beginPath();
+    ctx.arc(legendX, ly + 6, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = style.getPropertyValue('--text').trim();
+    ctx.font = '12px DM Sans, system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText(`${info.label}`, legendX + 14, ly + 10);
+    ctx.fillStyle = style.getPropertyValue('--text2').trim();
+    ctx.font = '11px JetBrains Mono, monospace';
+    ctx.fillText(`${pct}%  ${mins >= 60 ? (mins/60).toFixed(1) + 'u' : mins + 'm'}`, legendX + 14, ly + 26);
+    ly += 40;
+  });
+}
+
+function renderHistory(dates, logs, vocabs) {
+  const container = document.getElementById('historyList');
+  const reversed = [...dates].reverse().slice(0, 30);
+  container.innerHTML = reversed.map(dt => {
+    const mins = logs.filter(l => l.date === dt).reduce((s, l) => s + l.minutes, 0);
+    const words = vocabs.filter(v => v.date === dt).reduce((s, v) => s + v.count, 0);
+    const dateObj = new Date(dt);
+    const label = dt === today() ? 'Vandaag' : dateObj.toLocaleDateString('nl-BE', { weekday: 'short', day: 'numeric', month: 'short' });
+    return `
+      <div class="history-item">
+        <div>
+          <div class="history-date">${label}</div>
+          <div style="font-size:11px;color:var(--text3)">${words} woorden</div>
+        </div>
+        <div class="history-hours">${(mins/60).toFixed(1)}u</div>
+      </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════════════
+async function loadSettings() {
+  try {
+    const theme = await dbGet('settings', 'theme');
+    if (theme && theme.value === 'light') {
+      document.documentElement.classList.add('light-mode');
+      document.getElementById('themeToggle').textContent = '🌙';
+      document.getElementById('darkToggle').classList.remove('on');
+    } else {
+      document.getElementById('darkToggle').classList.add('on');
+    }
+    const goal = await dbGet('settings', 'hourGoal');
+    if (goal) { hourGoal = goal.value; document.getElementById('goalInput').value = hourGoal; }
+    const vGoal = await dbGet('settings', 'vocabGoal');
+    if (vGoal) { vocabGoal = vGoal.value; document.getElementById('vocabGoalInput').value = vocabGoal; }
+  } catch(e) {}
+}
+
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light-mode');
+  document.getElementById('themeToggle').textContent = isLight ? '🌙' : '☀️';
+  const toggle = document.getElementById('darkToggle');
+  if (isLight) toggle.classList.remove('on'); else toggle.classList.add('on');
+  dbPut('settings', { key: 'theme', value: isLight ? 'light' : 'dark' });
+  // Redraw charts if on stats tab
+  if (document.getElementById('viewStats').classList.contains('active')) refreshStats();
+}
+
+function updateGoal(val) {
+  hourGoal = parseFloat(val) || 2;
+  dbPut('settings', { key: 'hourGoal', value: hourGoal });
+  refreshAll();
+}
+
+function updateVocabGoal(val) {
+  vocabGoal = parseInt(val) || 50;
+  dbPut('settings', { key: 'vocabGoal', value: vocabGoal });
+}
+
+// ── Export / Import / Reset ──
+async function exportData() {
+  const logs = await dbGetAll('logs');
+  const vocab = await dbGetAll('vocab');
+  const anki = await dbGetAll('anki');
+  const data = JSON.stringify({ logs, vocab, anki, exported: new Date().toISOString() }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `dutch-tracker-backup-${today()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Gegevens geëxporteerd!');
+}
+
+function importData() {
+  document.getElementById('fileImport').click();
+}
+
+async function handleImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if (data.logs) { await dbClear('logs'); for (const l of data.logs) { delete l.id; await dbPut('logs', l); } }
+    if (data.vocab) { await dbClear('vocab'); for (const v of data.vocab) { delete v.id; await dbPut('vocab', v); } }
+    if (data.anki) { await dbClear('anki'); for (const a of data.anki) { delete a.id; await dbPut('anki', a); } }
+    showToast('Gegevens geïmporteerd!');
+    refreshAll();
+  } catch(err) {
+    showToast('Fout bij importeren!');
+  }
+  e.target.value = '';
+}
+
+async function resetData() {
+  if (!confirm('Alle gegevens wissen? Dit kan niet ongedaan worden!')) return;
+  if (!confirm('Weet je het zeker? Alle studie-data wordt verwijderd.')) return;
+  await dbClear('logs');
+  await dbClear('vocab');
+  await dbClear('anki');
+  showToast('Alle gegevens gewist');
+  refreshAll();
+}
+
+// ══════════════════════════════════════════════════
+// REFRESH ALL
+// ══════════════════════════════════════════════════
+function refreshAll() {
+  refreshDashboard();
+  if (document.getElementById('viewStats').classList.contains('active')) refreshStats();
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+async function init() {
+  await openDB();
+  await loadSettings();
+  refreshDashboard();
+
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  // Close modal on overlay click
+  document.getElementById('customModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('customModal')) closeModal();
+  });
+
+  // Enter key in modal
+  document.getElementById('modalInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') confirmCustom();
+  });
+}
+
+init();
+</script>
+</body>
+</html>
