@@ -597,6 +597,158 @@ body {
 /* ── Animations ── */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .card { animation: fadeIn 0.3s ease; }
+
+/* ── Goal Progress ── */
+.goal-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.goal-ring-wrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+.goal-ring-wrap svg {
+  width: 80px;
+  height: 80px;
+  transform: rotate(-90deg);
+}
+.goal-ring-wrap .ring-bg {
+  fill: none;
+  stroke: var(--bg4);
+  stroke-width: 6;
+}
+.goal-ring-wrap .ring-fill {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
+}
+.goal-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.goal-center .goal-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+.goal-center .goal-of {
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+.goal-details { flex: 1; }
+.goal-details .goal-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--amber);
+}
+.goal-details .goal-msg {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 2px;
+}
+
+/* ── Manual Entry ── */
+.manual-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.manual-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.manual-field label {
+  display: block;
+  font-size: 11px;
+  color: var(--text2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.manual-field input,
+.manual-field select,
+.manual-field textarea {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--bg4);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+}
+.manual-field select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239a9a9a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.manual-field textarea {
+  font-family: 'DM Sans', system-ui;
+  font-size: 13px;
+  resize: none;
+  height: 60px;
+}
+.manual-field input:focus,
+.manual-field select:focus,
+.manual-field textarea:focus { border-color: var(--amber); }
+
+/* ── Tags ── */
+.tag-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.tag-pill {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--bg4);
+  background: var(--bg3);
+  color: var(--text2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', system-ui;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.tag-pill.selected {
+  background: var(--amber-glow);
+  border-color: var(--amber);
+  color: var(--amber);
+}
+.tag-pill:active { transform: scale(0.94); }
+.save-manual-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--teal);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', system-ui;
+}
+.save-manual-btn:active { transform: scale(0.97); }
 </style>
 </head>
 <body>
@@ -648,21 +800,24 @@ body {
         <div class="week-grid" id="weekGrid"></div>
       </div>
 
-      <!-- Anki Today -->
+      <!-- Daily Goal Progress -->
       <div class="card">
-        <div class="card-title">Anki vandaag</div>
-        <div class="stats-row" style="margin-bottom:0">
-          <div class="stat-box">
-            <div class="stat-value" id="ankiCards" style="color:var(--blue);font-size:20px">0</div>
-            <div class="stat-label">Kaarten</div>
+        <div class="card-title">Dagelijks doel</div>
+        <div class="goal-card">
+          <div class="goal-ring-wrap">
+            <svg viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="34"/>
+              <circle class="ring-fill" id="goalRing" cx="40" cy="40" r="34"
+                stroke="var(--amber)" stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+            </svg>
+            <div class="goal-center">
+              <span class="goal-val" id="goalCurrent">0.0</span>
+              <span class="goal-of" id="goalTarget">/ 2.0u</span>
+            </div>
           </div>
-          <div class="stat-box">
-            <div class="stat-value" id="ankiTime" style="color:var(--purple);font-size:20px">0</div>
-            <div class="stat-label">Min</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value" id="ankiRetention" style="color:var(--teal);font-size:20px">--%</div>
-            <div class="stat-label">Retentie</div>
+          <div class="goal-details">
+            <div class="goal-pct" id="goalPct">0%</div>
+            <div class="goal-msg" id="goalMsg">Begin met studeren!</div>
           </div>
         </div>
       </div>
@@ -742,25 +897,55 @@ body {
         </div>
       </div>
 
-      <!-- Anki Session -->
+      <!-- Manual Entry -->
       <div class="log-section">
         <div class="card" style="margin-bottom:0">
-          <div class="card-title">Anki sessie loggen</div>
-          <div class="anki-inputs">
-            <div class="anki-field">
-              <label>Kaarten</label>
-              <input type="number" id="ankiCardsInput" placeholder="0" inputmode="numeric">
+          <div class="card-title">Handmatige invoer</div>
+          <div class="manual-form">
+            <div class="manual-row">
+              <div class="manual-field">
+                <label>Datum</label>
+                <input type="date" id="manualDate">
+              </div>
+              <div class="manual-field">
+                <label>Vaardigheid</label>
+                <select id="manualSkill">
+                  <option value="listening">🎧 Luisteren</option>
+                  <option value="reading">📖 Lezen</option>
+                  <option value="writing">✍️ Schrijven</option>
+                  <option value="grammar">📐 Grammatica</option>
+                </select>
+              </div>
             </div>
-            <div class="anki-field">
-              <label>Minuten</label>
-              <input type="number" id="ankiTimeInput" placeholder="0" inputmode="numeric">
+            <div class="manual-row">
+              <div class="manual-field">
+                <label>Minuten</label>
+                <input type="number" id="manualMinutes" placeholder="0" inputmode="numeric">
+              </div>
+              <div class="manual-field">
+                <label>Woorden</label>
+                <input type="number" id="manualVocab" placeholder="0" inputmode="numeric">
+              </div>
             </div>
-            <div class="anki-field">
-              <label>Retentie %</label>
-              <input type="number" id="ankiRetInput" placeholder="90" inputmode="numeric" max="100">
+            <div class="manual-field">
+              <label>Tags</label>
+              <div class="tag-pills" id="manualTags">
+                <span class="tag-pill" data-tag="podcast" onclick="toggleTag(this)">Podcast</span>
+                <span class="tag-pill" data-tag="boek" onclick="toggleTag(this)">Boek</span>
+                <span class="tag-pill" data-tag="artikel" onclick="toggleTag(this)">Artikel</span>
+                <span class="tag-pill" data-tag="video" onclick="toggleTag(this)">Video</span>
+                <span class="tag-pill" data-tag="gesprek" onclick="toggleTag(this)">Gesprek</span>
+                <span class="tag-pill" data-tag="oefening" onclick="toggleTag(this)">Oefening</span>
+                <span class="tag-pill" data-tag="cursus" onclick="toggleTag(this)">Cursus</span>
+                <span class="tag-pill" data-tag="app" onclick="toggleTag(this)">App</span>
+              </div>
             </div>
+            <div class="manual-field">
+              <label>Notities</label>
+              <textarea id="manualNotes" placeholder="Optioneel..."></textarea>
+            </div>
+            <button class="save-manual-btn" onclick="saveManualEntry()">Opslaan</button>
           </div>
-          <button class="anki-save-btn" onclick="saveAnki()">Anki sessie opslaan</button>
         </div>
       </div>
     </div>
@@ -898,7 +1083,7 @@ body {
 // DATABASE (IndexedDB)
 // ══════════════════════════════════════════════════
 const DB_NAME = 'DutchTrackerDB';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 let db;
 
 function openDB() {
@@ -906,21 +1091,20 @@ function openDB() {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
     req.onupgradeneeded = e => {
       const d = e.target.result;
-      if (!d.objectStoreNames.contains('logs')) {
+      const oldV = e.oldVersion;
+      if (oldV < 1) {
         const s = d.createObjectStore('logs', { keyPath: 'id', autoIncrement: true });
         s.createIndex('date', 'date');
         s.createIndex('skill', 'skill');
-      }
-      if (!d.objectStoreNames.contains('vocab')) {
-        const s = d.createObjectStore('vocab', { keyPath: 'id', autoIncrement: true });
-        s.createIndex('date', 'date');
-      }
-      if (!d.objectStoreNames.contains('anki')) {
-        const s = d.createObjectStore('anki', { keyPath: 'id', autoIncrement: true });
-        s.createIndex('date', 'date');
-      }
-      if (!d.objectStoreNames.contains('settings')) {
+        const v = d.createObjectStore('vocab', { keyPath: 'id', autoIncrement: true });
+        v.createIndex('date', 'date');
+        const a = d.createObjectStore('anki', { keyPath: 'id', autoIncrement: true });
+        a.createIndex('date', 'date');
         d.createObjectStore('settings', { keyPath: 'key' });
+      }
+      if (oldV < 2) {
+        const logsStore = e.target.transaction.objectStore('logs');
+        logsStore.createIndex('tags', 'tags', { multiEntry: true });
       }
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
@@ -1039,7 +1223,7 @@ function switchTab(name, btn) {
 // QUICK LOG
 // ══════════════════════════════════════════════════
 async function quickLog(skill, minutes) {
-  const entry = { date: today(), skill, minutes, timestamp: Date.now() };
+  const entry = { date: today(), skill, minutes, tags: [], notes: '', timestamp: Date.now() };
   const id = await dbPut('logs', entry);
   const s = SKILL_COLORS[skill];
   showToast(`${s.icon} +${minutes} min ${s.label}`);
@@ -1055,18 +1239,50 @@ async function addVocab(count) {
   refreshAll();
 }
 
-async function saveAnki() {
-  const cards = parseInt(document.getElementById('ankiCardsInput').value) || 0;
-  const time = parseInt(document.getElementById('ankiTimeInput').value) || 0;
-  const ret = parseInt(document.getElementById('ankiRetInput').value) || 0;
-  if (cards === 0 && time === 0) { showToast('Vul iets in!'); return; }
-  const entry = { date: today(), cards, time, retention: ret, timestamp: Date.now() };
-  const id = await dbPut('anki', entry);
-  document.getElementById('ankiCardsInput').value = '';
-  document.getElementById('ankiTimeInput').value = '';
-  document.getElementById('ankiRetInput').value = '';
-  showToast(`📚 Anki sessie opgeslagen`);
-  showUndo(`📚 Anki sessie`, () => dbDelete('anki', id));
+// ── Tags & Manual Entry ──
+function toggleTag(el) {
+  el.classList.toggle('selected');
+}
+
+function getSelectedTags() {
+  return [...document.querySelectorAll('#manualTags .tag-pill.selected')]
+    .map(el => el.dataset.tag);
+}
+
+async function saveManualEntry() {
+  const date = document.getElementById('manualDate').value;
+  const skill = document.getElementById('manualSkill').value;
+  const minutes = parseInt(document.getElementById('manualMinutes').value) || 0;
+  const vocabCount = parseInt(document.getElementById('manualVocab').value) || 0;
+  const notes = document.getElementById('manualNotes').value.trim();
+  const tags = getSelectedTags();
+
+  if (!date) { showToast('Kies een datum!'); return; }
+  if (minutes === 0 && vocabCount === 0) { showToast('Vul minuten of woorden in!'); return; }
+
+  const ids = [];
+  if (minutes > 0) {
+    const entry = { date, skill, minutes, tags, notes, timestamp: Date.now() };
+    const id = await dbPut('logs', entry);
+    ids.push({ store: 'logs', id });
+  }
+  if (vocabCount > 0) {
+    const entry = { date, count: vocabCount, timestamp: Date.now() };
+    const id = await dbPut('vocab', entry);
+    ids.push({ store: 'vocab', id });
+  }
+
+  const s = SKILL_COLORS[skill];
+  showToast(`${s.icon} Sessie opgeslagen`);
+  showUndo('Handmatige invoer', async () => {
+    for (const { store, id } of ids) await dbDelete(store, id);
+  });
+
+  // Reset form
+  document.getElementById('manualMinutes').value = '';
+  document.getElementById('manualVocab').value = '';
+  document.getElementById('manualNotes').value = '';
+  document.querySelectorAll('#manualTags .tag-pill').forEach(p => p.classList.remove('selected'));
   refreshAll();
 }
 
@@ -1122,15 +1338,24 @@ async function refreshDashboard() {
   // Week heatmap
   renderWeekGrid(logs);
 
-  // Anki today
-  const ankis = await dbGetAll('anki');
-  const todayAnki = ankis.filter(a => a.date === d);
-  const totalCards = todayAnki.reduce((s, a) => s + a.cards, 0);
-  const totalAnkiTime = todayAnki.reduce((s, a) => s + a.time, 0);
-  const avgRet = todayAnki.length ? todayAnki.reduce((s, a) => s + a.retention, 0) / todayAnki.length : 0;
-  document.getElementById('ankiCards').textContent = totalCards;
-  document.getElementById('ankiTime').textContent = totalAnkiTime;
-  document.getElementById('ankiRetention').textContent = avgRet ? Math.round(avgRet) + '%' : '--%';
+  // Goal progress
+  const goalPct = Math.min(100, (totalMin / (hourGoal * 60)) * 100);
+  const goalHours = (totalMin / 60).toFixed(1);
+  document.getElementById('goalCurrent').textContent = goalHours;
+  document.getElementById('goalTarget').textContent = `/ ${hourGoal.toFixed(1)}u`;
+  document.getElementById('goalPct').textContent = Math.round(goalPct) + '%';
+  const circumference = 213.6;
+  document.getElementById('goalRing').style.strokeDashoffset = circumference * (1 - goalPct / 100);
+  let goalColor, goalMsg;
+  if (goalPct === 0) { goalColor = 'var(--text3)'; goalMsg = 'Begin met studeren!'; }
+  else if (goalPct < 25) { goalColor = 'var(--red)'; goalMsg = 'Goed begin!'; }
+  else if (goalPct < 50) { goalColor = 'var(--amber)'; goalMsg = 'Je bent op weg!'; }
+  else if (goalPct < 75) { goalColor = 'var(--amber)'; goalMsg = 'Meer dan halverwege!'; }
+  else if (goalPct < 100) { goalColor = 'var(--blue)'; goalMsg = 'Bijna daar!'; }
+  else { goalColor = 'var(--teal)'; goalMsg = 'Doel bereikt!'; }
+  document.getElementById('goalRing').style.stroke = goalColor;
+  document.getElementById('goalPct').style.color = goalColor;
+  document.getElementById('goalMsg').textContent = goalMsg;
 
   // Total skills
   renderSkillBars('skillBarsTotal', logs, null, true);
@@ -1586,6 +1811,9 @@ async function init() {
   await openDB();
   await loadSettings();
   refreshDashboard();
+
+  // Set default date for manual entry
+  document.getElementById('manualDate').value = today();
 
   // Register service worker
   if ('serviceWorker' in navigator) {
