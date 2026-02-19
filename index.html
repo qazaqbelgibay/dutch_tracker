@@ -959,6 +959,148 @@ body {
   font-family: 'DM Sans', system-ui;
 }
 .save-manual-btn:active { transform: scale(0.97); }
+
+/* ── Goal Cards (new system) ── */
+.goal-card-new {
+  background: var(--bg2);
+  border: 1px solid var(--bg3);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.goal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.goal-card-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.goal-card-actions {
+  display: flex;
+  gap: 4px;
+}
+.goal-card-actions button {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+.goal-card-actions button:active { color: var(--text); }
+.goal-metric {
+  margin-bottom: 8px;
+}
+.goal-metric:last-child { margin-bottom: 0; }
+.goal-metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+.goal-metric-label {
+  font-size: 12px;
+  color: var(--text2);
+}
+.goal-metric-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+}
+.goal-progress-track {
+  height: 8px;
+  background: var(--bg4);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.goal-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.goal-pace {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.goal-milestone {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.goal-milestone.reached { color: var(--teal); }
+.goal-streak-display {
+  text-align: center;
+  padding: 8px 0;
+}
+.goal-streak-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+}
+.goal-streak-label {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 4px;
+}
+.milestone-field {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+}
+.milestone-field input {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--bg4);
+  border-radius: 6px;
+  padding: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+}
+.milestone-field input:focus { border-color: var(--amber); }
+.milestone-remove {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+}
+.milestone-remove:hover { color: var(--red); }
+.week-total {
+  text-align: center;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--bg3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--amber);
+  font-weight: 600;
+}
+.skill-total {
+  text-align: right;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--bg3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text2);
+}
 </style>
 </head>
 <body>
@@ -989,8 +1131,8 @@ body {
           <div class="stat-label">Uren</div>
         </div>
         <div class="stat-box">
-          <div class="stat-value" id="todayVocab" style="color:var(--teal)">0</div>
-          <div class="stat-label">Woorden</div>
+          <div class="stat-value" id="todayAnki" style="color:var(--teal)">0</div>
+          <div class="stat-label">Anki</div>
         </div>
         <div class="stat-box">
           <div class="stat-value" id="streakCount" style="color:var(--red)">0</div>
@@ -1004,22 +1146,10 @@ body {
         <div class="total-hours-label">Totale studie-uren</div>
       </div>
 
-      <!-- B1 Goal Progress -->
-      <div class="card">
-        <div class="card-title">B1 Doel</div>
-        <div class="b1-goal-stats">
-          <span class="b1-goal-current" id="b1GoalCurrent">0</span>
-          <span class="b1-goal-separator">/</span>
-          <span class="b1-goal-target" id="b1GoalTarget">500</span>
-          <span class="b1-goal-unit">uur</span>
-        </div>
-        <div class="b1-progress-track">
-          <div class="b1-progress-fill" id="b1ProgressFill" style="width:0%"></div>
-        </div>
-        <div class="b1-goal-details">
-          <span class="b1-goal-pct" id="b1GoalPct">0%</span>
-          <span class="b1-goal-remaining" id="b1GoalRemaining">500 uur te gaan</span>
-        </div>
+      <!-- Goals Section -->
+      <div id="goalsSection"></div>
+      <div style="text-align:center;margin-bottom:12px">
+        <button onclick="openGoalModal()" style="background:var(--bg2);border:1px dashed var(--bg4);border-radius:var(--radius);padding:12px;width:100%;color:var(--text3);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',system-ui">+ Nieuw doel</button>
       </div>
 
       <!-- Skills Today -->
@@ -1078,12 +1208,16 @@ body {
           <div class="timer-save-section" id="timerSaveSection" style="display:none">
             <div class="manual-field" style="margin-bottom:10px">
               <label>Vaardigheid</label>
-              <select id="timerSkill">
+              <select id="timerSkill" onchange="onTimerSkillChange()">
                 <option value="listening">🎧 Luisteren</option>
                 <option value="reading">📖 Lezen</option>
                 <option value="writing">✍️ Schrijven</option>
                 <option value="grammar">📐 Grammatica</option>
               </select>
+            </div>
+            <div class="manual-field" id="timerPassiveWrap" style="display:none;margin-bottom:10px">
+              <label>Passief luisteren</label>
+              <button class="toggle" id="timerPassiveToggle" onclick="toggleTimerPassive()"></button>
             </div>
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
               <span style="font-size:13px;color:var(--text2)">Tijd:</span>
@@ -1132,7 +1266,7 @@ body {
               </div>
               <div class="manual-field">
                 <label>Vaardigheid</label>
-                <select id="manualSkill">
+                <select id="manualSkill" onchange="onSkillChange()">
                   <option value="listening">🎧 Luisteren</option>
                   <option value="reading">📖 Lezen</option>
                   <option value="writing">✍️ Schrijven</option>
@@ -1145,9 +1279,9 @@ body {
                 <label>Minuten</label>
                 <input type="number" id="manualMinutes" placeholder="0" inputmode="numeric">
               </div>
-              <div class="manual-field">
-                <label>Woorden</label>
-                <input type="number" id="manualVocab" placeholder="0" inputmode="numeric">
+              <div class="manual-field" id="passiveToggleWrap" style="display:none">
+                <label>Passief luisteren</label>
+                <button class="toggle" id="passiveToggle" onclick="togglePassive()"></button>
               </div>
             </div>
             <div class="manual-field">
@@ -1171,6 +1305,24 @@ body {
           </div>
         </div>
       </div>
+
+      <!-- Anki Log -->
+      <div class="log-section">
+        <div class="card" style="margin-bottom:0">
+          <div class="card-title">Anki Kaarten</div>
+          <div class="manual-row">
+            <div class="manual-field">
+              <label>Datum</label>
+              <input type="date" id="ankiDate">
+            </div>
+            <div class="manual-field">
+              <label>Kaarten herhaald</label>
+              <input type="number" id="ankiCards" placeholder="0" inputmode="numeric">
+            </div>
+          </div>
+          <button class="save-manual-btn" onclick="saveAnkiEntry()" style="margin-top:10px">Opslaan</button>
+        </div>
+      </div>
     </div>
 
     <!-- ═══ STATS ═══ -->
@@ -1181,6 +1333,9 @@ body {
         <button class="period-btn" onclick="setPeriod('all',this)">Alles</button>
       </div>
 
+      <!-- Tag Filter -->
+      <div class="tag-pills" id="statsTagFilter" style="margin-bottom:12px"></div>
+
       <div class="card">
         <div class="card-title">Studietijd (uren/dag)</div>
         <div class="chart-container">
@@ -1189,16 +1344,16 @@ body {
       </div>
 
       <div class="card">
-        <div class="card-title">Nieuwe woorden per dag</div>
+        <div class="card-title">Vaardigheid verdeling</div>
         <div class="chart-container">
-          <canvas id="vocabChart" class="chart-canvas"></canvas>
+          <canvas id="skillChart" class="chart-canvas"></canvas>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">Vaardigheid verdeling</div>
+        <div class="card-title">Verdeling per tag</div>
         <div class="chart-container">
-          <canvas id="skillChart" class="chart-canvas"></canvas>
+          <canvas id="tagChart" class="chart-canvas"></canvas>
         </div>
       </div>
 
@@ -1227,24 +1382,6 @@ body {
           <input type="number" id="goalInput" value="2" min="0.5" max="8" step="0.5"
             style="width:60px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;text-align:center;outline:none;"
             onchange="updateGoal(this.value)">
-        </div>
-        <div class="setting-row">
-          <div>
-            <div class="setting-label">Woorden doel per dag</div>
-            <div class="setting-desc">Standaard: 50 woorden</div>
-          </div>
-          <input type="number" id="vocabGoalInput" value="50" min="10" max="200" step="10"
-            style="width:60px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;text-align:center;outline:none;"
-            onchange="updateVocabGoal(this.value)">
-        </div>
-        <div class="setting-row">
-          <div>
-            <div class="setting-label">B1 doel (totale uren)</div>
-            <div class="setting-desc">Standaard: 500 uur</div>
-          </div>
-          <input type="number" id="b1GoalInput" value="500" min="50" max="2000" step="50"
-            style="width:70px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;text-align:center;outline:none;"
-            onchange="updateTotalHourGoal(this.value)">
         </div>
       </div>
 
@@ -1286,6 +1423,257 @@ body {
   </nav>
 </div>
 
+<!-- Edit Entry Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>Invoer bewerken</h3>
+    <input type="hidden" id="editEntryId">
+    <div class="manual-form">
+      <div class="manual-row">
+        <div class="manual-field">
+          <label>Datum</label>
+          <input type="date" id="editDate">
+        </div>
+        <div class="manual-field">
+          <label>Vaardigheid</label>
+          <select id="editSkill" onchange="onEditSkillChange()">
+            <option value="listening">Luisteren</option>
+            <option value="reading">Lezen</option>
+            <option value="writing">Schrijven</option>
+            <option value="grammar">Grammatica</option>
+          </select>
+        </div>
+      </div>
+      <div class="manual-row">
+        <div class="manual-field">
+          <label>Minuten</label>
+          <input type="number" id="editMinutes" placeholder="0" inputmode="numeric">
+        </div>
+        <div class="manual-field" id="editPassiveWrap" style="display:none">
+          <label>Passief</label>
+          <button class="toggle" id="editPassiveToggle" onclick="toggleEditPassive()"></button>
+        </div>
+      </div>
+      <div class="manual-field">
+        <label>Tags</label>
+        <div class="tag-pills" id="editTags">
+          <span class="tag-pill" data-tag="podcast" onclick="toggleTag(this)">Podcast</span>
+          <span class="tag-pill" data-tag="boek" onclick="toggleTag(this)">Boek</span>
+          <span class="tag-pill" data-tag="artikel" onclick="toggleTag(this)">Artikel</span>
+          <span class="tag-pill" data-tag="video" onclick="toggleTag(this)">Video</span>
+          <span class="tag-pill" data-tag="gesprek" onclick="toggleTag(this)">Gesprek</span>
+          <span class="tag-pill" data-tag="oefening" onclick="toggleTag(this)">Oefening</span>
+          <span class="tag-pill" data-tag="cursus" onclick="toggleTag(this)">Cursus</span>
+          <span class="tag-pill" data-tag="app" onclick="toggleTag(this)">App</span>
+        </div>
+      </div>
+      <div class="manual-field">
+        <label>Notities</label>
+        <textarea id="editNotes" placeholder="Optioneel..."></textarea>
+      </div>
+      <div class="modal-btns">
+        <button class="modal-btn cancel" onclick="closeEditModal()">Annuleer</button>
+        <button class="modal-btn confirm" onclick="saveEdit()">Opslaan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Goal Modal -->
+<div class="modal-overlay" id="goalModal">
+  <div class="modal" style="max-height:85vh;overflow-y:auto">
+    <h3 id="goalModalTitle">Nieuw doel</h3>
+    <input type="hidden" id="goalEditId">
+    <div class="manual-form">
+      <div class="manual-field">
+        <label>Naam</label>
+        <input type="text" id="goalName" placeholder="bijv. B1 Examen" style="font-family:'DM Sans',system-ui">
+      </div>
+      <div class="manual-field">
+        <label>Type</label>
+        <select id="goalType" onchange="onGoalTypeChange()">
+          <option value="total">Totaal doel</option>
+          <option value="recurring">Terugkerend doel</option>
+          <option value="streak">Streak doel</option>
+        </select>
+      </div>
+
+      <!-- Total goal fields -->
+      <div id="goalTotalFields">
+        <div class="manual-row">
+          <div class="manual-field">
+            <label>Doel waarde</label>
+            <input type="number" id="goalTarget" placeholder="500" inputmode="decimal">
+          </div>
+          <div class="manual-field">
+            <label>Eenheid</label>
+            <select id="goalUnit">
+              <option value="uur">Uren</option>
+              <option value="kaarten">Kaarten</option>
+              <option value="pagina">Pagina's</option>
+              <option value="les">Lessen</option>
+              <option value="stuk">Stuks</option>
+            </select>
+          </div>
+        </div>
+        <div class="manual-field">
+          <label>Bron</label>
+          <select id="goalSource">
+            <option value="auto_hours">Automatisch (studie-uren)</option>
+            <option value="auto_anki">Automatisch (Anki kaarten)</option>
+            <option value="manual">Handmatig bijwerken</option>
+          </select>
+        </div>
+        <div class="manual-field">
+          <label>Vaardigheid filter (optioneel)</label>
+          <select id="goalSkillFilter">
+            <option value="">Alle vaardigheden</option>
+            <option value="listening">Luisteren</option>
+            <option value="reading">Lezen</option>
+            <option value="writing">Schrijven</option>
+            <option value="grammar">Grammatica</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Recurring goal fields -->
+      <div id="goalRecurringFields" style="display:none">
+        <div class="manual-row">
+          <div class="manual-field">
+            <label>Doel per periode</label>
+            <input type="number" id="goalRecurringTarget" placeholder="30" inputmode="numeric">
+          </div>
+          <div class="manual-field">
+            <label>Periode</label>
+            <select id="goalRecurrence">
+              <option value="daily">Per dag</option>
+              <option value="weekly">Per week</option>
+            </select>
+          </div>
+        </div>
+        <div class="manual-row">
+          <div class="manual-field">
+            <label>Eenheid</label>
+            <select id="goalRecurringUnit">
+              <option value="min">Minuten</option>
+              <option value="kaarten">Kaarten</option>
+              <option value="pagina">Pagina's</option>
+              <option value="stuk">Stuks</option>
+            </select>
+          </div>
+          <div class="manual-field">
+            <label>Bron</label>
+            <select id="goalRecurringSource">
+              <option value="auto_hours">Auto (studie-uren)</option>
+              <option value="auto_anki">Auto (Anki)</option>
+              <option value="manual">Handmatig</option>
+            </select>
+          </div>
+        </div>
+        <div class="manual-field">
+          <label>Vaardigheid filter</label>
+          <select id="goalRecurringSkillFilter">
+            <option value="">Alle vaardigheden</option>
+            <option value="listening">Luisteren</option>
+            <option value="reading">Lezen</option>
+            <option value="writing">Schrijven</option>
+            <option value="grammar">Grammatica</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Streak goal fields -->
+      <div id="goalStreakFields" style="display:none">
+        <div class="manual-row">
+          <div class="manual-field">
+            <label>Streek doel (dagen)</label>
+            <input type="number" id="goalStreakTarget" placeholder="30" inputmode="numeric">
+          </div>
+          <div class="manual-field">
+            <label>Min. minuten/dag</label>
+            <input type="number" id="goalStreakMinMinutes" placeholder="1" inputmode="numeric" value="1">
+          </div>
+        </div>
+        <div class="manual-field">
+          <label>Vaardigheid filter</label>
+          <select id="goalStreakSkillFilter">
+            <option value="">Alle vaardigheden</option>
+            <option value="listening">Luisteren</option>
+            <option value="reading">Lezen</option>
+            <option value="writing">Schrijven</option>
+            <option value="grammar">Grammatica</option>
+          </select>
+        </div>
+        <div class="manual-field">
+          <label style="display:flex;align-items:center;gap:8px">
+            <span>Passief luisteren meetellen</span>
+          </label>
+          <button class="toggle on" id="goalStreakPassiveToggle" onclick="this.classList.toggle('on')"></button>
+        </div>
+      </div>
+
+      <!-- Deadline -->
+      <div class="manual-field">
+        <label>Deadline (optioneel)</label>
+        <input type="date" id="goalDeadline">
+      </div>
+
+      <!-- Milestones -->
+      <div class="manual-field">
+        <label style="display:flex;justify-content:space-between;align-items:center">
+          <span>Mijlpalen</span>
+          <button onclick="addMilestoneField()" style="background:var(--bg3);border:1px solid var(--bg4);border-radius:6px;padding:4px 10px;color:var(--text2);font-size:11px;cursor:pointer">+ Toevoegen</button>
+        </label>
+        <div id="milestonesContainer"></div>
+      </div>
+
+      <!-- Color/Icon -->
+      <div class="manual-row">
+        <div class="manual-field">
+          <label>Kleur</label>
+          <div class="tag-pills" id="goalColorPicker">
+            <span class="tag-pill selected" data-color="--amber" onclick="pickGoalColor(this)" style="background:var(--amber-glow);border-color:var(--amber);color:var(--amber)">Amber</span>
+            <span class="tag-pill" data-color="--teal" onclick="pickGoalColor(this)" style="color:var(--teal)">Teal</span>
+            <span class="tag-pill" data-color="--blue" onclick="pickGoalColor(this)" style="color:var(--blue)">Blauw</span>
+            <span class="tag-pill" data-color="--purple" onclick="pickGoalColor(this)" style="color:var(--purple)">Paars</span>
+            <span class="tag-pill" data-color="--red" onclick="pickGoalColor(this)" style="color:var(--red)">Rood</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-btns" style="margin-top:8px">
+        <button class="modal-btn cancel" onclick="closeGoalModal()">Annuleer</button>
+        <button class="modal-btn confirm" onclick="saveGoal()">Opslaan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Goal Progress Update Modal -->
+<div class="modal-overlay" id="goalProgressModal">
+  <div class="modal">
+    <h3 id="goalProgressTitle">Voortgang bijwerken</h3>
+    <input type="hidden" id="goalProgressGoalId">
+    <input type="hidden" id="goalProgressMetricId">
+    <div class="manual-form">
+      <div class="manual-row">
+        <div class="manual-field">
+          <label>Datum</label>
+          <input type="date" id="goalProgressDate">
+        </div>
+        <div class="manual-field">
+          <label id="goalProgressLabel">Waarde</label>
+          <input type="number" id="goalProgressValue" placeholder="0" inputmode="numeric">
+        </div>
+      </div>
+      <div class="modal-btns">
+        <button class="modal-btn cancel" onclick="closeGoalProgressModal()">Annuleer</button>
+        <button class="modal-btn confirm" onclick="saveGoalProgress()">Opslaan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -1303,7 +1691,7 @@ body {
 // DATABASE (IndexedDB)
 // ══════════════════════════════════════════════════
 const DB_NAME = 'DutchTrackerDB';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 let db;
 
 function openDB() {
@@ -1316,15 +1704,32 @@ function openDB() {
         const s = d.createObjectStore('logs', { keyPath: 'id', autoIncrement: true });
         s.createIndex('date', 'date');
         s.createIndex('skill', 'skill');
-        const v = d.createObjectStore('vocab', { keyPath: 'id', autoIncrement: true });
-        v.createIndex('date', 'date');
-        const a = d.createObjectStore('anki', { keyPath: 'id', autoIncrement: true });
-        a.createIndex('date', 'date');
         d.createObjectStore('settings', { keyPath: 'key' });
       }
       if (oldV < 2) {
-        const logsStore = e.target.transaction.objectStore('logs');
-        logsStore.createIndex('tags', 'tags', { multiEntry: true });
+        try {
+          const logsStore = e.target.transaction.objectStore('logs');
+          logsStore.createIndex('tags', 'tags', { multiEntry: true });
+        } catch(err) {}
+      }
+      if (oldV < 3) {
+        // Create goals store
+        const goalsStore = d.createObjectStore('goals', { keyPath: 'id' });
+        goalsStore.createIndex('status', 'status');
+        // Create goal_progress store for manual metric tracking
+        const progressStore = d.createObjectStore('goal_progress', { keyPath: 'id' });
+        progressStore.createIndex('goalId', 'goalId');
+        progressStore.createIndex('date', 'date');
+        // Delete old vocab store if it exists
+        if (d.objectStoreNames.contains('vocab')) {
+          d.deleteObjectStore('vocab');
+        }
+        // Recreate anki store with better schema
+        if (d.objectStoreNames.contains('anki')) {
+          d.deleteObjectStore('anki');
+        }
+        const ankiStore = d.createObjectStore('anki', { keyPath: 'id', autoIncrement: true });
+        ankiStore.createIndex('date', 'date');
       }
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
@@ -1382,18 +1787,27 @@ function dbClear(store) {
 // HELPERS
 // ══════════════════════════════════════════════════
 const today = () => new Date().toISOString().split('T')[0];
+const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 const SKILL_COLORS = {
   listening: { color: 'var(--teal)', bg: 'var(--teal-dim)', label: 'Luisteren', icon: '🎧' },
   reading:   { color: 'var(--blue)', bg: 'var(--blue-dim)', label: 'Lezen', icon: '📖' },
   writing:   { color: 'var(--purple)', bg: 'var(--purple-dim)', label: 'Schrijven', icon: '✍️' },
   grammar:   { color: 'var(--amber)', bg: 'var(--amber-glow)', label: 'Grammatica', icon: '📐' }
 };
+const GOAL_COLORS = {
+  '--amber': { color: 'var(--amber)', fill: 'var(--amber-glow)' },
+  '--teal': { color: 'var(--teal)', fill: 'var(--teal-dim)' },
+  '--blue': { color: 'var(--blue)', fill: 'var(--blue-dim)' },
+  '--purple': { color: 'var(--purple)', fill: 'var(--purple-dim)' },
+  '--red': { color: 'var(--red)', fill: 'var(--red-dim)' }
+};
 const EXAM_DATE = new Date('2026-05-10T00:00:00');
 let hourGoal = 2;
-let vocabGoal = 50;
 let lastAction = null;
 let currentPeriod = 'week';
-let totalHourGoal = 500;
+let statsTagFilter = null;
+let isPassive = false;
+let isTimerPassive = false;
 
 function daysUntilExam() {
   const now = new Date();
@@ -1442,11 +1856,11 @@ function switchTab(name, btn) {
 // ══════════════════════════════════════════════════
 // QUICK LOG
 // ══════════════════════════════════════════════════
-async function quickLog(skill, minutes) {
-  const entry = { date: today(), skill, minutes, tags: [], notes: '', timestamp: Date.now() };
+async function quickLog(skill, minutes, passive) {
+  const entry = { date: today(), skill, minutes, tags: [], notes: '', passive: !!passive, timestamp: Date.now() };
   const id = await dbPut('logs', entry);
   const s = SKILL_COLORS[skill];
-  showToast(`${s.icon} +${minutes} min ${s.label}`);
+  showToast(`${s.icon} +${minutes} min ${s.label}${passive ? ' (passief)' : ''}`);
   showUndo(`${s.icon} +${minutes}min`, () => dbDelete('logs', id));
   refreshAll();
 }
@@ -1507,7 +1921,11 @@ function timerStop() {
 function timerSave() {
   const mins = Math.max(1, Math.round(timerSeconds / 60));
   const skill = document.getElementById('timerSkill').value;
-  quickLog(skill, mins);
+  const passive = skill === 'listening' && isTimerPassive;
+  quickLog(skill, mins, passive);
+  isTimerPassive = false;
+  const tp = document.getElementById('timerPassiveToggle');
+  if (tp) tp.classList.remove('on');
   timerReset();
 }
 
@@ -1582,36 +2000,117 @@ async function saveManualEntry() {
   const date = document.getElementById('manualDate').value;
   const skill = document.getElementById('manualSkill').value;
   const minutes = parseInt(document.getElementById('manualMinutes').value) || 0;
-  const vocabCount = parseInt(document.getElementById('manualVocab').value) || 0;
   const notes = document.getElementById('manualNotes').value.trim();
   const tags = getSelectedTags();
 
   if (!date) { showToast('Kies een datum!'); return; }
-  if (minutes === 0 && vocabCount === 0) { showToast('Vul minuten of woorden in!'); return; }
+  if (minutes === 0) { showToast('Vul minuten in!'); return; }
 
-  const ids = [];
-  if (minutes > 0) {
-    const entry = { date, skill, minutes, tags, notes, timestamp: Date.now() };
-    const id = await dbPut('logs', entry);
-    ids.push({ store: 'logs', id });
-  }
-  if (vocabCount > 0) {
-    const entry = { date, count: vocabCount, timestamp: Date.now() };
-    const id = await dbPut('vocab', entry);
-    ids.push({ store: 'vocab', id });
-  }
+  const passive = skill === 'listening' && isPassive;
+  const entry = { date, skill, minutes, tags, notes, passive, timestamp: Date.now() };
+  const id = await dbPut('logs', entry);
 
   const s = SKILL_COLORS[skill];
   showToast(`${s.icon} Sessie opgeslagen`);
-  showUndo('Handmatige invoer', async () => {
-    for (const { store, id } of ids) await dbDelete(store, id);
-  });
+  showUndo('Handmatige invoer', () => dbDelete('logs', id));
 
   // Reset form
   document.getElementById('manualMinutes').value = '';
-  document.getElementById('manualVocab').value = '';
   document.getElementById('manualNotes').value = '';
   document.querySelectorAll('#manualTags .tag-pill').forEach(p => p.classList.remove('selected'));
+  isPassive = false;
+  const pt = document.getElementById('passiveToggle');
+  if (pt) pt.classList.remove('on');
+  refreshAll();
+}
+
+// ── Passive Listening Toggle ──
+function togglePassive() {
+  isPassive = !isPassive;
+  document.getElementById('passiveToggle').classList.toggle('on', isPassive);
+}
+function toggleTimerPassive() {
+  isTimerPassive = !isTimerPassive;
+  document.getElementById('timerPassiveToggle').classList.toggle('on', isTimerPassive);
+}
+function onSkillChange() {
+  const skill = document.getElementById('manualSkill').value;
+  document.getElementById('passiveToggleWrap').style.display = skill === 'listening' ? '' : 'none';
+  if (skill !== 'listening') { isPassive = false; document.getElementById('passiveToggle').classList.remove('on'); }
+}
+function onTimerSkillChange() {
+  const skill = document.getElementById('timerSkill').value;
+  document.getElementById('timerPassiveWrap').style.display = skill === 'listening' ? '' : 'none';
+  if (skill !== 'listening') { isTimerPassive = false; document.getElementById('timerPassiveToggle').classList.remove('on'); }
+}
+function onEditSkillChange() {
+  const skill = document.getElementById('editSkill').value;
+  document.getElementById('editPassiveWrap').style.display = skill === 'listening' ? '' : 'none';
+}
+
+// ── Anki Log ──
+async function saveAnkiEntry() {
+  const date = document.getElementById('ankiDate').value;
+  const cards = parseInt(document.getElementById('ankiCards').value) || 0;
+  if (!date) { showToast('Kies een datum!'); return; }
+  if (cards === 0) { showToast('Vul kaarten in!'); return; }
+  const entry = { date, cards, timestamp: Date.now() };
+  const id = await dbPut('anki', entry);
+  showToast('Anki kaarten opgeslagen!');
+  showUndo('Anki invoer', () => dbDelete('anki', id));
+  document.getElementById('ankiCards').value = '';
+  refreshAll();
+}
+
+// ── Edit Entry ──
+let editingEntryId = null;
+let editPassiveState = false;
+
+async function editEntry(id) {
+  const entry = await dbGet('logs', id);
+  if (!entry) { showToast('Item niet gevonden'); return; }
+  editingEntryId = id;
+  document.getElementById('editEntryId').value = id;
+  document.getElementById('editDate').value = entry.date;
+  document.getElementById('editSkill').value = entry.skill;
+  document.getElementById('editMinutes').value = entry.minutes;
+  document.getElementById('editNotes').value = entry.notes || '';
+  editPassiveState = !!entry.passive;
+  document.getElementById('editPassiveToggle').classList.toggle('on', editPassiveState);
+  document.getElementById('editPassiveWrap').style.display = entry.skill === 'listening' ? '' : 'none';
+  // Set tags
+  document.querySelectorAll('#editTags .tag-pill').forEach(p => {
+    p.classList.toggle('selected', (entry.tags || []).includes(p.dataset.tag));
+  });
+  document.getElementById('editModal').classList.add('show');
+}
+
+function toggleEditPassive() {
+  editPassiveState = !editPassiveState;
+  document.getElementById('editPassiveToggle').classList.toggle('on', editPassiveState);
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').classList.remove('show');
+  editingEntryId = null;
+}
+
+async function saveEdit() {
+  const id = editingEntryId;
+  if (!id) return;
+  const oldEntry = await dbGet('logs', id);
+  const date = document.getElementById('editDate').value;
+  const skill = document.getElementById('editSkill').value;
+  const minutes = parseInt(document.getElementById('editMinutes').value) || 0;
+  const notes = document.getElementById('editNotes').value.trim();
+  const tags = [...document.querySelectorAll('#editTags .tag-pill.selected')].map(el => el.dataset.tag);
+  const passive = skill === 'listening' && editPassiveState;
+  if (!date || minutes === 0) { showToast('Vul datum en minuten in!'); return; }
+  const updated = { ...oldEntry, date, skill, minutes, notes, tags, passive, timestamp: Date.now() };
+  await dbPut('logs', updated);
+  showToast('Bijgewerkt!');
+  showUndo('Bewerking ongedaan', () => dbPut('logs', oldEntry));
+  closeEditModal();
   refreshAll();
 }
 
@@ -1635,27 +2134,15 @@ async function refreshDashboard() {
   const totalHours = allTotalMin / 60;
   document.getElementById('totalStudyHours').textContent = totalHours.toFixed(2);
 
-  // B1 Goal progress
-  const b1Pct = Math.min(100, (totalHours / totalHourGoal) * 100);
-  document.getElementById('b1GoalCurrent').textContent = Math.floor(totalHours);
-  document.getElementById('b1GoalTarget').textContent = totalHourGoal;
-  document.getElementById('b1ProgressFill').style.width = b1Pct + '%';
-  document.getElementById('b1GoalPct').textContent = Math.round(b1Pct) + '%';
-  const remaining = Math.max(0, totalHourGoal - totalHours);
-  document.getElementById('b1GoalRemaining').textContent =
-    remaining > 0 ? Math.ceil(remaining) + ' uur te gaan' : 'Doel bereikt! 🎉';
-  let b1Color;
-  if (b1Pct < 25) b1Color = 'var(--red)';
-  else if (b1Pct < 50) b1Color = 'var(--amber)';
-  else if (b1Pct < 75) b1Color = 'var(--blue)';
-  else b1Color = 'var(--teal)';
-  document.getElementById('b1ProgressFill').style.background = b1Color;
-  document.getElementById('b1GoalPct').style.color = b1Color;
+  // Anki today
+  try {
+    const ankiEntries = await dbGetAll('anki');
+    const todayAnki = ankiEntries.filter(a => a.date === d).reduce((s, a) => s + (a.cards || 0), 0);
+    document.getElementById('todayAnki').textContent = todayAnki;
+  } catch(e) { document.getElementById('todayAnki').textContent = '0'; }
 
-  // Vocab
-  const vocabs = await dbGetAll('vocab');
-  const todayVocab = vocabs.filter(v => v.date === d).reduce((s, v) => s + v.count, 0);
-  document.getElementById('todayVocab').textContent = todayVocab;
+  // Goals
+  await renderGoals(logs);
 
   // Streak
   const streak = calcStreak(logs);
@@ -1724,16 +2211,19 @@ function renderSkillBars(containerId, logs, maxMin, showTotal) {
     totalAll += mins[s];
   });
 
-  const maxVal = maxMin || Math.max(totalAll, 1);
+  // Listening sub-breakdown
+  const listenActive = logs.filter(l => l.skill === 'listening' && !l.passive).reduce((s, l) => s + l.minutes, 0);
+  const listenPassive = logs.filter(l => l.skill === 'listening' && l.passive).reduce((s, l) => s + l.minutes, 0);
 
-  container.innerHTML = skills.map(s => {
+  const maxVal = maxMin || Math.max(totalAll, 1);
+  let html = '';
+
+  skills.forEach(s => {
     const m = mins[s];
     const sc = SKILL_COLORS[s];
     const pct = maxMin ? Math.min(100, (m / maxMin) * 100 * 4) : (totalAll ? (m / totalAll) * 100 : 0);
-    const timeStr = showTotal
-      ? (m >= 60 ? `${(m/60).toFixed(1)}u` : `${m}min`)
-      : `${m}min`;
-    return `
+    const timeStr = showTotal ? (m >= 60 ? `${(m/60).toFixed(1)}u` : `${m}min`) : `${m}min`;
+    html += `
       <div class="skill-bar-wrap">
         <div class="skill-bar-header">
           <div class="skill-bar-name"><span class="dot" style="background:${sc.color}"></span>${sc.label}</div>
@@ -1743,7 +2233,43 @@ function renderSkillBars(containerId, logs, maxMin, showTotal) {
           <div class="skill-bar-fill" style="width:${Math.max(pct, m > 0 ? 3 : 0)}%;background:${sc.color}"></div>
         </div>
       </div>`;
-  }).join('');
+
+    // Show active/passive breakdown for listening
+    if (s === 'listening' && (listenActive > 0 || listenPassive > 0)) {
+      const aTime = showTotal ? (listenActive >= 60 ? `${(listenActive/60).toFixed(1)}u` : `${listenActive}min`) : `${listenActive}min`;
+      const pTime = showTotal ? (listenPassive >= 60 ? `${(listenPassive/60).toFixed(1)}u` : `${listenPassive}min`) : `${listenPassive}min`;
+      if (listenActive > 0) {
+        const aPct = maxMin ? Math.min(100, (listenActive / maxMin) * 100 * 4) : (totalAll ? (listenActive / totalAll) * 100 : 0);
+        html += `<div class="skill-bar-wrap" style="margin-left:20px;margin-top:-4px">
+          <div class="skill-bar-header">
+            <div class="skill-bar-name" style="font-size:11px;color:var(--text3)">Actief</div>
+            <div class="skill-bar-time" style="font-size:10px">${aTime}</div>
+          </div>
+          <div class="skill-bar-track" style="height:4px">
+            <div class="skill-bar-fill" style="width:${Math.max(aPct, listenActive > 0 ? 3 : 0)}%;background:var(--teal)"></div>
+          </div>
+        </div>`;
+      }
+      if (listenPassive > 0) {
+        const pPct = maxMin ? Math.min(100, (listenPassive / maxMin) * 100 * 4) : (totalAll ? (listenPassive / totalAll) * 100 : 0);
+        html += `<div class="skill-bar-wrap" style="margin-left:20px;margin-top:-4px">
+          <div class="skill-bar-header">
+            <div class="skill-bar-name" style="font-size:11px;color:var(--text3)">Passief</div>
+            <div class="skill-bar-time" style="font-size:10px">${pTime}</div>
+          </div>
+          <div class="skill-bar-track" style="height:4px">
+            <div class="skill-bar-fill" style="width:${Math.max(pPct, listenPassive > 0 ? 3 : 0)}%;background:rgba(45,212,168,0.5)"></div>
+          </div>
+        </div>`;
+      }
+    }
+  });
+
+  // Add total hours
+  if (showTotal && totalAll > 0) {
+    html += `<div class="skill-total">Totaal: ${(totalAll/60).toFixed(1)}u</div>`;
+  }
+  container.innerHTML = html;
 }
 
 function renderWeekGrid(logs) {
@@ -1756,6 +2282,7 @@ function renderWeekGrid(logs) {
 
   const dayNames = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
   let html = '';
+  let weekTotalMins = 0;
 
   for (let i = 0; i < 7; i++) {
     const date = new Date(monday);
@@ -1778,7 +2305,9 @@ function renderWeekGrid(logs) {
         <span class="day-name">${dayNames[i]}</span>
         <span class="day-hours">${isFuture ? '–' : hours}</span>
       </div>`;
+    if (!isFuture) weekTotalMins += dayMins;
   }
+  html += `<div class="week-total">Totaal: ${(weekTotalMins / 60).toFixed(1)}u</div>`;
   grid.innerHTML = html;
 }
 
@@ -1793,8 +2322,21 @@ function setPeriod(p, btn) {
 }
 
 async function refreshStats() {
-  const logs = await dbGetAll('logs');
-  const vocabs = await dbGetAll('vocab');
+  const allLogs = await dbGetAll('logs');
+
+  // Build tag filter pills
+  const allTags = [...new Set(allLogs.flatMap(l => l.tags || []))].sort();
+  const filterContainer = document.getElementById('statsTagFilter');
+  let filterHtml = '<span class="tag-pill' + (!statsTagFilter ? ' selected' : '') + '" onclick="setStatsTagFilter(null, this)">Alles</span>';
+  allTags.forEach(tag => {
+    filterHtml += '<span class="tag-pill' + (statsTagFilter === tag ? ' selected' : '') + '" data-tag="' + tag + '" onclick="setStatsTagFilter(\'' + tag + '\', this)">' + tag.charAt(0).toUpperCase() + tag.slice(1) + '</span>';
+  });
+  filterContainer.innerHTML = filterHtml;
+
+  // Apply tag filter
+  const logs = statsTagFilter
+    ? allLogs.filter(l => (l.tags || []).includes(statsTagFilter))
+    : allLogs;
 
   const now = new Date();
   let startDate;
@@ -1808,7 +2350,6 @@ async function refreshStats() {
   }
   startDate.setHours(0,0,0,0);
 
-  // Build date range
   const dates = [];
   const d = new Date(startDate);
   const endDate = new Date(now);
@@ -1824,24 +2365,100 @@ async function refreshStats() {
     return mins / 60;
   });
 
-  // Vocab per day
-  const vocabData = dates.map(dt => {
-    return vocabs.filter(v => v.date === dt).reduce((s, v) => s + v.count, 0);
-  });
-
   // Skill distribution
   const skillTotals = {};
   ['listening', 'reading', 'writing', 'grammar'].forEach(s => {
-    const filtered = logs.filter(l => {
-      return l.date >= dates[0] && l.date <= dates[dates.length - 1] && l.skill === s;
-    });
+    const filtered = logs.filter(l => l.date >= dates[0] && l.date <= dates[dates.length - 1] && l.skill === s);
     skillTotals[s] = filtered.reduce((sum, l) => sum + l.minutes, 0);
   });
 
+  // Tag distribution
+  const tagTotals = {};
+  const periodLogs = logs.filter(l => dates.length > 0 && l.date >= dates[0] && l.date <= dates[dates.length - 1]);
+  periodLogs.forEach(l => {
+    (l.tags || []).forEach(tag => { tagTotals[tag] = (tagTotals[tag] || 0) + l.minutes; });
+  });
+
   drawBarChart('hoursChart', dates, hoursData, 'var(--amber)', hourGoal);
-  drawBarChart('vocabChart', dates, vocabData, 'var(--teal)');
   drawDonutChart('skillChart', skillTotals);
-  renderHistory(dates, logs, vocabs);
+  drawTagChart(tagTotals);
+  renderHistory(dates, logs);
+}
+
+function setStatsTagFilter(tag, el) {
+  statsTagFilter = tag;
+  document.querySelectorAll('#statsTagFilter .tag-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  refreshStats();
+}
+
+function drawTagChart(tagTotals) {
+  const canvas = document.getElementById('tagChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+
+  const w = rect.width;
+  const h = rect.height;
+  ctx.clearRect(0, 0, w, h);
+
+  const tags = Object.keys(tagTotals).sort((a, b) => tagTotals[b] - tagTotals[a]);
+  if (tags.length === 0) {
+    const style = getComputedStyle(document.documentElement);
+    ctx.fillStyle = style.getPropertyValue('--text3').trim();
+    ctx.font = '13px DM Sans, system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('Geen tags', w / 2, h / 2);
+    return;
+  }
+
+  const style = getComputedStyle(document.documentElement);
+  const pad = { top: 10, right: 10, bottom: 28, left: 80 };
+  const chartW = w - pad.left - pad.right;
+  const chartH = h - pad.top - pad.bottom;
+  const barH = Math.min(chartH / tags.length * 0.7, 24);
+  const gap = chartH / tags.length;
+  const maxVal = Math.max(...Object.values(tagTotals), 1);
+  const barColor = style.getPropertyValue('--purple').trim();
+  const textColor = style.getPropertyValue('--text2').trim();
+
+  tags.forEach((tag, i) => {
+    const mins = tagTotals[tag];
+    const barW = (mins / maxVal) * chartW;
+    const y = pad.top + i * gap + (gap - barH) / 2;
+    ctx.fillStyle = barColor;
+    ctx.globalAlpha = 0.8;
+    ctx.beginPath();
+    const r = 3;
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(pad.left + barW - r, y);
+    ctx.quadraticCurveTo(pad.left + barW, y, pad.left + barW, y + r);
+    ctx.lineTo(pad.left + barW, y + barH - r);
+    ctx.quadraticCurveTo(pad.left + barW, y + barH, pad.left + barW - r, y + barH);
+    ctx.lineTo(pad.left, y + barH);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Tag label
+    ctx.fillStyle = textColor;
+    ctx.font = '11px DM Sans, system-ui';
+    ctx.textAlign = 'right';
+    ctx.fillText(tag.charAt(0).toUpperCase() + tag.slice(1), pad.left - 6, y + barH / 2 + 4);
+
+    // Value
+    ctx.fillStyle = textColor;
+    ctx.font = '10px JetBrains Mono, monospace';
+    ctx.textAlign = 'left';
+    const timeStr = mins >= 60 ? (mins / 60).toFixed(1) + 'u' : mins + 'min';
+    ctx.fillText(timeStr, pad.left + barW + 6, y + barH / 2 + 4);
+  });
 }
 
 function drawBarChart(canvasId, labels, data, color, goalLine) {
@@ -2018,40 +2635,33 @@ function drawDonutChart(canvasId, skillTotals) {
   });
 }
 
-function renderHistory(dates, logs, vocabs) {
+function renderHistory(dates, logs) {
   const container = document.getElementById('historyList');
   const reversed = [...dates].reverse().slice(0, 30);
   let html = '';
   for (const dt of reversed) {
     const dayLogs = logs.filter(l => l.date === dt);
-    const dayVocabs = vocabs.filter(v => v.date === dt);
-    if (dayLogs.length === 0 && dayVocabs.length === 0) continue;
+    if (dayLogs.length === 0) continue;
     const dateObj = new Date(dt);
     const label = dt === today() ? 'Vandaag' :
       dateObj.toLocaleDateString('nl-BE', { weekday: 'short', day: 'numeric', month: 'short' });
     const dayMins = dayLogs.reduce((s, l) => s + l.minutes, 0);
-    const dayWords = dayVocabs.reduce((s, v) => s + v.count, 0);
-    html += '<div class="history-day-header">' + label + ' — ' + (dayMins/60).toFixed(1) + 'u, ' + dayWords + ' w.</div>';
+    html += '<div class="history-day-header">' + label + ' — ' + (dayMins/60).toFixed(1) + 'u</div>';
     for (const log of dayLogs) {
       const sc = SKILL_COLORS[log.skill];
+      const passiveLabel = log.passive ? ' (passief)' : '';
       const meta = (log.tags && log.tags.length ? log.tags.join(', ') : '') +
         (log.notes ? (log.tags && log.tags.length ? ' · ' : '') + log.notes : '');
       html += '<div class="history-entry">' +
         '<div class="history-entry-info">' +
-          '<div class="history-entry-skill">' + sc.icon + ' ' + sc.label + '</div>' +
+          '<div class="history-entry-skill">' + sc.icon + ' ' + sc.label + passiveLabel + '</div>' +
           (meta ? '<div class="history-entry-meta">' + meta + '</div>' : '') +
         '</div>' +
         '<div class="history-entry-time">' + log.minutes + 'min</div>' +
-        '<button class="history-delete-btn" onclick="deleteEntry(\'logs\',' + log.id + ')" title="Verwijderen">🗑</button>' +
-      '</div>';
-    }
-    for (const v of dayVocabs) {
-      html += '<div class="history-entry">' +
-        '<div class="history-entry-info">' +
-          '<div class="history-entry-skill">📝 Woorden</div>' +
+        '<div style="display:flex;gap:2px">' +
+          '<button class="history-delete-btn" onclick="editEntry(' + log.id + ')" title="Bewerken">✏️</button>' +
+          '<button class="history-delete-btn" onclick="deleteEntry(\'logs\',' + log.id + ')" title="Verwijderen">🗑</button>' +
         '</div>' +
-        '<div class="history-entry-time">' + v.count + 'w</div>' +
-        '<button class="history-delete-btn" onclick="deleteEntry(\'vocab\',' + v.id + ')" title="Verwijderen">🗑</button>' +
       '</div>';
     }
   }
@@ -2065,6 +2675,432 @@ async function deleteEntry(store, id) {
   showToast('Verwijderd');
   showUndo('Item verwijderd', () => dbPut(store, entry));
   refreshAll();
+}
+
+// ══════════════════════════════════════════════════
+// GOALS SYSTEM
+// ══════════════════════════════════════════════════
+
+function getWeekStart() {
+  const d = new Date(today());
+  const dow = d.getDay();
+  d.setDate(d.getDate() - ((dow + 6) % 7));
+  return d.toISOString().split('T')[0];
+}
+
+async function computeGoalProgress(goal, logs, ankiEntries, progressEntries) {
+  const results = [];
+  for (const metric of goal.metrics) {
+    let current = 0;
+    if (metric.source === 'auto_hours') {
+      let filtered = logs;
+      if (metric.skillFilter) filtered = filtered.filter(l => l.skill === metric.skillFilter);
+      if (metric.passiveFilter === 'active_only') filtered = filtered.filter(l => !l.passive);
+      else if (metric.passiveFilter === 'passive_only') filtered = filtered.filter(l => l.passive === true);
+      if (goal.type === 'recurring') {
+        if (metric.recurrence === 'daily') filtered = filtered.filter(l => l.date === today());
+        else if (metric.recurrence === 'weekly') {
+          const ws = getWeekStart();
+          filtered = filtered.filter(l => l.date >= ws);
+        }
+        current = filtered.reduce((s, l) => s + l.minutes, 0);
+      } else {
+        current = filtered.reduce((s, l) => s + l.minutes, 0) / 60;
+      }
+    } else if (metric.source === 'auto_anki') {
+      if (goal.type === 'recurring' && metric.recurrence === 'daily') {
+        current = ankiEntries.filter(a => a.date === today()).reduce((s, a) => s + (a.cards || 0), 0);
+      } else if (goal.type === 'recurring' && metric.recurrence === 'weekly') {
+        const ws = getWeekStart();
+        current = ankiEntries.filter(a => a.date >= ws).reduce((s, a) => s + (a.cards || 0), 0);
+      } else {
+        current = ankiEntries.reduce((s, a) => s + (a.cards || 0), 0);
+      }
+    } else if (metric.source === 'manual') {
+      const mine = progressEntries.filter(p => p.goalId === goal.id && p.metricId === metric.id);
+      if (goal.type === 'recurring') {
+        if (metric.recurrence === 'daily') {
+          current = mine.filter(p => p.date === today()).reduce((s, p) => s + p.value, 0);
+        } else if (metric.recurrence === 'weekly') {
+          const ws = getWeekStart();
+          current = mine.filter(p => p.date >= ws).reduce((s, p) => s + p.value, 0);
+        }
+      } else {
+        current = mine.reduce((s, p) => s + p.value, 0);
+      }
+    }
+    const target = goal.type === 'recurring' ? (metric.recurringTarget || metric.target) : metric.target;
+    results.push({ metricId: metric.id, label: metric.label, unit: metric.unit, current, target, pct: target > 0 ? Math.min(100, (current / target) * 100) : 0 });
+  }
+  return results;
+}
+
+function computeGoalStreak(goal, logs) {
+  const config = goal.streakConfig;
+  if (!config) return 0;
+  let filtered = logs;
+  if (config.skillFilter) filtered = filtered.filter(l => l.skill === config.skillFilter);
+  if (!config.includePassive) filtered = filtered.filter(l => !l.passive);
+  const dateMinutes = {};
+  filtered.forEach(l => { dateMinutes[l.date] = (dateMinutes[l.date] || 0) + l.minutes; });
+  let streak = 0;
+  let checkDate = new Date(today());
+  if (!dateMinutes[today()] || dateMinutes[today()] < config.minimumMinutes) {
+    checkDate.setDate(checkDate.getDate() - 1);
+  }
+  for (let i = 0; i < 1000; i++) {
+    const ds = checkDate.toISOString().split('T')[0];
+    if (dateMinutes[ds] && dateMinutes[ds] >= config.minimumMinutes) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else break;
+  }
+  return streak;
+}
+
+function computeDailyPace(goal, metricResult) {
+  if (!goal.deadline) return null;
+  const remaining = metricResult.target - metricResult.current;
+  if (remaining <= 0) return { needed: 0, unit: metricResult.unit, daysLeft: 0 };
+  const deadlineDate = new Date(goal.deadline);
+  const now = new Date(); now.setHours(0,0,0,0);
+  const daysLeft = Math.max(1, Math.ceil((deadlineDate - now) / 86400000));
+  return { needed: (remaining / daysLeft).toFixed(1), unit: metricResult.unit, daysLeft };
+}
+
+async function renderGoals(logs) {
+  const container = document.getElementById('goalsSection');
+  let goals = [];
+  try { goals = await dbGetAll('goals'); } catch(e) {}
+  const activeGoals = goals.filter(g => g.status === 'active' && g.pinToDashboard).sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+  if (activeGoals.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  let ankiEntries = [];
+  let progressEntries = [];
+  try { ankiEntries = await dbGetAll('anki'); } catch(e) {}
+  try { progressEntries = await dbGetAll('goal_progress'); } catch(e) {}
+
+  let html = '';
+  for (const goal of activeGoals) {
+    const style = getComputedStyle(document.documentElement);
+    const colorVar = goal.color || '--amber';
+    const colorVal = style.getPropertyValue(colorVar).trim() || '#e8a020';
+
+    html += `<div class="goal-card-new" style="border-color:${colorVal}20">`;
+    html += `<div class="goal-card-header">
+      <div class="goal-card-name" style="color:${colorVal}">${goal.icon || '🎯'} ${goal.name}</div>
+      <div class="goal-card-actions">`;
+
+    // Show + button for manual metrics
+    const hasManual = goal.metrics && goal.metrics.some(m => m.source === 'manual');
+    if (hasManual) {
+      const manualMetric = goal.metrics.find(m => m.source === 'manual');
+      html += `<button onclick="openGoalProgressModal('${goal.id}','${manualMetric.id}','${manualMetric.label}')" title="Voortgang bijwerken">+</button>`;
+    }
+    html += `<button onclick="openGoalModal('${goal.id}')" title="Bewerken">✏️</button>`;
+    html += `<button onclick="archiveGoal('${goal.id}')" title="Archiveren">📦</button>`;
+    html += `</div></div>`;
+
+    if (goal.type === 'streak') {
+      const streak = computeGoalStreak(goal, logs);
+      const target = goal.streakConfig ? (goal.metrics[0]?.target || 30) : 30;
+      html += `<div class="goal-streak-display">
+        <div class="goal-streak-number" style="color:${colorVal}">${streak}</div>
+        <div class="goal-streak-label">dagen streak${target ? ` / ${target} doel` : ''}</div>
+      </div>`;
+      const pct = target > 0 ? Math.min(100, (streak / target) * 100) : 0;
+      html += `<div class="goal-progress-track"><div class="goal-progress-fill" style="width:${pct}%;background:${colorVal}"></div></div>`;
+    } else {
+      const progress = await computeGoalProgress(goal, logs, ankiEntries, progressEntries);
+      for (const p of progress) {
+        const curStr = goal.type === 'recurring' && p.unit === 'min' ? `${Math.round(p.current)}` : (Number.isInteger(p.current) ? p.current : p.current.toFixed(1));
+        const tarStr = goal.type === 'recurring' && p.unit === 'min' ? `${p.target}` : (Number.isInteger(p.target) ? p.target : p.target);
+        html += `<div class="goal-metric">
+          <div class="goal-metric-header">
+            <span class="goal-metric-label">${p.label}</span>
+            <span class="goal-metric-value" style="color:${colorVal}">${curStr} / ${tarStr} ${p.unit}</span>
+          </div>
+          <div class="goal-progress-track"><div class="goal-progress-fill" style="width:${p.pct}%;background:${colorVal}"></div></div>
+        </div>`;
+
+        // Daily pace
+        if (goal.type === 'total' && goal.deadline) {
+          const pace = computeDailyPace(goal, p);
+          if (pace && pace.needed > 0) {
+            html += `<div class="goal-pace">${pace.needed} ${p.unit}/dag nodig (${pace.daysLeft} dagen over)</div>`;
+          } else if (pace && pace.needed <= 0) {
+            html += `<div class="goal-pace" style="color:var(--teal)">Doel bereikt!</div>`;
+          }
+        }
+      }
+
+      // Milestones
+      if (goal.milestones && goal.milestones.length > 0) {
+        const mainProgress = progress[0];
+        for (const ms of goal.milestones) {
+          const reached = mainProgress && mainProgress.current >= ms.targetValue;
+          html += `<div class="goal-milestone ${reached ? 'reached' : ''}">
+            ${reached ? '✅' : '⬜'} ${ms.label}${ms.deadline ? ' — ' + ms.deadline : ''}
+          </div>`;
+        }
+      }
+    }
+    html += `</div>`;
+  }
+  container.innerHTML = html;
+}
+
+// ── Goal Modal ──
+async function openGoalModal(editId) {
+  document.getElementById('goalModalTitle').textContent = editId ? 'Doel bewerken' : 'Nieuw doel';
+  document.getElementById('goalEditId').value = editId || '';
+  document.getElementById('milestonesContainer').innerHTML = '';
+
+  if (editId) {
+    const goal = await dbGet('goals', editId);
+    if (!goal) return;
+    document.getElementById('goalName').value = goal.name;
+    document.getElementById('goalType').value = goal.type;
+    document.getElementById('goalDeadline').value = goal.deadline || '';
+    onGoalTypeChange();
+
+    if (goal.type === 'total' && goal.metrics && goal.metrics[0]) {
+      const m = goal.metrics[0];
+      document.getElementById('goalTarget').value = m.target;
+      document.getElementById('goalUnit').value = m.unit || 'uur';
+      document.getElementById('goalSource').value = m.source;
+      document.getElementById('goalSkillFilter').value = m.skillFilter || '';
+    } else if (goal.type === 'recurring' && goal.metrics && goal.metrics[0]) {
+      const m = goal.metrics[0];
+      document.getElementById('goalRecurringTarget').value = m.recurringTarget || m.target;
+      document.getElementById('goalRecurrence').value = m.recurrence || 'daily';
+      document.getElementById('goalRecurringUnit').value = m.unit || 'min';
+      document.getElementById('goalRecurringSource').value = m.source;
+      document.getElementById('goalRecurringSkillFilter').value = m.skillFilter || '';
+    } else if (goal.type === 'streak') {
+      document.getElementById('goalStreakTarget').value = goal.metrics[0]?.target || 30;
+      document.getElementById('goalStreakMinMinutes').value = goal.streakConfig?.minimumMinutes || 1;
+      document.getElementById('goalStreakSkillFilter').value = goal.streakConfig?.skillFilter || '';
+      document.getElementById('goalStreakPassiveToggle').classList.toggle('on', goal.streakConfig?.includePassive !== false);
+    }
+
+    // Color
+    document.querySelectorAll('#goalColorPicker .tag-pill').forEach(p => {
+      p.classList.toggle('selected', p.dataset.color === goal.color);
+      if (p.dataset.color === goal.color) {
+        p.style.background = `var(${goal.color.replace('--', '--') + (goal.color.includes('amber') ? '-glow' : '-dim')})`;
+        p.style.borderColor = `var(${goal.color})`;
+      }
+    });
+
+    // Milestones
+    if (goal.milestones) {
+      goal.milestones.forEach(ms => addMilestoneField(ms.label, ms.targetValue, ms.deadline));
+    }
+  } else {
+    document.getElementById('goalName').value = '';
+    document.getElementById('goalType').value = 'total';
+    document.getElementById('goalTarget').value = '';
+    document.getElementById('goalDeadline').value = '';
+    document.getElementById('goalUnit').value = 'uur';
+    document.getElementById('goalSource').value = 'auto_hours';
+    document.getElementById('goalSkillFilter').value = '';
+    onGoalTypeChange();
+  }
+  document.getElementById('goalModal').classList.add('show');
+}
+
+function closeGoalModal() {
+  document.getElementById('goalModal').classList.remove('show');
+}
+
+function onGoalTypeChange() {
+  const type = document.getElementById('goalType').value;
+  document.getElementById('goalTotalFields').style.display = type === 'total' ? '' : 'none';
+  document.getElementById('goalRecurringFields').style.display = type === 'recurring' ? '' : 'none';
+  document.getElementById('goalStreakFields').style.display = type === 'streak' ? '' : 'none';
+}
+
+function addMilestoneField(label, value, deadline) {
+  const container = document.getElementById('milestonesContainer');
+  const div = document.createElement('div');
+  div.className = 'milestone-field';
+  div.innerHTML = `
+    <input type="text" class="ms-label" placeholder="Naam" value="${label || ''}" style="font-family:'DM Sans',system-ui">
+    <input type="number" class="ms-value" placeholder="Waarde" value="${value || ''}" style="width:80px">
+    <input type="date" class="ms-deadline" value="${deadline || ''}" style="width:130px">
+    <button class="milestone-remove" onclick="this.parentElement.remove()">&times;</button>
+  `;
+  container.appendChild(div);
+}
+
+function pickGoalColor(el) {
+  document.querySelectorAll('#goalColorPicker .tag-pill').forEach(p => {
+    p.classList.remove('selected');
+    p.style.background = '';
+    p.style.borderColor = '';
+  });
+  el.classList.add('selected');
+  const color = el.dataset.color;
+  el.style.borderColor = `var(${color})`;
+}
+
+async function saveGoal() {
+  const editId = document.getElementById('goalEditId').value;
+  const name = document.getElementById('goalName').value.trim();
+  const type = document.getElementById('goalType').value;
+  const deadline = document.getElementById('goalDeadline').value || null;
+
+  if (!name) { showToast('Vul een naam in!'); return; }
+
+  const colorEl = document.querySelector('#goalColorPicker .tag-pill.selected');
+  const color = colorEl ? colorEl.dataset.color : '--amber';
+
+  let metrics = [];
+  let streakConfig = null;
+
+  if (type === 'total') {
+    const target = parseFloat(document.getElementById('goalTarget').value) || 0;
+    const unit = document.getElementById('goalUnit').value;
+    const source = document.getElementById('goalSource').value;
+    const skillFilter = document.getElementById('goalSkillFilter').value || null;
+    if (target <= 0) { showToast('Vul een doelwaarde in!'); return; }
+    metrics = [{ id: 'main', label: name, unit, target, source, skillFilter, passiveFilter: 'all', recurrence: null, recurringTarget: null }];
+  } else if (type === 'recurring') {
+    const recurringTarget = parseFloat(document.getElementById('goalRecurringTarget').value) || 0;
+    const recurrence = document.getElementById('goalRecurrence').value;
+    const unit = document.getElementById('goalRecurringUnit').value;
+    const source = document.getElementById('goalRecurringSource').value;
+    const skillFilter = document.getElementById('goalRecurringSkillFilter').value || null;
+    if (recurringTarget <= 0) { showToast('Vul een doelwaarde in!'); return; }
+    metrics = [{ id: 'main', label: name, unit, target: recurringTarget, source, skillFilter, passiveFilter: 'all', recurrence, recurringTarget }];
+  } else if (type === 'streak') {
+    const target = parseInt(document.getElementById('goalStreakTarget').value) || 30;
+    const minimumMinutes = parseInt(document.getElementById('goalStreakMinMinutes').value) || 1;
+    const skillFilter = document.getElementById('goalStreakSkillFilter').value || null;
+    const includePassive = document.getElementById('goalStreakPassiveToggle').classList.contains('on');
+    metrics = [{ id: 'main', label: name, unit: 'dagen', target, source: 'auto_hours', skillFilter, passiveFilter: 'all', recurrence: null, recurringTarget: null }];
+    streakConfig = { minimumMinutes, skillFilter, includePassive };
+  }
+
+  // Milestones
+  const milestones = [...document.querySelectorAll('.milestone-field')].map(div => ({
+    id: genId(),
+    label: div.querySelector('.ms-label').value.trim(),
+    targetValue: parseFloat(div.querySelector('.ms-value').value) || 0,
+    deadline: div.querySelector('.ms-deadline').value || null,
+    reachedAt: null
+  })).filter(ms => ms.label && ms.targetValue > 0);
+
+  const goal = {
+    id: editId || genId(),
+    name,
+    type,
+    status: 'active',
+    createdAt: Date.now(),
+    metrics,
+    deadline,
+    milestones,
+    streakConfig,
+    color,
+    icon: type === 'streak' ? '🔥' : '🎯',
+    pinToDashboard: true,
+    sortOrder: 0
+  };
+
+  if (editId) {
+    const existing = await dbGet('goals', editId);
+    if (existing) {
+      goal.createdAt = existing.createdAt;
+      goal.sortOrder = existing.sortOrder;
+    }
+  }
+
+  await dbPut('goals', goal);
+  showToast(editId ? 'Doel bijgewerkt!' : 'Doel aangemaakt!');
+  closeGoalModal();
+  refreshAll();
+}
+
+async function archiveGoal(id) {
+  if (!confirm('Dit doel archiveren?')) return;
+  const goal = await dbGet('goals', id);
+  if (!goal) return;
+  goal.status = 'archived';
+  await dbPut('goals', goal);
+  showToast('Doel gearchiveerd');
+  showUndo('Doel gearchiveerd', async () => {
+    goal.status = 'active';
+    await dbPut('goals', goal);
+    refreshAll();
+  });
+  refreshAll();
+}
+
+async function deleteGoal(id) {
+  if (!confirm('Dit doel definitief verwijderen?')) return;
+  const goal = await dbGet('goals', id);
+  await dbDelete('goals', id);
+  showToast('Doel verwijderd');
+  showUndo('Doel verwijderd', () => dbPut('goals', goal));
+  refreshAll();
+}
+
+// ── Goal Progress Update ──
+function openGoalProgressModal(goalId, metricId, label) {
+  document.getElementById('goalProgressGoalId').value = goalId;
+  document.getElementById('goalProgressMetricId').value = metricId;
+  document.getElementById('goalProgressLabel').textContent = label;
+  document.getElementById('goalProgressDate').value = today();
+  document.getElementById('goalProgressValue').value = '';
+  document.getElementById('goalProgressTitle').textContent = 'Voortgang: ' + label;
+  document.getElementById('goalProgressModal').classList.add('show');
+}
+
+function closeGoalProgressModal() {
+  document.getElementById('goalProgressModal').classList.remove('show');
+}
+
+async function saveGoalProgress() {
+  const goalId = document.getElementById('goalProgressGoalId').value;
+  const metricId = document.getElementById('goalProgressMetricId').value;
+  const date = document.getElementById('goalProgressDate').value;
+  const value = parseFloat(document.getElementById('goalProgressValue').value) || 0;
+  if (!date || value <= 0) { showToast('Vul datum en waarde in!'); return; }
+  const entry = { id: `${goalId}_${metricId}_${date}_${Date.now()}`, goalId, metricId, date, value, timestamp: Date.now() };
+  await dbPut('goal_progress', entry);
+  showToast('Voortgang opgeslagen!');
+  closeGoalProgressModal();
+  refreshAll();
+}
+
+// ── Default Goal Migration ──
+async function migrateExistingGoals() {
+  try {
+    const migrated = await dbGet('settings', 'goals_migrated_v3');
+    if (migrated) return;
+    const thg = await dbGet('settings', 'totalHourGoal');
+    const targetHours = thg ? thg.value : 500;
+    const defaultGoal = {
+      id: 'b1_exam_legacy',
+      name: 'B1 Examen',
+      type: 'total',
+      status: 'active',
+      createdAt: Date.now(),
+      metrics: [{ id: 'hours', label: 'Studie-uren', unit: 'uur', target: targetHours, source: 'auto_hours', skillFilter: null, passiveFilter: 'all', recurrence: null, recurringTarget: null }],
+      deadline: '2026-05-10',
+      milestones: [],
+      streakConfig: null,
+      color: '--amber',
+      icon: '🎯',
+      pinToDashboard: true,
+      sortOrder: 0
+    };
+    await dbPut('goals', defaultGoal);
+    await dbPut('settings', { key: 'goals_migrated_v3', value: true });
+  } catch(e) { console.log('Goal migration skipped:', e); }
 }
 
 // ══════════════════════════════════════════════════
@@ -2082,10 +3118,6 @@ async function loadSettings() {
     }
     const goal = await dbGet('settings', 'hourGoal');
     if (goal) { hourGoal = goal.value; document.getElementById('goalInput').value = hourGoal; }
-    const vGoal = await dbGet('settings', 'vocabGoal');
-    if (vGoal) { vocabGoal = vGoal.value; document.getElementById('vocabGoalInput').value = vocabGoal; }
-    const thg = await dbGet('settings', 'totalHourGoal');
-    if (thg) { totalHourGoal = thg.value; document.getElementById('b1GoalInput').value = totalHourGoal; }
   } catch(e) {}
 }
 
@@ -2105,23 +3137,14 @@ function updateGoal(val) {
   refreshAll();
 }
 
-function updateVocabGoal(val) {
-  vocabGoal = parseInt(val) || 50;
-  dbPut('settings', { key: 'vocabGoal', value: vocabGoal });
-}
-
-function updateTotalHourGoal(val) {
-  totalHourGoal = parseInt(val) || 500;
-  dbPut('settings', { key: 'totalHourGoal', value: totalHourGoal });
-  refreshAll();
-}
-
 // ── Export / Import / Reset ──
 async function exportData() {
   const logs = await dbGetAll('logs');
-  const vocab = await dbGetAll('vocab');
   const anki = await dbGetAll('anki');
-  const data = JSON.stringify({ logs, vocab, anki, exported: new Date().toISOString() }, null, 2);
+  let goals = [], goalProgress = [];
+  try { goals = await dbGetAll('goals'); } catch(e) {}
+  try { goalProgress = await dbGetAll('goal_progress'); } catch(e) {}
+  const data = JSON.stringify({ logs, anki, goals, goal_progress: goalProgress, version: 3, exported: new Date().toISOString() }, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -2143,8 +3166,10 @@ async function handleImport(e) {
     const text = await file.text();
     const data = JSON.parse(text);
     if (data.logs) { await dbClear('logs'); for (const l of data.logs) { delete l.id; await dbPut('logs', l); } }
-    if (data.vocab) { await dbClear('vocab'); for (const v of data.vocab) { delete v.id; await dbPut('vocab', v); } }
     if (data.anki) { await dbClear('anki'); for (const a of data.anki) { delete a.id; await dbPut('anki', a); } }
+    if (data.goals) { await dbClear('goals'); for (const g of data.goals) { await dbPut('goals', g); } }
+    if (data.goal_progress) { await dbClear('goal_progress'); for (const p of data.goal_progress) { await dbPut('goal_progress', p); } }
+    // Silently skip vocab from old v2 exports
     showToast('Gegevens geïmporteerd!');
     refreshAll();
   } catch(err) {
@@ -2157,8 +3182,11 @@ async function resetData() {
   if (!confirm('Alle gegevens wissen? Dit kan niet ongedaan worden!')) return;
   if (!confirm('Weet je het zeker? Alle studie-data wordt verwijderd.')) return;
   await dbClear('logs');
-  await dbClear('vocab');
   await dbClear('anki');
+  try { await dbClear('goals'); } catch(e) {}
+  try { await dbClear('goal_progress'); } catch(e) {}
+  await dbPut('settings', { key: 'goals_migrated_v3', value: false });
+  await migrateExistingGoals();
   showToast('Alle gegevens gewist');
   refreshAll();
 }
@@ -2177,10 +3205,16 @@ function refreshAll() {
 async function init() {
   await openDB();
   await loadSettings();
+  await migrateExistingGoals();
   refreshDashboard();
 
-  // Set default date for manual entry
+  // Set default dates
   document.getElementById('manualDate').value = today();
+  document.getElementById('ankiDate').value = today();
+
+  // Show passive toggle if listening is default
+  onSkillChange();
+  onTimerSkillChange();
 
   // Register service worker
   if ('serviceWorker' in navigator) {
