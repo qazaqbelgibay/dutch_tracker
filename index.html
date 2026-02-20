@@ -157,44 +157,6 @@ body {
   margin-bottom: 10px;
 }
 
-/* ── Countdown ── */
-.countdown {
-  background: linear-gradient(135deg, var(--bg3), var(--bg2));
-  border: 1px solid var(--amber);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 12px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.countdown::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 0%, var(--amber-glow), transparent 70%);
-  pointer-events: none;
-}
-.countdown-days {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 44px;
-  font-weight: 700;
-  color: var(--amber);
-  line-height: 1;
-}
-.countdown-label {
-  font-size: 12px;
-  color: var(--text2);
-  margin-top: 4px;
-  font-weight: 500;
-}
-.countdown-date {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--text3);
-  margin-top: 6px;
-}
-
 /* ── Stats Row ── */
 .stats-row {
   display: grid;
@@ -390,6 +352,17 @@ body {
   cursor: pointer;
 }
 .calc-add-btn:active { transform: scale(0.93); }
+.calc-minus-btn {
+  width: 48px;
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1px solid color-mix(in oklab, var(--red), transparent 40%);
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.calc-minus-btn:active { transform: scale(0.93); }
 .calc-actions {
   display: flex;
   gap: 8px;
@@ -771,12 +744,12 @@ body {
 /* ── Week Heatmap ── */
 .week-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
   margin-top: 8px;
 }
 .week-cell {
-  aspect-ratio: 1;
+  aspect-ratio: auto;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -1117,13 +1090,6 @@ body {
   <div class="content" id="content">
     <!-- ═══ DASHBOARD ═══ -->
     <div class="view active" id="viewDashboard">
-      <!-- Countdown -->
-      <div class="countdown">
-        <div class="countdown-days" id="countdownDays">--</div>
-        <div class="countdown-label">dagen tot CNaVT B1</div>
-        <div class="countdown-date">10 mei 2026</div>
-      </div>
-
       <!-- Today's Stats -->
       <div class="stats-row">
         <div class="stat-box">
@@ -1152,12 +1118,6 @@ body {
         <button onclick="openGoalModal()" style="background:var(--bg2);border:1px dashed var(--bg4);border-radius:var(--radius);padding:12px;width:100%;color:var(--text3);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',system-ui">+ Nieuw doel</button>
       </div>
 
-      <!-- Skills Today -->
-      <div class="card">
-        <div class="card-title">Vaardigheden vandaag</div>
-        <div id="skillBarsToday"></div>
-      </div>
-
       <!-- This Week Heatmap -->
       <div class="card">
         <div class="card-title">Deze week</div>
@@ -1176,7 +1136,7 @@ body {
             </svg>
             <div class="goal-center">
               <span class="goal-val" id="goalCurrent">0.0</span>
-              <span class="goal-of" id="goalTarget">/ 2.0u</span>
+              <span class="goal-of" id="dailyGoalDisplay">/ 2.0u</span>
             </div>
           </div>
           <div class="goal-details">
@@ -1246,6 +1206,7 @@ body {
               placeholder="24.58" inputmode="decimal" step="any"
               onkeydown="if(event.key==='Enter')calcAdd()">
             <button class="calc-add-btn" onclick="calcAdd()">+</button>
+            <button class="calc-minus-btn" onclick="calcSubtract()">−</button>
           </div>
           <div class="calc-actions">
             <button class="timer-btn discard" onclick="calcClear()">Wissen</button>
@@ -1958,6 +1919,16 @@ function calcAdd() {
   calcRender();
 }
 
+function calcSubtract() {
+  const input = document.getElementById('calcInput');
+  const val = parseFloat(input.value);
+  if (isNaN(val) || val <= 0) { showToast('Vul een getal in!'); return; }
+  calcValues.push(-val);
+  input.value = '';
+  input.focus();
+  calcRender();
+}
+
 function calcRemoveEntry(index) {
   calcValues.splice(index, 1);
   calcRender();
@@ -1972,7 +1943,7 @@ function calcRender() {
   const total = calcValues.reduce((s, v) => s + v, 0);
   document.getElementById('calcTotal').textContent = total.toFixed(2);
   document.getElementById('calcEntries').innerHTML = calcValues.map((v, i) =>
-    '<span class="calc-entry">' + v.toFixed(2) +
+    '<span class="calc-entry" style="color:' + (v < 0 ? 'var(--red)' : 'var(--text)') + '">' + (v > 0 ? '+' : '') + v.toFixed(2) +
     '<button class="calc-entry-remove" onclick="calcRemoveEntry(' + i + ')">&times;</button></span>'
   ).join('');
 }
@@ -2120,9 +2091,6 @@ async function saveEdit() {
 async function refreshDashboard() {
   const d = today();
 
-  // Countdown
-  document.getElementById('countdownDays').textContent = daysUntilExam();
-
   // Logs
   const logs = await dbGetAll('logs');
   const todayLogs = logs.filter(l => l.date === d);
@@ -2148,9 +2116,6 @@ async function refreshDashboard() {
   const streak = calcStreak(logs);
   document.getElementById('streakCount').textContent = streak;
 
-  // Skills today
-  renderSkillBars('skillBarsToday', todayLogs, hourGoal * 60);
-
   // Week heatmap
   renderWeekGrid(logs);
 
@@ -2158,7 +2123,7 @@ async function refreshDashboard() {
   const goalPct = Math.min(100, (totalMin / (hourGoal * 60)) * 100);
   const goalHours = (totalMin / 60).toFixed(1);
   document.getElementById('goalCurrent').textContent = goalHours;
-  document.getElementById('goalTarget').textContent = `/ ${hourGoal.toFixed(1)}u`;
+  document.getElementById('dailyGoalDisplay').textContent = `/ ${hourGoal.toFixed(1)}u`;
   document.getElementById('goalPct').textContent = Math.round(goalPct) + '%';
   const circumference = 213.6;
   document.getElementById('goalRing').style.strokeDashoffset = circumference * (1 - goalPct / 100);
