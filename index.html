@@ -3183,7 +3183,26 @@ async function init() {
 
   // Register service worker
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    let refreshed = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshed) return;
+      refreshed = true;
+      location.reload();
+    });
+
+    navigator.serviceWorker.register('sw.js?v=5', { updateViaCache: 'none' }).then(reg => {
+      reg.update().catch(() => {});
+      if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
+      reg.addEventListener('updatefound', () => {
+        const worker = reg.installing;
+        if (!worker) return;
+        worker.addEventListener('statechange', () => {
+          if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+            worker.postMessage('SKIP_WAITING');
+          }
+        });
+      });
+    }).catch(() => {});
   }
 }
 
