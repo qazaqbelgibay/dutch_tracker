@@ -1118,12 +1118,6 @@ body {
         <button onclick="openGoalModal()" style="background:var(--bg2);border:1px dashed var(--bg4);border-radius:var(--radius);padding:12px;width:100%;color:var(--text3);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',system-ui">+ Nieuw doel</button>
       </div>
 
-      <!-- This Week Heatmap -->
-      <div class="card">
-        <div class="card-title">Deze week</div>
-        <div class="week-grid" id="weekGrid"></div>
-      </div>
-
       <!-- Daily Goal Progress -->
       <div class="card">
         <div class="card-title">Dagelijks doel</div>
@@ -1144,6 +1138,13 @@ body {
             <div class="goal-msg" id="goalMsg">Begin met studeren!</div>
           </div>
         </div>
+      </div>
+
+      <!-- This Week Heatmap -->
+      <div class="card">
+        <div class="card-title">Deze week</div>
+        <div id="weekGoalSummary"></div>
+        <div class="week-grid" id="weekGrid"></div>
       </div>
 
       <!-- Cumulative Skills -->
@@ -2088,6 +2089,38 @@ async function saveEdit() {
 // ══════════════════════════════════════════════════
 // DASHBOARD REFRESH
 // ══════════════════════════════════════════════════
+// Compute the effective daily goal in hours from pinned total goals with a deadline.
+// Falls back to the manual hourGoal setting if no relevant big goals exist.
+async function computeEffectiveDailyGoal(logs) {
+  let goals = [];
+  try { goals = await dbGetAll('goals'); } catch(e) {}
+  const relevantGoals = goals.filter(g =>
+    g.status === 'active' &&
+    g.pinToDashboard &&
+    g.type === 'total' &&
+    g.deadline &&
+    g.metrics && g.metrics.some(m => m.source === 'auto_hours' && m.unit === 'uur')
+  );
+  if (relevantGoals.length === 0) return hourGoal;
+
+  let ankiEntries = [];
+  let progressEntries = [];
+  try { ankiEntries = await dbGetAll('anki'); } catch(e) {}
+  try { progressEntries = await dbGetAll('goal_progress'); } catch(e) {}
+
+  let totalPace = 0;
+  for (const goal of relevantGoals) {
+    const progress = await computeGoalProgress(goal, logs, ankiEntries, progressEntries);
+    for (const p of progress) {
+      if (p.unit === 'uur') {
+        const pace = computeDailyPace(goal, p);
+        if (pace && pace.needed > 0) totalPace += parseFloat(pace.needed);
+      }
+    }
+  }
+  return totalPace > 0 ? totalPace : hourGoal;
+}
+
 async function refreshDashboard() {
   const d = today();
 
@@ -2112,18 +2145,21 @@ async function refreshDashboard() {
   // Goals
   await renderGoals(logs);
 
+  // Effective daily goal (from big goals, or fallback to manual setting)
+  const effectiveDailyGoal = await computeEffectiveDailyGoal(logs);
+
   // Streak
   const streak = calcStreak(logs);
   document.getElementById('streakCount').textContent = streak;
 
   // Week heatmap
-  renderWeekGrid(logs);
+  renderWeekGrid(logs, effectiveDailyGoal);
 
   // Goal progress
-  const goalPct = Math.min(100, (totalMin / (hourGoal * 60)) * 100);
+  const goalPct = Math.min(100, (totalMin / (effectiveDailyGoal * 60)) * 100);
   const goalHours = (totalMin / 60).toFixed(1);
   document.getElementById('goalCurrent').textContent = goalHours;
-  document.getElementById('dailyGoalDisplay').textContent = `/ ${hourGoal.toFixed(1)}u`;
+  document.getElementById('dailyGoalDisplay').textContent = `/ ${effectiveDailyGoal.toFixed(1)}u`;
   document.getElementById('goalPct').textContent = Math.round(goalPct) + '%';
   const circumference = 213.6;
   document.getElementById('goalRing').style.strokeDashoffset = circumference * (1 - goalPct / 100);
@@ -2237,7 +2273,8 @@ function renderSkillBars(containerId, logs, maxMin, showTotal) {
   container.innerHTML = html;
 }
 
-function renderWeekGrid(logs) {
+function renderWeekGrid(logs, effectiveDailyGoal) {
+  const goal = effectiveDailyGoal || hourGoal;
   const grid = document.getElementById('weekGrid');
   const d = today();
   const todayDate = new Date(d);
@@ -2260,8 +2297,8 @@ function renderWeekGrid(logs) {
 
     let cls = 'empty';
     if (!isFuture && dayMins > 0) {
-      if (dayMins >= hourGoal * 60) cls = 'good';
-      else if (dayMins >= hourGoal * 30) cls = 'mid';
+      if (dayMins >= goal * 60) cls = 'good';
+      else if (dayMins >= goal * 30) cls = 'mid';
       else cls = 'low';
     }
 
@@ -2274,6 +2311,23 @@ function renderWeekGrid(logs) {
   }
   html += `<div class="week-total">Totaal: ${(weekTotalMins / 60).toFixed(1)}u</div>`;
   grid.innerHTML = html;
+
+  // Weekly goal summary
+  const weeklyTarget = goal * 7;
+  const weekHours = weekTotalMins / 60;
+  const weekPct = Math.min(100, (weekHours / weeklyTarget) * 100);
+  const summaryEl = document.getElementById('weekGoalSummary');
+  if (summaryEl) {
+    const summaryColor = weekPct >= 100 ? 'var(--teal)' : weekPct >= 50 ? 'var(--amber)' : 'var(--text3)';
+    summaryEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px">
+        <span style="color:var(--text3);font-weight:600">Weekdoel</span>
+        <span style="color:${summaryColor};font-family:'JetBrains Mono',monospace;font-weight:700">${weekHours.toFixed(1)} / ${weeklyTarget.toFixed(1)}u</span>
+      </div>
+      <div class="goal-progress-track" style="margin-bottom:8px">
+        <div class="goal-progress-fill" style="width:${weekPct}%;background:${summaryColor}"></div>
+      </div>`;
+  }
 }
 
 // ══════════════════════════════════════════════════
