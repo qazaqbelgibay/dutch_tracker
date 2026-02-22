@@ -840,6 +840,12 @@ body {
   color: var(--text2);
   margin-top: 2px;
 }
+.goal-details .goal-left {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 5px;
+  font-family: 'JetBrains Mono', monospace;
+}
 
 /* ── Manual Entry ── */
 .manual-form {
@@ -1136,6 +1142,7 @@ body {
           <div class="goal-details">
             <div class="goal-pct" id="goalPct">0%</div>
             <div class="goal-msg" id="goalMsg">Begin met studeren!</div>
+            <div class="goal-left" id="goalLeft"></div>
           </div>
         </div>
       </div>
@@ -1344,6 +1351,13 @@ body {
           <input type="number" id="goalInput" value="2" min="0.5" max="8" step="0.5"
             style="width:60px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;text-align:center;outline:none;"
             onchange="updateGoal(this.value)">
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Dag verlengen na middernacht</div>
+            <div class="setting-desc">Tot 03:00 als gisteren meetellen</div>
+          </div>
+          <button class="toggle" id="extendDayToggle" onclick="toggleExtendDay()"></button>
         </div>
       </div>
 
@@ -1748,7 +1762,16 @@ function dbClear(store) {
 // ══════════════════════════════════════════════════
 // HELPERS
 // ══════════════════════════════════════════════════
-const today = () => new Date().toISOString().split('T')[0];
+let extendDayPastMidnight = false;
+const today = () => {
+  const now = new Date();
+  if (extendDayPastMidnight && now.getHours() < 3) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - 1);
+    return d.toISOString().split('T')[0];
+  }
+  return now.toISOString().split('T')[0];
+};
 const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 const SKILL_COLORS = {
   listening: { color: 'var(--teal)', bg: 'var(--teal-dim)', label: 'Luisteren', icon: '🎧' },
@@ -2173,6 +2196,15 @@ async function refreshDashboard() {
   document.getElementById('goalRing').style.stroke = goalColor;
   document.getElementById('goalPct').style.color = goalColor;
   document.getElementById('goalMsg').textContent = goalMsg;
+  const goalLeftEl = document.getElementById('goalLeft');
+  if (goalLeftEl) {
+    if (goalPct >= 100) {
+      goalLeftEl.textContent = '';
+    } else {
+      const hoursLeft = Math.max(0, effectiveDailyGoal - totalMin / 60);
+      goalLeftEl.textContent = `${hoursLeft.toFixed(1)}u nog te gaan`;
+    }
+  }
 
   // Total skills
   renderSkillBars('skillBarsTotal', logs, null, true);
@@ -2319,14 +2351,16 @@ function renderWeekGrid(logs, effectiveDailyGoal) {
   const summaryEl = document.getElementById('weekGoalSummary');
   if (summaryEl) {
     const summaryColor = weekPct >= 100 ? 'var(--teal)' : weekPct >= 50 ? 'var(--amber)' : 'var(--text3)';
+    const weekLeft = Math.max(0, weeklyTarget - weekHours);
     summaryEl.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px">
         <span style="color:var(--text3);font-weight:600">Weekdoel</span>
         <span style="color:${summaryColor};font-family:'JetBrains Mono',monospace;font-weight:700">${weekHours.toFixed(1)} / ${weeklyTarget.toFixed(1)}u</span>
       </div>
-      <div class="goal-progress-track" style="margin-bottom:8px">
+      <div class="goal-progress-track" style="margin-bottom:${weekPct < 100 ? '4px' : '8px'}">
         <div class="goal-progress-fill" style="width:${weekPct}%;background:${summaryColor}"></div>
-      </div>`;
+      </div>
+      ${weekPct < 100 ? `<div style="text-align:right;margin-bottom:8px;font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">${weekLeft.toFixed(1)}u nog te gaan</div>` : ''}`;
   }
 }
 
@@ -3137,6 +3171,11 @@ async function loadSettings() {
     }
     const goal = await dbGet('settings', 'hourGoal');
     if (goal) { hourGoal = goal.value; document.getElementById('goalInput').value = hourGoal; }
+    const extend = await dbGet('settings', 'extendDay');
+    if (extend && extend.value) {
+      extendDayPastMidnight = true;
+      document.getElementById('extendDayToggle').classList.add('on');
+    }
   } catch(e) {}
 }
 
@@ -3153,6 +3192,14 @@ function toggleTheme() {
 function updateGoal(val) {
   hourGoal = parseFloat(val) || 2;
   dbPut('settings', { key: 'hourGoal', value: hourGoal });
+  refreshAll();
+}
+
+function toggleExtendDay() {
+  extendDayPastMidnight = !extendDayPastMidnight;
+  const toggle = document.getElementById('extendDayToggle');
+  if (extendDayPastMidnight) toggle.classList.add('on'); else toggle.classList.remove('on');
+  dbPut('settings', { key: 'extendDay', value: extendDayPastMidnight });
   refreshAll();
 }
 
