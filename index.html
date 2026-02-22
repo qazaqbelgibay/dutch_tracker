@@ -1763,14 +1763,15 @@ function dbClear(store) {
 // HELPERS
 // ══════════════════════════════════════════════════
 let extendDayPastMidnight = false;
+const fmtDate = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const today = () => {
   const now = new Date();
   if (extendDayPastMidnight && now.getHours() < 3) {
     const d = new Date(now);
     d.setDate(d.getDate() - 1);
-    return d.toISOString().split('T')[0];
+    return fmtDate(d);
   }
-  return now.toISOString().split('T')[0];
+  return fmtDate(now);
 };
 const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 const SKILL_COLORS = {
@@ -2406,9 +2407,9 @@ async function refreshStats() {
   const dates = [];
   const d = new Date(startDate);
   const endDate = new Date(now);
-  endDate.setHours(0,0,0,0);
+  endDate.setHours(23,59,59,999);
   while (d <= endDate) {
-    dates.push(d.toISOString().split('T')[0]);
+    dates.push(fmtDate(d));
     d.setDate(d.getDate() + 1);
   }
 
@@ -2735,10 +2736,10 @@ async function deleteEntry(store, id) {
 // ══════════════════════════════════════════════════
 
 function getWeekStart() {
-  const d = new Date(today());
+  const d = new Date();
   const dow = d.getDay();
   d.setDate(d.getDate() - ((dow + 6) % 7));
-  return d.toISOString().split('T')[0];
+  return fmtDate(d);
 }
 
 async function computeGoalProgress(goal, logs, ankiEntries, progressEntries) {
