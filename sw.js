@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dutch-tracker-v6';
+const CACHE_NAME = 'dutch-tracker-v7';
 const BASE = '/dutch_tracker/';
 const ASSETS = [BASE, BASE + 'index.html', BASE + 'manifest.json'];
 
