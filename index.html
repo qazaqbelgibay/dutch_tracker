@@ -1071,6 +1071,21 @@ body {
   color: var(--amber);
   font-weight: 600;
 }
+.week-nav-btn {
+  background: var(--bg3);
+  border: 1px solid var(--bg4);
+  border-radius: 8px;
+  color: var(--text2);
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.week-nav-btn:disabled { opacity: 0.3; cursor: default; }
 .skill-total {
   text-align: right;
   margin-top: 8px;
@@ -1149,7 +1164,11 @@ body {
 
       <!-- This Week Heatmap -->
       <div class="card">
-        <div class="card-title">Deze week</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <button class="week-nav-btn" onclick="changeWeek(-1)">&#8592;</button>
+          <span id="weekTitle" style="font-size:13px;font-weight:700;color:var(--text2);font-family:'JetBrains Mono',monospace"></span>
+          <button class="week-nav-btn" id="weekNextBtn" onclick="changeWeek(1)">&#8594;</button>
+        </div>
         <div id="weekGoalSummary"></div>
         <div class="week-grid" id="weekGrid"></div>
       </div>
@@ -1789,6 +1808,7 @@ const GOAL_COLORS = {
 };
 const EXAM_DATE = new Date('2026-05-10T00:00:00');
 let hourGoal = 2;
+let weekOffset = 0;
 let lastAction = null;
 let currentPeriod = 'week';
 let statsTagFilter = null;
@@ -2309,11 +2329,20 @@ function renderSkillBars(containerId, logs, maxMin, showTotal) {
 function renderWeekGrid(logs, effectiveDailyGoal) {
   const goal = effectiveDailyGoal || hourGoal;
   const grid = document.getElementById('weekGrid');
-  const d = today();
-  const todayDate = new Date(d);
+  const todayStr = today();
+  const todayDate = new Date(todayStr + 'T00:00:00');
+
+  // Monday of the offset week
   const dayOfWeek = todayDate.getDay();
   const monday = new Date(todayDate);
-  monday.setDate(todayDate.getDate() - ((dayOfWeek + 6) % 7));
+  monday.setDate(todayDate.getDate() - ((dayOfWeek + 6) % 7) + weekOffset * 7);
+
+  // Update title with ISO week number
+  const weekNum = getISOWeek(monday);
+  const titleEl = document.getElementById('weekTitle');
+  if (titleEl) titleEl.textContent = weekOffset === 0 ? `Week ${weekNum} · nu` : `Week ${weekNum}`;
+  const nextBtn = document.getElementById('weekNextBtn');
+  if (nextBtn) nextBtn.disabled = weekOffset === 0;
 
   const dayNames = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
   let html = '';
@@ -2322,11 +2351,11 @@ function renderWeekGrid(logs, effectiveDailyGoal) {
   for (let i = 0; i < 7; i++) {
     const date = new Date(monday);
     date.setDate(monday.getDate() + i);
-    const ds = date.toISOString().split('T')[0];
+    const ds = fmtDate(date);
     const dayMins = logs.filter(l => l.date === ds).reduce((s, l) => s + l.minutes, 0);
     const hours = (dayMins / 60).toFixed(1);
-    const isToday = ds === d;
-    const isFuture = date > todayDate;
+    const isToday = ds === todayStr;
+    const isFuture = ds > todayStr;
 
     let cls = 'empty';
     if (!isFuture && dayMins > 0) {
@@ -2361,7 +2390,7 @@ function renderWeekGrid(logs, effectiveDailyGoal) {
       <div class="goal-progress-track" style="margin-bottom:${weekPct < 100 ? '4px' : '8px'}">
         <div class="goal-progress-fill" style="width:${weekPct}%;background:${summaryColor}"></div>
       </div>
-      ${weekPct < 100 ? `<div style="text-align:right;margin-bottom:8px;font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">${weekLeft.toFixed(1)}u nog te gaan</div>` : ''}`;
+      ${weekPct < 100 && weekOffset === 0 ? `<div style="text-align:right;margin-bottom:8px;font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">${weekLeft.toFixed(1)}u nog te gaan</div>` : ''}`;
   }
 }
 
@@ -2740,6 +2769,19 @@ function getWeekStart() {
   const dow = d.getDay();
   d.setDate(d.getDate() - ((dow + 6) % 7));
   return fmtDate(d);
+}
+
+function getISOWeek(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const day = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+}
+
+function changeWeek(delta) {
+  weekOffset = Math.min(0, weekOffset + delta);
+  refreshDashboard();
 }
 
 async function computeGoalProgress(goal, logs, ankiEntries, progressEntries) {
