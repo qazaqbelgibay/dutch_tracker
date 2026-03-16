@@ -1095,6 +1095,69 @@ body {
   font-size: 13px;
   color: var(--text2);
 }
+
+/* ── Compact Timer ── */
+.timer-compact {
+  font-size: 32px !important;
+  padding: 10px 0 10px !important;
+  letter-spacing: 1px !important;
+}
+.timer-btn-sm {
+  padding: 9px 18px !important;
+  font-size: 13px !important;
+}
+
+/* ── Embedded Video Calculator ── */
+.calc-embed {
+  border: 1px solid var(--bg4);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.calc-embed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--bg3);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.calc-embed-header:active { opacity: 0.7; }
+.calc-embed-body {
+  padding: 10px 12px 12px;
+  background: var(--bg2);
+}
+
+/* ── Anki recent list ── */
+.anki-recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 0;
+  border-top: 1px solid var(--bg3);
+  font-size: 13px;
+}
+.anki-recent-date {
+  color: var(--text2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+.anki-recent-cards {
+  color: var(--teal);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+}
+.anki-delete-btn {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 3px 5px;
+  border-radius: 4px;
+}
+.anki-delete-btn:active { color: var(--red); }
 </style>
 </head>
 <body>
@@ -1182,66 +1245,6 @@ body {
 
     <!-- ═══ QUICK LOG ═══ -->
     <div class="view" id="viewLog">
-      <!-- Timer -->
-      <div class="log-section">
-        <div class="card" style="margin-bottom:0">
-          <div class="card-title">Stopwatch</div>
-          <div class="timer-display" id="timerDisplay">00:00:00</div>
-          <div class="timer-controls">
-            <button class="timer-btn start" id="timerStartBtn" onclick="timerStart()">&#9654; Start</button>
-            <button class="timer-btn pause" id="timerPauseBtn" onclick="timerPause()" style="display:none">&#9208; Pauze</button>
-            <button class="timer-btn stop" id="timerStopBtn" onclick="timerStop()" style="display:none">&#9209; Stop</button>
-          </div>
-          <div class="timer-save-section" id="timerSaveSection" style="display:none">
-            <div class="manual-field" style="margin-bottom:10px">
-              <label>Vaardigheid</label>
-              <select id="timerSkill" onchange="onTimerSkillChange()">
-                <option value="listening">🎧 Luisteren</option>
-                <option value="reading">📖 Lezen</option>
-                <option value="writing">✍️ Schrijven</option>
-                <option value="grammar">📐 Grammatica</option>
-              </select>
-            </div>
-            <div class="manual-field" id="timerPassiveWrap" style="display:none;margin-bottom:10px">
-              <label>Passief luisteren</label>
-              <button class="toggle" id="timerPassiveToggle" onclick="toggleTimerPassive()"></button>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-              <span style="font-size:13px;color:var(--text2)">Tijd:</span>
-              <span id="timerResultTime" style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--amber)">0 min</span>
-            </div>
-            <div style="display:flex;gap:8px">
-              <button class="timer-btn discard" onclick="timerDiscard()">Annuleer</button>
-              <button class="timer-btn save" onclick="timerSave()">Opslaan</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Video Length Calculator -->
-      <div class="log-section">
-        <div class="card" style="margin-bottom:0">
-          <div class="card-title">Video calculator</div>
-          <div class="calc-total">
-            <span class="calc-total-label">Totaal:</span>
-            <span class="calc-total-value" id="calcTotal">0.00</span>
-            <span class="calc-total-unit">min</span>
-          </div>
-          <div class="calc-entries" id="calcEntries"></div>
-          <div class="calc-input-row">
-            <input type="number" class="calc-input" id="calcInput"
-              placeholder="24.58" inputmode="decimal" step="any"
-              onkeydown="if(event.key==='Enter')calcAdd()">
-            <button class="calc-add-btn" onclick="calcAdd()">+</button>
-            <button class="calc-minus-btn" onclick="calcSubtract()">−</button>
-          </div>
-          <div class="calc-actions">
-            <button class="timer-btn discard" onclick="calcClear()">Wissen</button>
-            <button class="timer-btn save" onclick="calcTransfer()">&#8594; Minuten veld</button>
-          </div>
-        </div>
-      </div>
-
       <!-- Manual Entry -->
       <div class="log-section">
         <div class="card" style="margin-bottom:0">
@@ -1272,6 +1275,33 @@ body {
                 <button class="toggle" id="passiveToggle" onclick="togglePassive()"></button>
               </div>
             </div>
+
+            <!-- Video Calculator (embedded) -->
+            <div class="calc-embed">
+              <div class="calc-embed-header" onclick="toggleCalcEmbed(this)">
+                <span style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px">Video calculator</span>
+                <span class="calc-embed-arrow" style="font-size:12px;color:var(--text3)">▾</span>
+              </div>
+              <div class="calc-embed-body" style="display:none">
+                <div class="calc-total" style="padding:8px 0">
+                  <span class="calc-total-label">Totaal:</span>
+                  <span class="calc-total-value" id="calcTotal" style="font-size:28px">0.00</span>
+                  <span class="calc-total-unit">min</span>
+                </div>
+                <div class="calc-entries" id="calcEntries"></div>
+                <form class="calc-input-row" onsubmit="calcAdd();return false;">
+                  <input type="number" class="calc-input" id="calcInput"
+                    placeholder="24.58" inputmode="decimal" step="any">
+                  <button type="submit" class="calc-add-btn">+</button>
+                  <button type="button" class="calc-minus-btn" onclick="calcSubtract()">−</button>
+                </form>
+                <div class="calc-actions">
+                  <button type="button" class="timer-btn discard" onclick="calcClear()">Wissen</button>
+                  <button type="button" class="timer-btn save" onclick="calcTransferAndFill()">&#8594; Minuten</button>
+                </div>
+              </div>
+            </div>
+
             <div class="manual-field">
               <label>Tags</label>
               <div class="tag-pills" id="manualTags">
@@ -1309,6 +1339,43 @@ body {
             </div>
           </div>
           <button class="save-manual-btn" onclick="saveAnkiEntry()" style="margin-top:10px">Opslaan</button>
+          <div id="ankiRecentList" style="margin-top:10px"></div>
+        </div>
+      </div>
+
+      <!-- Timer (compact) -->
+      <div class="log-section">
+        <div class="card" style="margin-bottom:0">
+          <div class="card-title">Stopwatch</div>
+          <div class="timer-display timer-compact" id="timerDisplay">00:00:00</div>
+          <div class="timer-controls">
+            <button class="timer-btn timer-btn-sm start" id="timerStartBtn" onclick="timerStart()">&#9654; Start</button>
+            <button class="timer-btn timer-btn-sm pause" id="timerPauseBtn" onclick="timerPause()" style="display:none">&#9208; Pauze</button>
+            <button class="timer-btn timer-btn-sm stop" id="timerStopBtn" onclick="timerStop()" style="display:none">&#9209; Stop</button>
+          </div>
+          <div class="timer-save-section" id="timerSaveSection" style="display:none">
+            <div class="manual-field" style="margin-bottom:10px">
+              <label>Vaardigheid</label>
+              <select id="timerSkill" onchange="onTimerSkillChange()">
+                <option value="listening">🎧 Luisteren</option>
+                <option value="reading">📖 Lezen</option>
+                <option value="writing">✍️ Schrijven</option>
+                <option value="grammar">📐 Grammatica</option>
+              </select>
+            </div>
+            <div class="manual-field" id="timerPassiveWrap" style="display:none;margin-bottom:10px">
+              <label>Passief luisteren</label>
+              <button class="toggle" id="timerPassiveToggle" onclick="toggleTimerPassive()"></button>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <span style="font-size:13px;color:var(--text2)">Tijd:</span>
+              <span id="timerResultTime" style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--amber)">0 min</span>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="timer-btn discard" onclick="timerDiscard()">Annuleer</button>
+              <button class="timer-btn save" onclick="timerSave()">Opslaan</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2000,6 +2067,39 @@ function calcTransfer() {
   document.getElementById('manualMinutes').value = rounded;
   showToast(rounded + ' min overgenomen');
   document.getElementById('manualMinutes').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function calcTransferAndFill() {
+  const total = calcValues.reduce((s, v) => s + v, 0);
+  if (total <= 0) { showToast('Nog geen waarden!'); return; }
+  const rounded = Math.round(total);
+  document.getElementById('manualMinutes').value = rounded;
+  showToast(rounded + ' min ingevuld');
+}
+
+function toggleCalcEmbed(headerEl) {
+  const body = headerEl.nextElementSibling;
+  const arrow = headerEl.querySelector('.calc-embed-arrow');
+  const open = body.style.display === 'none';
+  body.style.display = open ? '' : 'none';
+  arrow.textContent = open ? '▴' : '▾';
+}
+
+async function renderAnkiList() {
+  const container = document.getElementById('ankiRecentList');
+  if (!container) return;
+  let entries = [];
+  try { entries = await dbGetAll('anki'); } catch(e) {}
+  entries.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  const recent = entries.slice(0, 5);
+  if (recent.length === 0) { container.innerHTML = ''; return; }
+  container.innerHTML = recent.map(e =>
+    '<div class="anki-recent-item">' +
+      '<span class="anki-recent-date">' + e.date + '</span>' +
+      '<span class="anki-recent-cards">' + e.cards + ' kaarten</span>' +
+      '<button class="anki-delete-btn" onclick="deleteEntry(\'anki\',' + e.id + ')">🗑</button>' +
+    '</div>'
+  ).join('');
 }
 
 // ── Tags & Manual Entry ──
@@ -2735,9 +2835,15 @@ function renderHistory(dates, logs) {
       const passiveLabel = log.passive ? ' (passief)' : '';
       const meta = (log.tags && log.tags.length ? log.tags.join(', ') : '') +
         (log.notes ? (log.tags && log.tags.length ? ' · ' : '') + log.notes : '');
+      const timeStr = log.timestamp ? (() => {
+        const d = new Date(log.timestamp);
+        return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+      })() : '';
       html += '<div class="history-entry">' +
         '<div class="history-entry-info">' +
-          '<div class="history-entry-skill">' + sc.icon + ' ' + sc.label + passiveLabel + '</div>' +
+          '<div class="history-entry-skill">' + sc.icon + ' ' + sc.label + passiveLabel +
+            (timeStr ? '<span style="font-size:10px;color:var(--text3);margin-left:5px;font-family:\'JetBrains Mono\',monospace">' + timeStr + '</span>' : '') +
+          '</div>' +
           (meta ? '<div class="history-entry-meta">' + meta + '</div>' : '') +
         '</div>' +
         '<div class="history-entry-time">' + log.minutes + 'min</div>' +
@@ -3306,6 +3412,7 @@ async function resetData() {
 function refreshAll() {
   refreshDashboard();
   if (document.getElementById('viewStats').classList.contains('active')) refreshStats();
+  renderAnkiList();
 }
 
 // ══════════════════════════════════════════════════
@@ -3324,6 +3431,7 @@ async function init() {
   // Show passive toggle if listening is default
   onSkillChange();
   onTimerSkillChange();
+  renderAnkiList();
 
   // Register service worker
   if ('serviceWorker' in navigator) {
