@@ -160,7 +160,7 @@ body {
 /* ── Stats Row ── */
 .stats-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
   margin-bottom: 12px;
 }
@@ -621,47 +621,6 @@ body {
   color: var(--text);
 }
 
-/* ── Anki Section ── */
-.anki-inputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.anki-field label {
-  display: block;
-  font-size: 11px;
-  color: var(--text2);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-.anki-field input {
-  width: 100%;
-  background: var(--bg3);
-  border: 1px solid var(--bg4);
-  border-radius: 8px;
-  padding: 12px;
-  color: var(--text);
-  font-size: 16px;
-  font-family: 'JetBrains Mono', monospace;
-  outline: none;
-}
-.anki-field input:focus { border-color: var(--amber); }
-.anki-save-btn {
-  width: 100%;
-  margin-top: 10px;
-  padding: 14px;
-  background: var(--teal);
-  color: #000;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'DM Sans', system-ui;
-}
-.anki-save-btn:active { transform: scale(0.97); }
 
 /* ── Settings ── */
 .setting-row {
@@ -1129,35 +1088,7 @@ body {
   background: var(--bg2);
 }
 
-/* ── Anki recent list ── */
-.anki-recent-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 7px 0;
-  border-top: 1px solid var(--bg3);
-  font-size: 13px;
-}
-.anki-recent-date {
-  color: var(--text2);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-}
-.anki-recent-cards {
-  color: var(--teal);
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
-}
-.anki-delete-btn {
-  background: none;
-  border: none;
-  color: var(--text3);
-  font-size: 14px;
-  cursor: pointer;
-  padding: 3px 5px;
-  border-radius: 4px;
-}
-.anki-delete-btn:active { color: var(--red); }
+
 </style>
 </head>
 <body>
@@ -1179,10 +1110,6 @@ body {
         <div class="stat-box">
           <div class="stat-value" id="todayHours" style="color:var(--amber)">0.0</div>
           <div class="stat-label">Uren</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value" id="todayAnki" style="color:var(--teal)">0</div>
-          <div class="stat-label">Anki</div>
         </div>
         <div class="stat-box">
           <div class="stat-value" id="streakCount" style="color:var(--red)">0</div>
@@ -1324,24 +1251,6 @@ body {
         </div>
       </div>
 
-      <!-- Anki Log -->
-      <div class="log-section">
-        <div class="card" style="margin-bottom:0">
-          <div class="card-title">Anki Kaarten</div>
-          <div class="manual-row">
-            <div class="manual-field">
-              <label>Datum</label>
-              <input type="date" id="ankiDate">
-            </div>
-            <div class="manual-field">
-              <label>Kaarten herhaald</label>
-              <input type="number" id="ankiCards" placeholder="0" inputmode="numeric">
-            </div>
-          </div>
-          <button class="save-manual-btn" onclick="saveAnkiEntry()" style="margin-top:10px">Opslaan</button>
-          <div id="ankiRecentList" style="margin-top:10px"></div>
-        </div>
-      </div>
 
       <!-- Timer (compact) -->
       <div class="log-section">
@@ -1582,7 +1491,6 @@ body {
           <label>Bron</label>
           <select id="goalSource">
             <option value="auto_hours">Automatisch (studie-uren)</option>
-            <option value="auto_anki">Automatisch (Anki kaarten)</option>
             <option value="manual">Handmatig bijwerken</option>
           </select>
         </div>
@@ -1627,7 +1535,6 @@ body {
             <label>Bron</label>
             <select id="goalRecurringSource">
               <option value="auto_hours">Auto (studie-uren)</option>
-              <option value="auto_anki">Auto (Anki)</option>
               <option value="manual">Handmatig</option>
             </select>
           </div>
@@ -1786,12 +1693,9 @@ function openDB() {
         if (d.objectStoreNames.contains('vocab')) {
           d.deleteObjectStore('vocab');
         }
-        // Recreate anki store with better schema
         if (d.objectStoreNames.contains('anki')) {
           d.deleteObjectStore('anki');
         }
-        const ankiStore = d.createObjectStore('anki', { keyPath: 'id', autoIncrement: true });
-        ankiStore.createIndex('date', 'date');
       }
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
@@ -2085,22 +1989,6 @@ function toggleCalcEmbed(headerEl) {
   arrow.textContent = open ? '▴' : '▾';
 }
 
-async function renderAnkiList() {
-  const container = document.getElementById('ankiRecentList');
-  if (!container) return;
-  let entries = [];
-  try { entries = await dbGetAll('anki'); } catch(e) {}
-  entries.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-  const recent = entries.slice(0, 5);
-  if (recent.length === 0) { container.innerHTML = ''; return; }
-  container.innerHTML = recent.map(e =>
-    '<div class="anki-recent-item">' +
-      '<span class="anki-recent-date">' + e.date + '</span>' +
-      '<span class="anki-recent-cards">' + e.cards + ' kaarten</span>' +
-      '<button class="anki-delete-btn" onclick="deleteEntry(\'anki\',' + e.id + ')">🗑</button>' +
-    '</div>'
-  ).join('');
-}
 
 // ── Tags & Manual Entry ──
 function toggleTag(el) {
@@ -2164,19 +2052,6 @@ function onEditSkillChange() {
   document.getElementById('editPassiveWrap').style.display = skill === 'listening' ? '' : 'none';
 }
 
-// ── Anki Log ──
-async function saveAnkiEntry() {
-  const date = document.getElementById('ankiDate').value;
-  const cards = parseInt(document.getElementById('ankiCards').value) || 0;
-  if (!date) { showToast('Kies een datum!'); return; }
-  if (cards === 0) { showToast('Vul kaarten in!'); return; }
-  const entry = { date, cards, timestamp: Date.now() };
-  const id = await dbPut('anki', entry);
-  showToast('Anki kaarten opgeslagen!');
-  showUndo('Anki invoer', () => dbDelete('anki', id));
-  document.getElementById('ankiCards').value = '';
-  refreshAll();
-}
 
 // ── Edit Entry ──
 let editingEntryId = null;
@@ -2247,14 +2122,12 @@ async function computeEffectiveDailyGoal(logs) {
   );
   if (relevantGoals.length === 0) return hourGoal;
 
-  let ankiEntries = [];
   let progressEntries = [];
-  try { ankiEntries = await dbGetAll('anki'); } catch(e) {}
   try { progressEntries = await dbGetAll('goal_progress'); } catch(e) {}
 
   let totalPace = 0;
   for (const goal of relevantGoals) {
-    const progress = await computeGoalProgress(goal, logs, ankiEntries, progressEntries);
+    const progress = await computeGoalProgress(goal, logs, [], progressEntries);
     for (const p of progress) {
       if (p.unit === 'uur') {
         const pace = computeDailyPace(goal, p);
@@ -2278,13 +2151,6 @@ async function refreshDashboard() {
   const allTotalMin = logs.reduce((s, l) => s + l.minutes, 0);
   const totalHours = allTotalMin / 60;
   document.getElementById('totalStudyHours').textContent = totalHours.toFixed(2);
-
-  // Anki today
-  try {
-    const ankiEntries = await dbGetAll('anki');
-    const todayAnki = ankiEntries.filter(a => a.date === d).reduce((s, a) => s + (a.cards || 0), 0);
-    document.getElementById('todayAnki').textContent = todayAnki;
-  } catch(e) { document.getElementById('todayAnki').textContent = '0'; }
 
   // Goals
   await renderGoals(logs);
@@ -2909,15 +2775,6 @@ async function computeGoalProgress(goal, logs, ankiEntries, progressEntries) {
       } else {
         current = filtered.reduce((s, l) => s + l.minutes, 0) / 60;
       }
-    } else if (metric.source === 'auto_anki') {
-      if (goal.type === 'recurring' && metric.recurrence === 'daily') {
-        current = ankiEntries.filter(a => a.date === today()).reduce((s, a) => s + (a.cards || 0), 0);
-      } else if (goal.type === 'recurring' && metric.recurrence === 'weekly') {
-        const ws = getWeekStart();
-        current = ankiEntries.filter(a => a.date >= ws).reduce((s, a) => s + (a.cards || 0), 0);
-      } else {
-        current = ankiEntries.reduce((s, a) => s + (a.cards || 0), 0);
-      }
     } else if (metric.source === 'manual') {
       const mine = progressEntries.filter(p => p.goalId === goal.id && p.metricId === metric.id);
       if (goal.type === 'recurring') {
@@ -2979,9 +2836,7 @@ async function renderGoals(logs) {
     container.innerHTML = '';
     return;
   }
-  let ankiEntries = [];
   let progressEntries = [];
-  try { ankiEntries = await dbGetAll('anki'); } catch(e) {}
   try { progressEntries = await dbGetAll('goal_progress'); } catch(e) {}
 
   let html = '';
@@ -3015,7 +2870,7 @@ async function renderGoals(logs) {
       const pct = target > 0 ? Math.min(100, (streak / target) * 100) : 0;
       html += `<div class="goal-progress-track"><div class="goal-progress-fill" style="width:${pct}%;background:${colorVal}"></div></div>`;
     } else {
-      const progress = await computeGoalProgress(goal, logs, ankiEntries, progressEntries);
+      const progress = await computeGoalProgress(goal, logs, [], progressEntries);
       for (const p of progress) {
         const curStr = goal.type === 'recurring' && p.unit === 'min' ? `${Math.round(p.current)}` : (Number.isInteger(p.current) ? p.current : p.current.toFixed(1));
         const tarStr = goal.type === 'recurring' && p.unit === 'min' ? `${p.target}` : (Number.isInteger(p.target) ? p.target : p.target);
@@ -3355,11 +3210,10 @@ function toggleExtendDay() {
 // ── Export / Import / Reset ──
 async function exportData() {
   const logs = await dbGetAll('logs');
-  const anki = await dbGetAll('anki');
   let goals = [], goalProgress = [];
   try { goals = await dbGetAll('goals'); } catch(e) {}
   try { goalProgress = await dbGetAll('goal_progress'); } catch(e) {}
-  const data = JSON.stringify({ logs, anki, goals, goal_progress: goalProgress, version: 3, exported: new Date().toISOString() }, null, 2);
+  const data = JSON.stringify({ logs, goals, goal_progress: goalProgress, version: 3, exported: new Date().toISOString() }, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -3381,7 +3235,6 @@ async function handleImport(e) {
     const text = await file.text();
     const data = JSON.parse(text);
     if (data.logs) { await dbClear('logs'); for (const l of data.logs) { delete l.id; await dbPut('logs', l); } }
-    if (data.anki) { await dbClear('anki'); for (const a of data.anki) { delete a.id; await dbPut('anki', a); } }
     if (data.goals) { await dbClear('goals'); for (const g of data.goals) { await dbPut('goals', g); } }
     if (data.goal_progress) { await dbClear('goal_progress'); for (const p of data.goal_progress) { await dbPut('goal_progress', p); } }
     // Silently skip vocab from old v2 exports
@@ -3397,7 +3250,6 @@ async function resetData() {
   if (!confirm('Alle gegevens wissen? Dit kan niet ongedaan worden!')) return;
   if (!confirm('Weet je het zeker? Alle studie-data wordt verwijderd.')) return;
   await dbClear('logs');
-  await dbClear('anki');
   try { await dbClear('goals'); } catch(e) {}
   try { await dbClear('goal_progress'); } catch(e) {}
   await dbPut('settings', { key: 'goals_migrated_v3', value: false });
@@ -3412,7 +3264,6 @@ async function resetData() {
 function refreshAll() {
   refreshDashboard();
   if (document.getElementById('viewStats').classList.contains('active')) refreshStats();
-  renderAnkiList();
 }
 
 // ══════════════════════════════════════════════════
@@ -3426,12 +3277,10 @@ async function init() {
 
   // Set default dates
   document.getElementById('manualDate').value = today();
-  document.getElementById('ankiDate').value = today();
 
   // Show passive toggle if listening is default
   onSkillChange();
   onTimerSkillChange();
-  renderAnkiList();
 
   // Register service worker
   if ('serviceWorker' in navigator) {
