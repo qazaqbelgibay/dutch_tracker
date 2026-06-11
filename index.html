@@ -1,122 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0f0f14">
+<meta name="theme-color" content="#17171a">
 <link rel="manifest" href="manifest.json">
 <title>Dutch B1 Tracker</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
 
 :root {
-  --bg: #0f0f14;
-  --bg2: #16161e;
-  --bg3: #1e1e28;
-  --bg4: #282836;
-  --text: #e8e6e3;
-  --text2: #9a9a9a;
-  --text3: #5a5a6a;
-  --amber: #e8a020;
-  --amber2: #c88a10;
-  --amber-glow: rgba(232, 160, 32, 0.15);
-  --teal: #2dd4a8;
-  --teal-dim: rgba(45, 212, 168, 0.15);
-  --red: #f04060;
-  --red-dim: rgba(240, 64, 96, 0.1);
-  --blue: #4090f0;
-  --blue-dim: rgba(64, 144, 240, 0.15);
-  --purple: #a070f0;
-  --purple-dim: rgba(160, 112, 240, 0.15);
-  --radius: 14px;
-  --radius-sm: 8px;
-  --nav-height: 72px;
+  --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --sans: 'Geist', -apple-system, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* dark journal (default) */
+  --bg: #17171a;
+  --bg2: #1e1e23;
+  --bg3: #26262c;
+  --bg4: #32323a;
+  --text: #f4efe7;
+  --text2: #9b958a;
+  --text3: #6a655c;
+  --hairline: #2b2b31;
+
+  --amber: #d99c52;
+  --teal: #4daf96;
+  --blue: #7aa5d8;
+  --purple: #b08fd0;
+  --red: #d4838f;
+  --amber-glow: rgba(217,156,82,0.14);
+  --teal-dim: rgba(77,175,150,0.14);
+  --blue-dim: rgba(122,165,216,0.14);
+  --purple-dim: rgba(176,143,208,0.14);
+  --red-dim: rgba(212,131,143,0.13);
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --nav-height: 76px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .light-mode {
-  --bg: #f4f2ef;
-  --bg2: #ffffff;
-  --bg3: #eae8e4;
-  --bg4: #ddd;
-  --text: #1a1a1a;
-  --text2: #666;
-  --text3: #aaa;
-  --amber-glow: rgba(232, 160, 32, 0.1);
-  --teal-dim: rgba(45, 212, 168, 0.1);
-  --red-dim: rgba(240, 64, 96, 0.06);
-  --blue-dim: rgba(64, 144, 240, 0.1);
-  --purple-dim: rgba(160, 112, 240, 0.1);
+  --bg: #faf7f2;
+  --bg2: #fffdf9;
+  --bg3: #f1ece3;
+  --bg4: #e6dfd1;
+  --text: #1a1916;
+  --text2: #6b6557;
+  --text3: #a39c8c;
+  --hairline: #e8e1d2;
+
+  --amber: #b87a2e;
+  --teal: #2f8a72;
+  --blue: #4f7fb5;
+  --purple: #8a64ab;
+  --red: #b85f6d;
+  --amber-glow: rgba(184,122,46,0.12);
+  --teal-dim: rgba(47,138,114,0.12);
+  --blue-dim: rgba(79,127,181,0.12);
+  --purple-dim: rgba(138,100,171,0.12);
+  --red-dim: rgba(184,95,109,0.11);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; overflow: hidden; }
 
 body {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--sans);
   background: var(--bg);
   color: var(--text);
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
 }
 
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.serif { font-family: var(--serif); }
+.hidden-select { display: none !important; }
+
 .app {
   height: 100vh;
   height: 100dvh;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr;
   max-width: 480px;
   margin: 0 auto;
 }
 
 /* ── Header ── */
 .header {
-  padding: calc(12px + var(--safe-top)) 20px 10px;
+  padding: calc(14px + var(--safe-top)) 20px 10px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
+  align-items: flex-end;
 }
-.header h1 {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--amber);
-  letter-spacing: -0.5px;
+.wordmark {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--text3);
 }
-.header-right { display: flex; gap: 8px; align-items: center; }
+.header-date {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text2);
+  margin-top: 3px;
+  text-transform: capitalize;
+}
 .theme-btn {
-  background: none; border: none; color: var(--text2);
-  font-size: 20px; cursor: pointer; padding: 6px;
-  border-radius: 8px; transition: background 0.2s;
+  width: 36px; height: 36px;
+  background: var(--bg2);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  color: var(--text2);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
 }
 .theme-btn:active { background: var(--bg3); }
 
-/* ── Content Area ── */
+/* ── Content / Views ── */
 .content {
-  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 16px 16px;
+  padding: 4px 16px calc(var(--nav-height) + 22px + var(--safe-bottom));
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 }
+.content::-webkit-scrollbar { width: 0; }
 
-/* ── Tab Views ── */
 .view { display: none; }
-.view.active { display: block; }
+.view.active { display: flex; flex-direction: column; gap: 18px; }
+.block { min-width: 0; }
 
-/* ── Bottom Nav ── */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.card { animation: fadeIn 0.3s ease; }
+
+/* ── Bottom Nav (floating pill) ── */
 .nav {
+  position: fixed;
+  bottom: calc(10px + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(448px, calc(100% - 24px));
   display: flex;
-  background: var(--bg2);
-  border-top: 1px solid var(--bg4);
-  padding: 6px 8px calc(6px + var(--safe-bottom));
-  flex-shrink: 0;
   gap: 4px;
+  padding: 8px 8px;
+  border-radius: 26px;
+  border: 1px solid var(--hairline);
+  background: color-mix(in srgb, var(--bg2) 84%, transparent);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+  z-index: 60;
 }
 .nav-btn {
   flex: 1;
@@ -124,196 +167,488 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  padding: 8px 4px 6px;
+  padding: 7px 4px 6px;
   border: none;
   background: none;
   color: var(--text3);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: 0.3px;
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: 16px;
   transition: all 0.2s;
-  font-family: 'DM Sans', system-ui;
+  font-family: var(--sans);
 }
-.nav-btn .icon { font-size: 22px; line-height: 1; }
+.nav-btn .icon { font-size: 16px; line-height: 1; }
 .nav-btn.active { color: var(--amber); background: var(--amber-glow); }
-.nav-btn:active { transform: scale(0.92); }
+.nav-btn:active { transform: scale(0.94); }
 
-/* ── Cards ── */
+/* ── Cards & eyebrows ── */
 .card {
   background: var(--bg2);
   border-radius: var(--radius);
+  border: 1px solid var(--hairline);
   padding: 16px;
-  margin-bottom: 12px;
-  border: 1px solid var(--bg3);
 }
-.card-title {
-  font-family: 'JetBrains Mono', monospace;
+.eyebrow {
   font-size: 11px;
-  font-weight: 600;
-  color: var(--text2);
+  font-weight: 500;
+  color: var(--text3);
   text-transform: uppercase;
-  letter-spacing: 1.2px;
-  margin-bottom: 10px;
+  letter-spacing: 1.5px;
+}
+.eyebrow.center { text-align: center; display: block; }
+.card > .eyebrow { display: block; margin-bottom: 12px; }
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0 4px 8px;
+}
+.head-meta { font-size: 11px; color: var(--text3); }
+
+/* ── Hero (dashboard) ── */
+.hero-card { padding: 20px 18px; position: relative; }
+.hero-row { display: flex; align-items: center; gap: 20px; }
+.goal-ring-wrap { position: relative; width: 104px; height: 104px; flex-shrink: 0; }
+.goal-ring-wrap svg { width: 104px; height: 104px; transform: rotate(-90deg); }
+.goal-ring-wrap .ring-bg { fill: none; stroke: var(--bg3); stroke-width: 5.5; }
+.goal-ring-wrap .ring-fill { fill: none; stroke-width: 5.5; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+.goal-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.goal-center .goal-val {
+  font-family: var(--serif);
+  font-size: 26px;
+  line-height: 1;
+  color: var(--text);
+}
+.goal-center .goal-of {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
+.hero-info { flex: 1; min-width: 0; }
+.hero-hours {
+  font-family: var(--serif);
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: var(--text);
+  margin-top: 5px;
+}
+.hero-hours .hero-unit {
+  font-size: 16px;
+  font-style: italic;
+  color: var(--text2);
+  margin-left: 6px;
+  letter-spacing: 0;
+}
+.goal-msg { font-size: 12px; color: var(--text2); margin-top: 8px; }
+.goal-left { font-size: 11px; color: var(--text3); margin-top: 4px; font-family: var(--mono); }
+.goal-pct {
+  position: absolute;
+  top: 16px; right: 16px;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
 }
 
-/* ── Stats Row ── */
-.stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
+/* ── Mini stat cards ── */
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mini-card { padding: 14px; }
+.mini-card .eyebrow { display: block; margin-bottom: 8px; }
+.big-num { display: flex; align-items: baseline; gap: 6px; }
+.serif-num {
+  font-family: var(--serif);
+  font-size: 32px;
+  line-height: 1;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+.serif-num.md { font-size: 24px; }
+.serif-num.lg { font-size: 40px; }
+.num-unit { font-size: 11px; color: var(--text2); }
+.slim-card { margin-top: 10px; padding: 13px 16px; }
+.slim-row { display: flex; justify-content: space-between; align-items: baseline; }
+
+/* ── Today sessions ── */
+.list-card { padding: 4px 16px; }
+.session-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.session-row:last-child { border-bottom: none; }
+.session-time { font-size: 11px; color: var(--text3); width: 38px; flex-shrink: 0; }
+.session-chip {
+  width: 28px; height: 28px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600;
+  flex-shrink: 0;
+}
+.session-info { flex: 1; min-width: 0; }
+.session-skill { font-size: 13px; font-weight: 500; color: var(--text); }
+.session-meta { font-size: 11px; font-weight: 400; color: var(--text3); }
+.session-note {
+  font-size: 11px; color: var(--text2); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.session-mins { font-size: 13px; color: var(--text); flex-shrink: 0; }
+.row-action {
+  background: none; border: none;
+  color: var(--text3); font-size: 14px;
+  cursor: pointer; padding: 5px;
+  border-radius: 6px; flex-shrink: 0;
+}
+.row-action:active { background: var(--bg3); color: var(--text); }
+.empty-state {
+  text-align: center;
+  color: var(--text3);
+  font-size: 13px;
+  padding: 22px 10px;
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+/* ── Ghost / buttons ── */
+.ghost-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px dashed var(--bg4);
+  border-radius: var(--radius);
+  padding: 13px;
+  color: var(--text3);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--sans);
+  margin-top: 10px;
+  transition: all 0.2s;
+}
+.ghost-btn:active { background: var(--bg2); color: var(--text2); }
+
+.btn {
+  padding: 12px 18px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--sans);
+  letter-spacing: 0.2px;
+  transition: transform 0.15s;
+}
+.btn:active { transform: scale(0.96); }
+.btn.primary { background: var(--amber); color: #fff; }
+.btn.warn { background: var(--amber-glow); color: var(--amber); border: 1px solid var(--amber); }
+.btn.danger-soft { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+.btn.ghost { background: var(--bg3); color: var(--text2); }
+.btn.full { width: 100%; }
+.btn-row { display: flex; gap: 8px; margin-top: 12px; }
+.btn-row .btn { flex: 1; }
+
+/* ── Week grid ── */
+.week-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 12px;
 }
-.stat-box {
-  background: var(--bg2);
-  border: 1px solid var(--bg3);
-  border-radius: var(--radius-sm);
-  padding: 12px 10px;
-  text-align: center;
-}
-.stat-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1;
-}
-.stat-label {
-  font-size: 10px;
+.week-title { font-size: 12px; font-weight: 500; color: var(--text2); letter-spacing: 0.5px; }
+.week-nav-btn {
+  background: var(--bg3);
+  border: 1px solid var(--hairline);
+  border-radius: 9px;
   color: var(--text2);
-  margin-top: 4px;
-  font-weight: 600;
+  font-size: 15px;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.week-nav-btn:disabled { opacity: 0.3; cursor: default; }
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 8px;
+}
+.week-cell {
+  border-radius: 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0 7px;
+  background: var(--bg3);
+}
+.week-cell .day-name {
+  color: var(--text3);
+  font-size: 9px;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+.week-cell .day-hours {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 2px;
+  color: var(--text3);
+}
+.week-cell.good { background: var(--teal-dim); }
+.week-cell.good .day-hours { color: var(--teal); }
+.week-cell.mid { background: var(--amber-glow); }
+.week-cell.mid .day-hours { color: var(--amber); }
+.week-cell.low { background: var(--red-dim); }
+.week-cell.low .day-hours { color: var(--red); }
+.week-cell.today { outline: 1.5px solid var(--amber); outline-offset: 1px; }
+.week-grid .week-total { grid-column: 1 / -1; }
+.week-total {
+  text-align: center;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--hairline);
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--amber);
+  font-weight: 500;
+}
 
-/* ── Skill Bars ── */
-.skill-bar-wrap { margin-bottom: 10px; }
+/* ── Skill bars (JS-injected) ── */
+.skill-bar-wrap { margin-bottom: 12px; }
 .skill-bar-wrap:last-child { margin-bottom: 0; }
 .skill-bar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 .skill-bar-name {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
+  color: var(--text2);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 }
-.skill-bar-name .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-}
-.skill-bar-time {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--text2);
-}
+.skill-bar-name .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.skill-bar-time { font-family: var(--mono); font-size: 12px; color: var(--text2); }
 .skill-bar-track {
-  height: 8px;
-  background: var(--bg4);
-  border-radius: 4px;
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
   overflow: hidden;
 }
 .skill-bar-fill {
   height: 100%;
-  border-radius: 4px;
-  transition: width 0.5s ease;
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(.2,.8,.2,1);
   min-width: 2px;
 }
+.skill-total {
+  text-align: right;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--hairline);
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text2);
+}
 
-/* ── Quick Log ── */
-.log-section { margin-bottom: 16px; }
-.log-section-title {
+/* ── Goal cards (JS-injected) ── */
+.goal-card-new {
+  background: var(--bg2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  animation: fadeIn 0.3s ease;
+}
+.goal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.goal-card-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+.goal-card-actions { display: flex; gap: 2px; }
+.goal-card-actions button {
+  background: none;
+  border: none;
+  color: var(--text3);
   font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 8px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+.goal-card-actions button:active { color: var(--text); background: var(--bg3); }
+.goal-metric { margin-bottom: 10px; }
+.goal-metric:last-child { margin-bottom: 0; }
+.goal-metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+}
+.goal-metric-label { font-size: 12px; color: var(--text2); }
+.goal-metric-value { font-family: var(--mono); font-size: 13px; font-weight: 500; }
+.goal-progress-track {
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.goal-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(.2,.8,.2,1);
+}
+.goal-pace {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 7px;
+  font-family: var(--mono);
+}
+.goal-milestone {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 5px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
 }
+.goal-milestone.reached { color: var(--teal); }
+.goal-streak-display { text-align: center; padding: 10px 0 8px; }
+.goal-streak-number {
+  font-family: var(--serif);
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.goal-streak-label { font-size: 12px; color: var(--text2); margin-top: 5px; }
+
 /* ── Timer ── */
+.timer-card { padding: 22px 18px; }
 .timer-display {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 48px;
-  font-weight: 700;
+  font-family: var(--mono);
+  font-size: 52px;
+  font-weight: 300;
   text-align: center;
   color: var(--text);
-  padding: 20px 0 16px;
-  letter-spacing: 2px;
+  padding: 18px 0 16px;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
 }
 .timer-display.running { color: var(--teal); }
 .timer-display.paused { color: var(--amber); }
-.timer-controls {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-}
-.timer-btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'DM Sans', system-ui;
-  transition: transform 0.15s;
-}
-.timer-btn:active { transform: scale(0.95); }
-.timer-btn.start { background: var(--teal); color: #000; }
-.timer-btn.pause { background: var(--amber); color: #000; }
-.timer-btn.stop { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
-.timer-btn.save { flex: 1; background: var(--teal); color: #000; }
-.timer-btn.discard { flex: 1; background: var(--bg3); color: var(--text2); }
+.timer-controls { display: flex; gap: 8px; justify-content: center; }
+.timer-controls .btn { min-width: 110px; }
 .timer-save-section {
-  margin-top: 16px;
+  margin-top: 18px;
   padding-top: 16px;
-  border-top: 1px solid var(--bg3);
+  border-top: 1px solid var(--hairline);
+}
+.timer-result {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 14px 0 2px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.timer-result .mono { font-size: 18px; font-weight: 500; color: var(--amber); }
+.field-label {
+  font-size: 10px;
+  color: var(--text3);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 8px;
 }
 
-/* ── Video Calculator ── */
-.calc-total {
-  text-align: center;
-  padding: 12px 0;
+/* ── Skill chips ── */
+.skill-chips {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
 }
-.calc-total-label {
-  font-size: 13px;
-  color: var(--text2);
+.skill-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 9px 2px 8px;
+  border: 1px solid var(--hairline);
+  background: var(--bg3);
+  border-radius: 11px;
+  color: var(--text3);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all 0.18s;
 }
-.calc-total-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--amber);
-  margin: 0 6px;
+.skill-chip .chip-letter { font-size: 15px; font-weight: 600; line-height: 1; }
+.skill-chip:active { transform: scale(0.95); }
+.skill-chip[data-skill="listening"].active { background: var(--teal-dim); border-color: var(--teal); color: var(--teal); }
+.skill-chip[data-skill="reading"].active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+.skill-chip[data-skill="writing"].active { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
+.skill-chip[data-skill="speaking"].active { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+.skill-chip[data-skill="grammar"].active { background: var(--amber-glow); border-color: var(--amber); color: var(--amber); }
+
+/* ── Passive toggle row ── */
+.passive-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 13px;
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
 }
-.calc-total-unit {
-  font-size: 13px;
-  color: var(--text2);
-}
+.passive-title { font-size: 13px; color: var(--text); }
+.passive-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* ── Calculator ── */
+.calc-total { text-align: center; padding: 8px 0 4px; }
+.calc-alt { font-size: 11px; color: var(--text3); margin-top: 6px; min-height: 14px; }
 .calc-entries {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 10px;
-  min-height: 0;
+  margin: 10px 0;
+  justify-content: center;
 }
 .calc-entry {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   background: var(--bg3);
-  border: 1px solid var(--bg4);
+  border: 1px solid var(--hairline);
   border-radius: 20px;
   padding: 4px 10px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 12px;
   color: var(--text2);
 }
+.calc-entry.neg { color: var(--red); }
 .calc-entry-remove {
   background: none;
   border: none;
@@ -323,198 +658,312 @@ body {
   padding: 0 2px;
   line-height: 1;
 }
-.calc-entry-remove:hover { color: var(--red); }
-.calc-input-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.calc-input {
-  flex: 1;
-  background: var(--bg3);
-  border: 1px solid var(--bg4);
-  border-radius: 8px;
-  padding: 12px;
-  color: var(--text);
-  font-size: 16px;
-  font-family: 'JetBrains Mono', monospace;
-  outline: none;
-}
-.calc-input:focus { border-color: var(--amber); }
-.calc-add-btn {
+.calc-entry-remove:active { color: var(--red); }
+.calc-input-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.icon-btn {
   width: 48px;
-  background: var(--amber);
-  color: #000;
   border: none;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.calc-add-btn:active { transform: scale(0.93); }
-.calc-minus-btn {
-  width: 48px;
-  background: var(--red-dim);
-  color: var(--red);
-  border: 1px solid color-mix(in oklab, var(--red), transparent 40%);
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.calc-minus-btn:active { transform: scale(0.93); }
-.calc-actions {
-  display: flex;
-  gap: 8px;
-}
-
-/* ── Total Hours Overview ── */
-.total-hours-card {
-  text-align: center;
-  padding: 20px 16px;
-  background: linear-gradient(135deg, var(--bg3), var(--bg2));
-  border: 1px solid var(--amber);
-}
-.total-hours-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 44px;
-  font-weight: 700;
-  color: var(--amber);
-  line-height: 1;
-}
-.total-hours-label {
-  font-size: 13px;
-  color: var(--text2);
-  margin-top: 6px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* ── B1 Goal Tracker ── */
-.b1-goal-stats {
-  text-align: center;
-  margin-bottom: 12px;
-}
-.b1-goal-current {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--amber);
-}
-.b1-goal-separator {
-  font-size: 20px;
-  color: var(--text3);
-  margin: 0 4px;
-}
-.b1-goal-target {
-  font-family: 'JetBrains Mono', monospace;
+  border-radius: var(--radius-sm);
   font-size: 20px;
   font-weight: 600;
-  color: var(--text2);
+  cursor: pointer;
+  transition: transform 0.15s;
 }
-.b1-goal-unit {
+.icon-btn:active { transform: scale(0.93); }
+.icon-btn.add { background: var(--amber); color: #fff; }
+.icon-btn.sub { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+.hint { font-size: 11px; color: var(--text3); margin-bottom: 12px; line-height: 1.5; }
+.hint .mono { color: var(--text2); }
+.calc-save-row { display: flex; gap: 8px; margin-bottom: 4px; }
+.calc-save-row .select-input { flex: 1; }
+.calc-save-row .btn { flex: 1.4; }
+
+/* ── Inputs / selects ── */
+.text-input, .num-input, .select-input,
+.manual-field input, .manual-field select, .manual-field textarea,
+.modal-input, .milestone-field input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: var(--mono);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.text-input { flex: 1; }
+.text-input:focus, .num-input:focus, .select-input:focus,
+.manual-field input:focus, .manual-field select:focus, .manual-field textarea:focus,
+.modal-input:focus, .milestone-field input:focus { border-color: var(--amber); }
+.num-input { width: 64px; text-align: center; padding: 9px 6px; }
+
+.select-input, .manual-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%239b958a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.manual-field textarea {
+  font-family: var(--sans);
   font-size: 13px;
-  color: var(--text3);
-  margin-left: 4px;
-}
-.b1-progress-track {
-  height: 12px;
-  background: var(--bg4);
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-.b1-progress-fill {
-  height: 100%;
-  border-radius: 6px;
-  transition: width 0.6s ease, background 0.3s ease;
-  min-width: 0;
-}
-.b1-goal-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.b1-goal-pct {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 16px;
-  font-weight: 700;
-}
-.b1-goal-remaining {
-  font-size: 12px;
-  color: var(--text2);
+  resize: none;
+  height: 64px;
 }
 
-/* ── Delete Entry / History ── */
+/* ── Manual form ── */
+.manual-form { display: flex; flex-direction: column; gap: 13px; }
+.manual-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.manual-field label {
+  display: block;
+  font-size: 10px;
+  color: var(--text3);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 6px;
+}
+.manual-field .skill-chips { margin-bottom: 0; }
+
+/* ── Quick-add minute chips ── */
+.qa-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: -3px; }
+.qa-chip {
+  padding: 6px 13px;
+  font-size: 12px;
+  font-family: var(--mono);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.qa-chip.selected, .qa-chip:active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+/* ── Tag pills ── */
+.tag-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.tag-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--text2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--sans);
+  -webkit-user-select: none;
+  user-select: none;
+}
+.tag-pill.selected {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+.tag-pill:active { transform: scale(0.94); }
+.filter-pills { padding: 0 2px; margin-bottom: 10px; }
+
+/* ── Period selector ── */
+.period-selector {
+  display: inline-flex;
+  background: var(--bg3);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 3px;
+  margin: 0 auto 12px;
+  align-self: center;
+}
+.view.active .period-selector { align-self: center; }
+.period-btn {
+  padding: 8px 20px;
+  border: none;
+  background: none;
+  color: var(--text2);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: all 0.2s;
+  font-family: var(--sans);
+}
+.period-btn.active {
+  background: var(--bg2);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+/* ── Charts ── */
+.chart-container { height: 180px; position: relative; margin: 4px 0; }
+.chart-canvas { width: 100%; height: 100%; }
+
+/* ── History (JS-injected) ── */
+.history-day-header {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 14px 0 6px;
+  border-bottom: 1px solid var(--hairline);
+  margin-top: 4px;
+}
+.history-day-header:first-child { margin-top: 0; padding-top: 4px; }
 .history-entry {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--bg3);
+  padding: 11px 0;
+  border-bottom: 1px solid var(--hairline);
 }
 .history-entry:last-child { border: none; }
-.history-entry-info {
-  flex: 1;
-  min-width: 0;
-}
-.history-entry-skill {
-  font-size: 13px;
-  font-weight: 600;
-}
-.history-entry-meta {
-  font-size: 11px;
-  color: var(--text3);
-  margin-top: 2px;
-}
+.history-entry-info { flex: 1; min-width: 0; }
+.history-entry-skill { font-size: 13px; font-weight: 500; }
+.history-entry-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
 .history-entry-time {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
+  font-family: var(--mono);
+  font-size: 13px;
   color: var(--amber);
-  margin-right: 10px;
+  margin-right: 8px;
   flex-shrink: 0;
 }
 .history-delete-btn {
   background: none;
   border: none;
   color: var(--text3);
-  font-size: 18px;
+  font-size: 15px;
   cursor: pointer;
-  padding: 6px;
+  padding: 5px;
   border-radius: 6px;
   transition: all 0.15s;
   flex-shrink: 0;
 }
-.history-delete-btn:active {
-  background: var(--red-dim);
-  color: var(--red);
+.history-delete-btn:active { background: var(--red-dim); color: var(--red); }
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hairline);
 }
-.history-day-header {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text2);
-  padding: 10px 0 4px;
-  border-bottom: 1px solid var(--bg4);
-  margin-top: 6px;
-}
-.history-day-header:first-child { margin-top: 0; }
+.history-item:last-child { border: none; }
+.history-date { font-size: 13px; font-weight: 500; }
+.history-hours { font-family: var(--mono); font-size: 13px; color: var(--amber); }
 
-/* ── Custom Input Modal ── */
+/* ── Settings ── */
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.setting-row:first-child { padding-top: 2px; }
+.setting-row:last-child { border: none; padding-bottom: 2px; }
+.setting-label { font-size: 14px; font-weight: 500; }
+.setting-desc { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+.toggle {
+  width: 44px; height: 26px;
+  background: var(--bg4);
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggle.on { background: var(--amber); }
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  top: 3px; left: 3px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.toggle.on::after { transform: translateX(18px); }
+
+.data-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--hairline);
+  padding: 14px 2px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--sans);
+  text-align: left;
+}
+.data-btn:first-child { padding-top: 4px; }
+.data-btn:last-child { border-bottom: none; padding-bottom: 4px; }
+.data-btn:active { color: var(--text2); }
+.data-btn.warn { color: var(--red); }
+.data-ic {
+  width: 28px; height: 28px;
+  border-radius: 9px;
+  background: var(--bg3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+.data-btn.warn .data-ic { background: var(--red-dim); color: var(--red); }
+
+.install-card { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.install-card p { margin-bottom: 8px; }
+.install-card strong { color: var(--text); font-weight: 600; }
+.install-note { color: var(--text3); font-size: 11px; margin-top: 8px; }
+
+.footer-quote { text-align: center; padding: 10px 20px 6px; }
+.footer-quote .quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text3);
+}
+.footer-quote .version {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 1px;
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+/* ── Modals ── */
 .modal-overlay {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.55);
   z-index: 100;
   align-items: flex-end;
   justify-content: center;
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 .modal-overlay.show { display: flex; }
 .modal {
   background: var(--bg2);
-  border-radius: 20px 20px 0 0;
+  border: 1px solid var(--hairline);
+  border-radius: 24px 24px 0 0;
   padding: 24px 20px calc(24px + var(--safe-bottom));
   width: 100%;
   max-width: 480px;
@@ -522,536 +971,34 @@ body {
 }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .modal h3 {
-  font-size: 16px;
-  font-weight: 700;
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 400;
   margin-bottom: 16px;
 }
-.modal-input {
-  width: 100%;
-  background: var(--bg3);
-  border: 2px solid var(--bg4);
-  border-radius: 10px;
-  padding: 14px;
-  color: var(--text);
-  font-size: 18px;
-  font-family: 'JetBrains Mono', monospace;
-  margin-bottom: 12px;
-  outline: none;
-}
-.modal-input:focus { border-color: var(--amber); }
+.modal-input { font-size: 17px; margin-bottom: 12px; }
 .modal-btns { display: flex; gap: 8px; }
 .modal-btn {
   flex: 1;
   padding: 14px;
   border: none;
-  border-radius: 10px;
-  font-size: 15px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  font-family: 'DM Sans', system-ui;
+  font-family: var(--sans);
 }
 .modal-btn.cancel { background: var(--bg3); color: var(--text2); }
-.modal-btn.confirm { background: var(--amber); color: #000; }
+.modal-btn.confirm { background: var(--amber); color: #fff; }
 
-/* ── Toast ── */
-.toast {
-  position: fixed;
-  top: calc(16px + var(--safe-top));
-  left: 50%;
-  transform: translateX(-50%) translateY(-120%);
-  background: var(--teal);
-  color: #000;
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-size: 13px;
-  font-weight: 600;
-  z-index: 200;
-  transition: transform 0.3s ease;
-  white-space: nowrap;
-  pointer-events: none;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
-
-/* ── History / Charts ── */
-.chart-container {
-  height: 180px;
-  position: relative;
-  margin: 8px 0;
-}
-.chart-canvas { width: 100%; height: 100%; }
-
-.history-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--bg3);
-}
-.history-item:last-child { border: none; }
-.history-date { font-size: 13px; font-weight: 600; }
-.history-hours {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  color: var(--amber);
-}
-
-/* ── Period Selector ── */
-.period-selector {
-  display: flex;
-  background: var(--bg3);
-  border-radius: 10px;
-  padding: 3px;
-  margin-bottom: 14px;
-}
-.period-btn {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  background: none;
-  color: var(--text2);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.2s;
-  font-family: 'DM Sans', system-ui;
-}
-.period-btn.active {
-  background: var(--bg2);
-  color: var(--text);
-}
-
-/* ── Anki Section ── */
-.anki-inputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.anki-field label {
-  display: block;
-  font-size: 11px;
-  color: var(--text2);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-.anki-field input {
-  width: 100%;
-  background: var(--bg3);
-  border: 1px solid var(--bg4);
-  border-radius: 8px;
-  padding: 12px;
-  color: var(--text);
-  font-size: 16px;
-  font-family: 'JetBrains Mono', monospace;
-  outline: none;
-}
-.anki-field input:focus { border-color: var(--amber); }
-.anki-save-btn {
-  width: 100%;
-  margin-top: 10px;
-  padding: 14px;
-  background: var(--teal);
-  color: #000;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'DM Sans', system-ui;
-}
-.anki-save-btn:active { transform: scale(0.97); }
-
-/* ── Settings ── */
-.setting-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--bg3);
-}
-.setting-row:last-child { border: none; }
-.setting-label { font-size: 14px; font-weight: 500; }
-.setting-desc { font-size: 11px; color: var(--text3); margin-top: 2px; }
-.toggle {
-  width: 48px; height: 28px;
-  background: var(--bg4);
-  border-radius: 14px;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  transition: background 0.2s;
-}
-.toggle.on { background: var(--amber); }
-.toggle::after {
-  content: '';
-  position: absolute;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: white;
-  top: 3px; left: 3px;
-  transition: transform 0.2s;
-}
-.toggle.on::after { transform: translateX(20px); }
-
-.danger-btn {
-  width: 100%;
-  padding: 14px;
-  background: var(--red-dim);
-  color: var(--red);
-  border: 1px solid var(--red);
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 12px;
-  font-family: 'DM Sans', system-ui;
-}
-.danger-btn:active { opacity: 0.7; }
-
-/* ── Undo Bar ── */
-.undo-bar {
-  position: fixed;
-  bottom: calc(var(--nav-height) + 12px + var(--safe-bottom));
-  left: 50%;
-  transform: translateX(-50%) translateY(120px);
-  background: var(--bg3);
-  border: 1px solid var(--bg4);
-  padding: 10px 16px;
-  border-radius: 30px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  z-index: 50;
-  transition: transform 0.3s ease;
-  font-size: 13px;
-  white-space: nowrap;
-}
-.undo-bar.show { transform: translateX(-50%) translateY(0); }
-.undo-btn {
-  background: var(--amber);
-  color: #000;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'DM Sans', system-ui;
-}
-
-/* ── Week Heatmap ── */
-.week-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 4px;
-  margin-top: 8px;
-}
-.week-cell {
-  aspect-ratio: auto;
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: 600;
-  background: var(--bg3);
-}
-.week-cell .day-name { color: var(--text3); font-size: 9px; }
-.week-cell .day-hours {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  margin-top: 1px;
-}
-.week-cell.good { background: var(--teal-dim); }
-.week-cell.good .day-hours { color: var(--teal); }
-.week-cell.mid { background: var(--amber-glow); }
-.week-cell.mid .day-hours { color: var(--amber); }
-.week-cell.low { background: var(--red-dim); }
-.week-cell.low .day-hours { color: var(--red); }
-.week-cell.empty .day-hours { color: var(--text3); }
-.week-cell.today { border: 2px solid var(--amber); }
-
-/* ── Scroll ── */
-.content::-webkit-scrollbar { width: 0; }
-
-/* ── Animations ── */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.card { animation: fadeIn 0.3s ease; }
-
-/* ── Goal Progress ── */
-.goal-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.goal-ring-wrap {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  flex-shrink: 0;
-}
-.goal-ring-wrap svg {
-  width: 80px;
-  height: 80px;
-  transform: rotate(-90deg);
-}
-.goal-ring-wrap .ring-bg {
-  fill: none;
-  stroke: var(--bg4);
-  stroke-width: 6;
-}
-.goal-ring-wrap .ring-fill {
-  fill: none;
-  stroke-width: 6;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.6s ease;
-}
-.goal-center {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.goal-center .goal-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1;
-}
-.goal-center .goal-of {
-  font-size: 10px;
-  color: var(--text3);
-  margin-top: 2px;
-}
-.goal-details { flex: 1; }
-.goal-details .goal-pct {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--amber);
-}
-.goal-details .goal-msg {
-  font-size: 12px;
-  color: var(--text2);
-  margin-top: 2px;
-}
-.goal-details .goal-left {
-  font-size: 11px;
-  color: var(--text3);
-  margin-top: 5px;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-/* ── Manual Entry ── */
-.manual-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.manual-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.manual-field label {
-  display: block;
-  font-size: 11px;
-  color: var(--text2);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-.manual-field input,
-.manual-field select,
-.manual-field textarea {
-  width: 100%;
-  background: var(--bg3);
-  border: 1px solid var(--bg4);
-  border-radius: 8px;
-  padding: 12px;
-  color: var(--text);
-  font-size: 14px;
-  font-family: 'JetBrains Mono', monospace;
-  outline: none;
-}
-.manual-field select {
-  appearance: none;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239a9a9a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 32px;
-}
-.manual-field textarea {
-  font-family: 'DM Sans', system-ui;
-  font-size: 13px;
-  resize: none;
-  height: 60px;
-}
-.manual-field input:focus,
-.manual-field select:focus,
-.manual-field textarea:focus { border-color: var(--amber); }
-
-/* ── Tags ── */
-.tag-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-}
-.tag-pill {
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--bg4);
-  background: var(--bg3);
-  color: var(--text2);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s;
-  font-family: 'DM Sans', system-ui;
-  -webkit-user-select: none;
-  user-select: none;
-}
-.tag-pill.selected {
-  background: var(--amber-glow);
-  border-color: var(--amber);
-  color: var(--amber);
-}
-.tag-pill:active { transform: scale(0.94); }
-.save-manual-btn {
-  width: 100%;
-  padding: 14px;
-  background: var(--teal);
-  color: #000;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'DM Sans', system-ui;
-}
-.save-manual-btn:active { transform: scale(0.97); }
-
-/* ── Goal Cards (new system) ── */
-.goal-card-new {
-  background: var(--bg2);
-  border: 1px solid var(--bg3);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 12px;
-}
-.goal-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.goal-card-name {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.goal-card-actions {
-  display: flex;
-  gap: 4px;
-}
-.goal-card-actions button {
-  background: none;
-  border: none;
-  color: var(--text3);
-  font-size: 16px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-}
-.goal-card-actions button:active { color: var(--text); }
-.goal-metric {
-  margin-bottom: 8px;
-}
-.goal-metric:last-child { margin-bottom: 0; }
-.goal-metric-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 4px;
-}
-.goal-metric-label {
-  font-size: 12px;
-  color: var(--text2);
-}
-.goal-metric-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  font-weight: 600;
-}
-.goal-progress-track {
-  height: 8px;
-  background: var(--bg4);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.goal-progress-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 0.5s ease;
-}
-.goal-pace {
-  font-size: 11px;
-  color: var(--text3);
-  margin-top: 6px;
-  font-family: 'JetBrains Mono', monospace;
-}
-.goal-milestone {
-  font-size: 11px;
-  color: var(--text3);
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.goal-milestone.reached { color: var(--teal); }
-.goal-streak-display {
-  text-align: center;
-  padding: 8px 0;
-}
-.goal-streak-number {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1;
-}
-.goal-streak-label {
-  font-size: 12px;
-  color: var(--text2);
-  margin-top: 4px;
-}
+/* ── Milestones ── */
 .milestone-field {
   display: flex;
   gap: 6px;
   align-items: center;
   margin-top: 6px;
 }
-.milestone-field input {
-  flex: 1;
-  background: var(--bg3);
-  border: 1px solid var(--bg4);
-  border-radius: 6px;
-  padding: 8px;
-  color: var(--text);
-  font-size: 13px;
-  font-family: 'JetBrains Mono', monospace;
-  outline: none;
-}
-.milestone-field input:focus { border-color: var(--amber); }
+.milestone-field input { padding: 9px; font-size: 13px; border-radius: 9px; }
 .milestone-remove {
   background: none;
   border: none;
@@ -1060,192 +1007,314 @@ body {
   cursor: pointer;
   padding: 4px;
 }
-.milestone-remove:hover { color: var(--red); }
-.week-total {
-  text-align: center;
-  margin-top: 10px;
-  padding-top: 8px;
-  border-top: 1px solid var(--bg3);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  color: var(--amber);
-  font-weight: 600;
+.milestone-remove:active { color: var(--red); }
+.ms-add-btn {
+  background: var(--bg3);
+  border: 1px solid var(--hairline);
+  border-radius: 7px;
+  padding: 4px 10px;
+  color: var(--text2);
+  font-size: 11px;
+  cursor: pointer;
+  font-family: var(--sans);
 }
-.week-nav-btn {
+
+/* ── Toast / Undo ── */
+.toast {
+  position: fixed;
+  top: calc(16px + var(--safe-top));
+  left: 50%;
+  transform: translateX(-50%) translateY(-160%);
+  opacity: 0;
+  background: var(--text);
+  color: var(--bg);
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 200;
+  transition: transform 0.3s ease, opacity 0.25s ease;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+.undo-bar {
+  position: fixed;
+  bottom: calc(var(--nav-height) + 16px + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(140px);
   background: var(--bg3);
   border: 1px solid var(--bg4);
-  border-radius: 8px;
-  color: var(--text2);
-  font-size: 16px;
-  width: 32px;
-  height: 32px;
+  padding: 10px 16px;
+  border-radius: 30px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.week-nav-btn:disabled { opacity: 0.3; cursor: default; }
-.skill-total {
-  text-align: right;
-  margin-top: 8px;
-  padding-top: 6px;
-  border-top: 1px solid var(--bg3);
-  font-family: 'JetBrains Mono', monospace;
+  gap: 12px;
+  z-index: 70;
+  transition: transform 0.3s ease;
   font-size: 13px;
-  color: var(--text2);
+  white-space: nowrap;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
 }
+.undo-bar.show { transform: translateX(-50%) translateY(0); }
+.undo-btn {
+  background: var(--amber);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+/* ── Desktop ── */
+@media (min-width: 900px) {
+  .app {
+    max-width: 1180px;
+    grid-template-columns: 216px 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "side header"
+      "side content";
+    border-left: 1px solid var(--hairline);
+    border-right: 1px solid var(--hairline);
+  }
+  .header { grid-area: header; padding: 26px 32px 14px; }
+  .content { grid-area: content; padding: 8px 32px 40px; }
+  .nav {
+    grid-area: side;
+    position: static;
+    transform: none;
+    width: auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 30px 14px;
+    border: none;
+    border-right: 1px solid var(--hairline);
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+  }
+  .nav-btn {
+    flex: 0 0 auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+  .nav-btn .icon { font-size: 16px; width: 18px; text-align: center; }
+
+  .view.active {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .block.wide { grid-column: 1 / -1; }
+  .view.active .period-selector { margin: 0 0 12px; }
+
+  .undo-bar { bottom: 28px; }
+  .modal-overlay { align-items: center; padding: 24px; }
+  .modal { border-radius: 24px; max-width: 540px; animation: fadeIn 0.2s ease; }
+}
+
 </style>
 </head>
 <body>
 <div class="app" id="app">
   <!-- Header -->
-  <div class="header">
-    <h1>NL_TRACKER</h1>
-    <div class="header-right">
-      <button class="theme-btn" id="themeToggle" onclick="toggleTheme()">☀️</button>
+  <header class="header">
+    <div class="header-id">
+      <div class="wordmark">NL_TRACKER</div>
+      <div class="header-date" id="headerDate"></div>
     </div>
-  </div>
+    <button class="theme-btn" id="themeToggle" onclick="toggleTheme()">☀️</button>
+  </header>
 
   <!-- Content -->
   <div class="content" id="content">
+
     <!-- ═══ DASHBOARD ═══ -->
     <div class="view active" id="viewDashboard">
-      <!-- Today's Stats -->
-      <div class="stats-row">
-        <div class="stat-box">
-          <div class="stat-value" id="todayHours" style="color:var(--amber)">0.0</div>
-          <div class="stat-label">Uren</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value" id="todayAnki" style="color:var(--teal)">0</div>
-          <div class="stat-label">Anki</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value" id="streakCount" style="color:var(--red)">0</div>
-          <div class="stat-label">Streak 🔥</div>
-        </div>
-      </div>
 
-      <!-- Total Study Hours -->
-      <div class="card total-hours-card">
-        <div class="total-hours-value" id="totalStudyHours">0.00</div>
-        <div class="total-hours-label">Totale studie-uren</div>
-      </div>
-
-      <!-- Goals Section -->
-      <div id="goalsSection"></div>
-      <div style="text-align:center;margin-bottom:12px">
-        <button onclick="openGoalModal()" style="background:var(--bg2);border:1px dashed var(--bg4);border-radius:var(--radius);padding:12px;width:100%;color:var(--text3);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',system-ui">+ Nieuw doel</button>
-      </div>
-
-      <!-- Daily Goal Progress -->
-      <div class="card">
-        <div class="card-title">Dagelijks doel</div>
-        <div class="goal-card">
-          <div class="goal-ring-wrap">
-            <svg viewBox="0 0 80 80">
-              <circle class="ring-bg" cx="40" cy="40" r="34"/>
-              <circle class="ring-fill" id="goalRing" cx="40" cy="40" r="34"
-                stroke="var(--amber)" stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
-            </svg>
-            <div class="goal-center">
-              <span class="goal-val" id="goalCurrent">0.0</span>
-              <span class="goal-of" id="dailyGoalDisplay">/ 2.0u</span>
+      <!-- Hero: today + daily goal -->
+      <section class="block wide">
+        <div class="card hero-card">
+          <div class="hero-row">
+            <div class="goal-ring-wrap">
+              <svg viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="34"/>
+                <circle class="ring-fill" id="goalRing" cx="40" cy="40" r="34"
+                  stroke="var(--amber)" stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+              </svg>
+              <div class="goal-center">
+                <span class="goal-val" id="goalCurrent">0.0</span>
+                <span class="goal-of" id="dailyGoalDisplay">/ 2.0u</span>
+              </div>
+            </div>
+            <div class="hero-info">
+              <span class="eyebrow">Vandaag</span>
+              <div class="hero-hours"><span id="todayHours">0.0</span><span class="hero-unit">uur</span></div>
+              <div class="goal-msg" id="goalMsg">Begin met studeren!</div>
+              <div class="goal-left" id="goalLeft"></div>
             </div>
           </div>
-          <div class="goal-details">
-            <div class="goal-pct" id="goalPct">0%</div>
-            <div class="goal-msg" id="goalMsg">Begin met studeren!</div>
-            <div class="goal-left" id="goalLeft"></div>
+          <div class="goal-pct" id="goalPct">0%</div>
+        </div>
+      </section>
+
+      <!-- Streak + Anki + total -->
+      <section class="block">
+        <div class="duo">
+          <div class="card mini-card">
+            <span class="eyebrow">Reeks 🔥</span>
+            <div class="big-num"><span class="serif-num" id="streakCount">0</span><span class="num-unit">dagen</span></div>
+          </div>
+          <div class="card mini-card">
+            <span class="eyebrow">Anki vandaag</span>
+            <div class="big-num"><span class="serif-num" id="todayAnki">0</span><span class="num-unit">kaarten</span></div>
           </div>
         </div>
-      </div>
-
-      <!-- This Week Heatmap -->
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <button class="week-nav-btn" onclick="changeWeek(-1)">&#8592;</button>
-          <span id="weekTitle" style="font-size:13px;font-weight:700;color:var(--text2);font-family:'JetBrains Mono',monospace"></span>
-          <button class="week-nav-btn" id="weekNextBtn" onclick="changeWeek(1)">&#8594;</button>
+        <div class="card slim-card">
+          <div class="slim-row">
+            <span class="eyebrow">Totale studie-uren</span>
+            <span class="serif-num md"><span id="totalStudyHours">0.00</span><span class="num-unit"> u</span></span>
+          </div>
         </div>
-        <div id="weekGoalSummary"></div>
-        <div class="week-grid" id="weekGrid"></div>
-      </div>
+      </section>
 
-      <!-- Cumulative Skills -->
-      <div class="card">
-        <div class="card-title">Totaal per vaardigheid</div>
-        <div id="skillBarsTotal"></div>
-      </div>
+      <!-- Today's sessions -->
+      <section class="block">
+        <div class="section-head">
+          <span class="eyebrow">Vandaag · Sessies</span>
+          <span class="head-meta mono" id="todaySessionCount"></span>
+        </div>
+        <div class="card list-card" id="todaySessions"></div>
+      </section>
+
+      <!-- Goals -->
+      <section class="block">
+        <div class="section-head"><span class="eyebrow">Doelen</span></div>
+        <div id="goalsSection"></div>
+        <button class="ghost-btn" onclick="openGoalModal()">+ Nieuw doel</button>
+      </section>
+
+      <!-- Week -->
+      <section class="block">
+        <div class="card">
+          <div class="week-head">
+            <button class="week-nav-btn" onclick="changeWeek(-1)">&#8592;</button>
+            <span id="weekTitle" class="week-title mono"></span>
+            <button class="week-nav-btn" id="weekNextBtn" onclick="changeWeek(1)">&#8594;</button>
+          </div>
+          <div id="weekGoalSummary"></div>
+          <div class="week-grid" id="weekGrid"></div>
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section class="block">
+        <div class="section-head"><span class="eyebrow">Totaal per vaardigheid</span></div>
+        <div class="card" id="skillBarsTotal"></div>
+      </section>
     </div>
 
     <!-- ═══ QUICK LOG ═══ -->
     <div class="view" id="viewLog">
-      <!-- Timer -->
-      <div class="log-section">
-        <div class="card" style="margin-bottom:0">
-          <div class="card-title">Stopwatch</div>
+
+      <!-- Stopwatch -->
+      <section class="block">
+        <div class="card timer-card">
+          <span class="eyebrow center">Stopwatch</span>
           <div class="timer-display" id="timerDisplay">00:00:00</div>
           <div class="timer-controls">
-            <button class="timer-btn start" id="timerStartBtn" onclick="timerStart()">&#9654; Start</button>
-            <button class="timer-btn pause" id="timerPauseBtn" onclick="timerPause()" style="display:none">&#9208; Pauze</button>
-            <button class="timer-btn stop" id="timerStopBtn" onclick="timerStop()" style="display:none">&#9209; Stop</button>
+            <button class="btn primary" id="timerStartBtn" onclick="timerStart()">&#9654;&nbsp; Start</button>
+            <button class="btn warn" id="timerPauseBtn" onclick="timerPause()" style="display:none">&#9208;&nbsp; Pauze</button>
+            <button class="btn danger-soft" id="timerStopBtn" onclick="timerStop()" style="display:none">&#9209;&nbsp; Stop</button>
           </div>
           <div class="timer-save-section" id="timerSaveSection" style="display:none">
-            <div class="manual-field" style="margin-bottom:10px">
-              <label>Vaardigheid</label>
-              <select id="timerSkill" onchange="onTimerSkillChange()">
-                <option value="listening">🎧 Luisteren</option>
-                <option value="reading">📖 Lezen</option>
-                <option value="writing">✍️ Schrijven</option>
-                <option value="grammar">📐 Grammatica</option>
-              </select>
+            <div class="field-label">Vaardigheid</div>
+            <div class="skill-chips">
+              <button type="button" class="skill-chip active" data-skill="listening" onclick="pickSkill('timer','listening',this)"><span class="chip-letter">L</span>Luisteren</button>
+              <button type="button" class="skill-chip" data-skill="reading" onclick="pickSkill('timer','reading',this)"><span class="chip-letter">R</span>Lezen</button>
+              <button type="button" class="skill-chip" data-skill="writing" onclick="pickSkill('timer','writing',this)"><span class="chip-letter">W</span>Schrijven</button>
+              <button type="button" class="skill-chip" data-skill="speaking" onclick="pickSkill('timer','speaking',this)"><span class="chip-letter">S</span>Spreken</button>
+              <button type="button" class="skill-chip" data-skill="grammar" onclick="pickSkill('timer','grammar',this)"><span class="chip-letter">G</span>Grammatica</button>
             </div>
-            <div class="manual-field" id="timerPassiveWrap" style="display:none;margin-bottom:10px">
-              <label>Passief luisteren</label>
+            <select id="timerSkill" class="hidden-select" onchange="onTimerSkillChange()">
+              <option value="listening">Luisteren</option>
+              <option value="reading">Lezen</option>
+              <option value="writing">Schrijven</option>
+              <option value="speaking">Spreken</option>
+              <option value="grammar">Grammatica</option>
+            </select>
+            <div class="passive-row" id="timerPassiveWrap" style="display:none">
+              <div>
+                <div class="passive-title">Passief luisteren</div>
+                <div class="passive-sub">Achtergrondpodcast tijdens afwas, wandelen…</div>
+              </div>
               <button class="toggle" id="timerPassiveToggle" onclick="toggleTimerPassive()"></button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-              <span style="font-size:13px;color:var(--text2)">Tijd:</span>
-              <span id="timerResultTime" style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--amber)">0 min</span>
+            <div class="timer-result">
+              <span>Tijd:</span>
+              <span class="mono" id="timerResultTime">0 min</span>
             </div>
-            <div style="display:flex;gap:8px">
-              <button class="timer-btn discard" onclick="timerDiscard()">Annuleer</button>
-              <button class="timer-btn save" onclick="timerSave()">Opslaan</button>
+            <div class="btn-row">
+              <button class="btn ghost" onclick="timerDiscard()">Annuleer</button>
+              <button class="btn primary" onclick="timerSave()">Opslaan</button>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Video Length Calculator -->
-      <div class="log-section">
-        <div class="card" style="margin-bottom:0">
-          <div class="card-title">Video calculator</div>
+      <!-- Video calculator -->
+      <section class="block">
+        <div class="card">
+          <span class="eyebrow">Video calculator</span>
           <div class="calc-total">
-            <span class="calc-total-label">Totaal:</span>
-            <span class="calc-total-value" id="calcTotal">0.00</span>
-            <span class="calc-total-unit">min</span>
+            <span class="serif-num lg" id="calcTotal">0.0</span>
+            <span class="num-unit">min</span>
+            <div class="calc-alt mono" id="calcTotalAlt"></div>
           </div>
           <div class="calc-entries" id="calcEntries"></div>
           <div class="calc-input-row">
-            <input type="number" class="calc-input" id="calcInput"
-              placeholder="24.58" inputmode="decimal" step="any"
+            <input type="text" class="text-input mono" id="calcInput"
+              placeholder="12:34 of 24.5" inputmode="decimal"
               onkeydown="if(event.key==='Enter')calcAdd()">
-            <button class="calc-add-btn" onclick="calcAdd()">+</button>
-            <button class="calc-minus-btn" onclick="calcSubtract()">−</button>
+            <button class="icon-btn add" onclick="calcAdd()">+</button>
+            <button class="icon-btn sub" onclick="calcSubtract()">&minus;</button>
           </div>
-          <div class="calc-actions">
-            <button class="timer-btn discard" onclick="calcClear()">Wissen</button>
-            <button class="timer-btn save" onclick="calcTransfer()">&#8594; Minuten veld</button>
+          <div class="hint">Tip: typ <span class="mono">12:34</span> voor 12 min 34 sec, <span class="mono">1:02:30</span> voor uren — of gewoon minuten als getal.</div>
+          <div class="calc-save-row">
+            <select id="calcSkill" class="select-input">
+              <option value="listening">Luisteren</option>
+              <option value="reading">Lezen</option>
+              <option value="writing">Schrijven</option>
+              <option value="speaking">Spreken</option>
+              <option value="grammar">Grammatica</option>
+            </select>
+            <button class="btn primary" onclick="calcSaveSession()">Opslaan als sessie</button>
+          </div>
+          <div class="btn-row">
+            <button class="btn ghost" onclick="calcClear()">Wissen</button>
+            <button class="btn ghost" onclick="calcTransfer()">&#8594; Minuten veld</button>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Manual Entry -->
-      <div class="log-section">
-        <div class="card" style="margin-bottom:0">
-          <div class="card-title">Handmatige invoer</div>
+      <!-- Manual entry -->
+      <section class="block">
+        <div class="card">
+          <span class="eyebrow">Handmatige invoer</span>
           <div class="manual-form">
             <div class="manual-row">
               <div class="manual-field">
@@ -1253,24 +1322,41 @@ body {
                 <input type="date" id="manualDate">
               </div>
               <div class="manual-field">
-                <label>Vaardigheid</label>
-                <select id="manualSkill" onchange="onSkillChange()">
-                  <option value="listening">🎧 Luisteren</option>
-                  <option value="reading">📖 Lezen</option>
-                  <option value="writing">✍️ Schrijven</option>
-                  <option value="grammar">📐 Grammatica</option>
-                </select>
-              </div>
-            </div>
-            <div class="manual-row">
-              <div class="manual-field">
                 <label>Minuten</label>
                 <input type="number" id="manualMinutes" placeholder="0" inputmode="numeric">
               </div>
-              <div class="manual-field" id="passiveToggleWrap" style="display:none">
-                <label>Passief luisteren</label>
-                <button class="toggle" id="passiveToggle" onclick="togglePassive()"></button>
+            </div>
+            <div class="qa-chips">
+              <button type="button" class="qa-chip" onclick="quickMins(15,this)">15m</button>
+              <button type="button" class="qa-chip" onclick="quickMins(25,this)">25m</button>
+              <button type="button" class="qa-chip" onclick="quickMins(30,this)">30m</button>
+              <button type="button" class="qa-chip" onclick="quickMins(45,this)">45m</button>
+              <button type="button" class="qa-chip" onclick="quickMins(60,this)">60m</button>
+              <button type="button" class="qa-chip" onclick="quickMins(90,this)">90m</button>
+            </div>
+            <div class="manual-field">
+              <label>Vaardigheid</label>
+              <div class="skill-chips">
+                <button type="button" class="skill-chip active" data-skill="listening" onclick="pickSkill('manual','listening',this)"><span class="chip-letter">L</span>Luisteren</button>
+                <button type="button" class="skill-chip" data-skill="reading" onclick="pickSkill('manual','reading',this)"><span class="chip-letter">R</span>Lezen</button>
+                <button type="button" class="skill-chip" data-skill="writing" onclick="pickSkill('manual','writing',this)"><span class="chip-letter">W</span>Schrijven</button>
+                <button type="button" class="skill-chip" data-skill="speaking" onclick="pickSkill('manual','speaking',this)"><span class="chip-letter">S</span>Spreken</button>
+                <button type="button" class="skill-chip" data-skill="grammar" onclick="pickSkill('manual','grammar',this)"><span class="chip-letter">G</span>Grammatica</button>
               </div>
+              <select id="manualSkill" class="hidden-select" onchange="onSkillChange()">
+                <option value="listening">Luisteren</option>
+                <option value="reading">Lezen</option>
+                <option value="writing">Schrijven</option>
+                <option value="speaking">Spreken</option>
+                <option value="grammar">Grammatica</option>
+              </select>
+            </div>
+            <div class="passive-row" id="passiveToggleWrap" style="display:none">
+              <div>
+                <div class="passive-title">Passief luisteren</div>
+                <div class="passive-sub">Achtergrondpodcast tijdens afwas, wandelen…</div>
+              </div>
+              <button class="toggle" id="passiveToggle" onclick="togglePassive()"></button>
             </div>
             <div class="manual-field">
               <label>Tags</label>
@@ -1280,6 +1366,7 @@ body {
                 <span class="tag-pill" data-tag="artikel" onclick="toggleTag(this)">Artikel</span>
                 <span class="tag-pill" data-tag="video" onclick="toggleTag(this)">Video</span>
                 <span class="tag-pill" data-tag="gesprek" onclick="toggleTag(this)">Gesprek</span>
+                <span class="tag-pill" data-tag="tutor" onclick="toggleTag(this)">Tutor</span>
                 <span class="tag-pill" data-tag="oefening" onclick="toggleTag(this)">Oefening</span>
                 <span class="tag-pill" data-tag="cursus" onclick="toggleTag(this)">Cursus</span>
                 <span class="tag-pill" data-tag="app" onclick="toggleTag(this)">App</span>
@@ -1287,17 +1374,17 @@ body {
             </div>
             <div class="manual-field">
               <label>Notities</label>
-              <textarea id="manualNotes" placeholder="Optioneel..."></textarea>
+              <textarea id="manualNotes" placeholder="Optioneel…"></textarea>
             </div>
-            <button class="save-manual-btn" onclick="saveManualEntry()">Opslaan</button>
+            <button class="btn primary full" onclick="saveManualEntry()">Opslaan</button>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Anki Log -->
-      <div class="log-section">
-        <div class="card" style="margin-bottom:0">
-          <div class="card-title">Anki Kaarten</div>
+      <!-- Anki -->
+      <section class="block">
+        <div class="card">
+          <span class="eyebrow">Anki kaarten</span>
           <div class="manual-row">
             <div class="manual-field">
               <label>Datum</label>
@@ -1308,113 +1395,116 @@ body {
               <input type="number" id="ankiCards" placeholder="0" inputmode="numeric">
             </div>
           </div>
-          <button class="save-manual-btn" onclick="saveAnkiEntry()" style="margin-top:10px">Opslaan</button>
+          <button class="btn primary full" style="margin-top:13px" onclick="saveAnkiEntry()">Opslaan</button>
         </div>
-      </div>
+      </section>
     </div>
 
     <!-- ═══ STATS ═══ -->
     <div class="view" id="viewStats">
-      <div class="period-selector">
-        <button class="period-btn active" onclick="setPeriod('week',this)">Week</button>
-        <button class="period-btn" onclick="setPeriod('month',this)">Maand</button>
-        <button class="period-btn" onclick="setPeriod('all',this)">Alles</button>
-      </div>
-
-      <!-- Tag Filter -->
-      <div class="tag-pills" id="statsTagFilter" style="margin-bottom:12px"></div>
-
-      <div class="card">
-        <div class="card-title">Studietijd (uren/dag)</div>
-        <div class="chart-container">
-          <canvas id="hoursChart" class="chart-canvas"></canvas>
+      <section class="block wide">
+        <div style="display:flex;justify-content:center">
+          <div class="period-selector">
+            <button class="period-btn active" onclick="setPeriod('week',this)">Week</button>
+            <button class="period-btn" onclick="setPeriod('month',this)">Maand</button>
+            <button class="period-btn" onclick="setPeriod('all',this)">Alles</button>
+          </div>
         </div>
-      </div>
+        <div class="tag-pills filter-pills" id="statsTagFilter"></div>
+      </section>
 
-      <div class="card">
-        <div class="card-title">Vaardigheid verdeling</div>
-        <div class="chart-container">
-          <canvas id="skillChart" class="chart-canvas"></canvas>
+      <section class="block">
+        <div class="section-head"><span class="eyebrow">Studietijd · uren per dag</span></div>
+        <div class="card">
+          <div class="chart-container"><canvas id="hoursChart" class="chart-canvas"></canvas></div>
         </div>
-      </div>
+      </section>
 
-      <div class="card">
-        <div class="card-title">Verdeling per tag</div>
-        <div class="chart-container">
-          <canvas id="tagChart" class="chart-canvas"></canvas>
+      <section class="block">
+        <div class="section-head"><span class="eyebrow">Vaardigheid verdeling</span></div>
+        <div class="card">
+          <div class="chart-container"><canvas id="skillChart" class="chart-canvas"></canvas></div>
         </div>
-      </div>
+      </section>
 
-      <div class="card">
-        <div class="card-title">Dagelijkse geschiedenis</div>
-        <div id="historyList"></div>
-      </div>
+      <section class="block">
+        <div class="section-head"><span class="eyebrow">Verdeling per tag</span></div>
+        <div class="card">
+          <div class="chart-container"><canvas id="tagChart" class="chart-canvas"></canvas></div>
+        </div>
+      </section>
+
+      <section class="block wide">
+        <div class="section-head"><span class="eyebrow">Geschiedenis</span></div>
+        <div class="tag-pills filter-pills" id="statsSkillPills"></div>
+        <div class="card" id="historyList"></div>
+      </section>
     </div>
 
     <!-- ═══ SETTINGS ═══ -->
     <div class="view" id="viewSettings">
-      <div class="card">
-        <div class="card-title">Instellingen</div>
-        <div class="setting-row">
-          <div>
-            <div class="setting-label">Donkere modus</div>
-            <div class="setting-desc">Schakel tussen licht en donker</div>
+      <section class="block">
+        <div class="section-head"><span class="eyebrow">Voorkeuren</span></div>
+        <div class="card">
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Donkere modus</div>
+              <div class="setting-desc">Schakel tussen licht en donker</div>
+            </div>
+            <button class="toggle" id="darkToggle" onclick="toggleTheme()"></button>
           </div>
-          <button class="toggle" id="darkToggle" onclick="toggleTheme()"></button>
-        </div>
-        <div class="setting-row">
-          <div>
-            <div class="setting-label">Dagelijks doel (uren)</div>
-            <div class="setting-desc">Standaard: 2 uur</div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Dagelijks doel (uren)</div>
+              <div class="setting-desc">Standaard: 2 uur</div>
+            </div>
+            <input type="number" id="goalInput" class="num-input" value="2" min="0.5" max="8" step="0.5" onchange="updateGoal(this.value)">
           </div>
-          <input type="number" id="goalInput" value="2" min="0.5" max="8" step="0.5"
-            style="width:60px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;text-align:center;outline:none;"
-            onchange="updateGoal(this.value)">
-        </div>
-        <div class="setting-row">
-          <div>
-            <div class="setting-label">Dag verlengen na middernacht</div>
-            <div class="setting-desc">Tot 03:00 als gisteren meetellen</div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">Dag verlengen na middernacht</div>
+              <div class="setting-desc">Tot 03:00 als gisteren meetellen</div>
+            </div>
+            <button class="toggle" id="extendDayToggle" onclick="toggleExtendDay()"></button>
           </div>
-          <button class="toggle" id="extendDayToggle" onclick="toggleExtendDay()"></button>
         </div>
-      </div>
+      </section>
 
-      <div class="card">
-        <div class="card-title">Gegevens</div>
-        <button class="danger-btn" onclick="exportData()">📤 Gegevens exporteren (JSON)</button>
-        <button class="danger-btn" style="background:var(--blue-dim);color:var(--blue);border-color:var(--blue);margin-top:8px" onclick="importData()">📥 Gegevens importeren</button>
-        <button class="danger-btn" style="margin-top:8px" onclick="resetData()">⚠️ Alle gegevens wissen</button>
-      </div>
+      <section class="block">
+        <div class="section-head"><span class="eyebrow">Gegevens</span></div>
+        <div class="card">
+          <button class="data-btn" onclick="exportData()"><span class="data-ic">&#8593;</span> Gegevens exporteren (JSON)</button>
+          <button class="data-btn" onclick="importData()"><span class="data-ic">&#8595;</span> Gegevens importeren</button>
+          <button class="data-btn warn" onclick="resetData()"><span class="data-ic">&#9888;</span> Alle gegevens wissen</button>
+        </div>
+      </section>
 
-      <div class="card">
-        <div class="card-title">Installatie als app</div>
-        <div style="font-size:13px;color:var(--text2);line-height:1.6">
-          <p style="margin-bottom:8px"><strong style="color:var(--text)">Android (Chrome):</strong><br>
+      <section class="block">
+        <div class="section-head"><span class="eyebrow">Installatie als app</span></div>
+        <div class="card install-card">
+          <p><strong>Android (Chrome):</strong><br>
           Menu (⋮) → "Add to Home screen" / "Toevoegen aan startscherm"</p>
-          <p style="margin-bottom:8px"><strong style="color:var(--text)">iPhone (Safari):</strong><br>
+          <p><strong>iPhone (Safari):</strong><br>
           Deel-knop (↑) → "Zet op beginscherm"</p>
-          <p style="color:var(--text3);font-size:11px;margin-top:8px">
-          De app werkt dan volledig offline, geen internet nodig.</p>
+          <p class="install-note">De app werkt dan volledig offline, geen internet nodig.</p>
         </div>
-      </div>
+      </section>
+
+      <section class="block wide">
+        <div class="footer-quote">
+          <div class="quote">"Een taal leer je met je oren."</div>
+          <div class="version">NL_TRACKER · V3 · OFFLINE</div>
+        </div>
+      </section>
     </div>
   </div>
 
   <!-- Bottom Nav -->
   <nav class="nav">
-    <button class="nav-btn active" onclick="switchTab('Dashboard',this)">
-      <span class="icon">📊</span>Overzicht
-    </button>
-    <button class="nav-btn" onclick="switchTab('Log',this)">
-      <span class="icon">⚡</span>Loggen
-    </button>
-    <button class="nav-btn" onclick="switchTab('Stats',this)">
-      <span class="icon">📈</span>Stats
-    </button>
-    <button class="nav-btn" onclick="switchTab('Settings',this)">
-      <span class="icon">⚙️</span>Meer
-    </button>
+    <button class="nav-btn active" onclick="switchTab('Dashboard',this)"><span class="icon">◐</span><span class="nav-label">Overzicht</span></button>
+    <button class="nav-btn" onclick="switchTab('Log',this)"><span class="icon">●</span><span class="nav-label">Loggen</span></button>
+    <button class="nav-btn" onclick="switchTab('Stats',this)"><span class="icon">▤</span><span class="nav-label">Stats</span></button>
+    <button class="nav-btn" onclick="switchTab('Settings',this)"><span class="icon">⋯</span><span class="nav-label">Meer</span></button>
   </nav>
 </div>
 
@@ -1435,6 +1525,7 @@ body {
             <option value="listening">Luisteren</option>
             <option value="reading">Lezen</option>
             <option value="writing">Schrijven</option>
+            <option value="speaking">Spreken</option>
             <option value="grammar">Grammatica</option>
           </select>
         </div>
@@ -1457,6 +1548,7 @@ body {
           <span class="tag-pill" data-tag="artikel" onclick="toggleTag(this)">Artikel</span>
           <span class="tag-pill" data-tag="video" onclick="toggleTag(this)">Video</span>
           <span class="tag-pill" data-tag="gesprek" onclick="toggleTag(this)">Gesprek</span>
+          <span class="tag-pill" data-tag="tutor" onclick="toggleTag(this)">Tutor</span>
           <span class="tag-pill" data-tag="oefening" onclick="toggleTag(this)">Oefening</span>
           <span class="tag-pill" data-tag="cursus" onclick="toggleTag(this)">Cursus</span>
           <span class="tag-pill" data-tag="app" onclick="toggleTag(this)">App</span>
@@ -1482,7 +1574,7 @@ body {
     <div class="manual-form">
       <div class="manual-field">
         <label>Naam</label>
-        <input type="text" id="goalName" placeholder="bijv. B1 Examen" style="font-family:'DM Sans',system-ui">
+        <input type="text" id="goalName" placeholder="bijv. B1 Examen" style="font-family:var(--sans)">
       </div>
       <div class="manual-field">
         <label>Type</label>
@@ -1511,7 +1603,7 @@ body {
             </select>
           </div>
         </div>
-        <div class="manual-field">
+        <div class="manual-field" style="margin-top:13px">
           <label>Bron</label>
           <select id="goalSource">
             <option value="auto_hours">Automatisch (studie-uren)</option>
@@ -1519,13 +1611,14 @@ body {
             <option value="manual">Handmatig bijwerken</option>
           </select>
         </div>
-        <div class="manual-field">
+        <div class="manual-field" style="margin-top:13px">
           <label>Vaardigheid filter (optioneel)</label>
           <select id="goalSkillFilter">
             <option value="">Alle vaardigheden</option>
             <option value="listening">Luisteren</option>
             <option value="reading">Lezen</option>
             <option value="writing">Schrijven</option>
+            <option value="speaking">Spreken</option>
             <option value="grammar">Grammatica</option>
           </select>
         </div>
@@ -1546,7 +1639,7 @@ body {
             </select>
           </div>
         </div>
-        <div class="manual-row">
+        <div class="manual-row" style="margin-top:13px">
           <div class="manual-field">
             <label>Eenheid</label>
             <select id="goalRecurringUnit">
@@ -1565,13 +1658,14 @@ body {
             </select>
           </div>
         </div>
-        <div class="manual-field">
+        <div class="manual-field" style="margin-top:13px">
           <label>Vaardigheid filter</label>
           <select id="goalRecurringSkillFilter">
             <option value="">Alle vaardigheden</option>
             <option value="listening">Luisteren</option>
             <option value="reading">Lezen</option>
             <option value="writing">Schrijven</option>
+            <option value="speaking">Spreken</option>
             <option value="grammar">Grammatica</option>
           </select>
         </div>
@@ -1589,17 +1683,18 @@ body {
             <input type="number" id="goalStreakMinMinutes" placeholder="1" inputmode="numeric" value="1">
           </div>
         </div>
-        <div class="manual-field">
+        <div class="manual-field" style="margin-top:13px">
           <label>Vaardigheid filter</label>
           <select id="goalStreakSkillFilter">
             <option value="">Alle vaardigheden</option>
             <option value="listening">Luisteren</option>
             <option value="reading">Lezen</option>
             <option value="writing">Schrijven</option>
+            <option value="speaking">Spreken</option>
             <option value="grammar">Grammatica</option>
           </select>
         </div>
-        <div class="manual-field">
+        <div class="manual-field" style="margin-top:13px">
           <label style="display:flex;align-items:center;gap:8px">
             <span>Passief luisteren meetellen</span>
           </label>
@@ -1617,22 +1712,20 @@ body {
       <div class="manual-field">
         <label style="display:flex;justify-content:space-between;align-items:center">
           <span>Mijlpalen</span>
-          <button onclick="addMilestoneField()" style="background:var(--bg3);border:1px solid var(--bg4);border-radius:6px;padding:4px 10px;color:var(--text2);font-size:11px;cursor:pointer">+ Toevoegen</button>
+          <button class="ms-add-btn" onclick="addMilestoneField()">+ Toevoegen</button>
         </label>
         <div id="milestonesContainer"></div>
       </div>
 
-      <!-- Color/Icon -->
-      <div class="manual-row">
-        <div class="manual-field">
-          <label>Kleur</label>
-          <div class="tag-pills" id="goalColorPicker">
-            <span class="tag-pill selected" data-color="--amber" onclick="pickGoalColor(this)" style="background:var(--amber-glow);border-color:var(--amber);color:var(--amber)">Amber</span>
-            <span class="tag-pill" data-color="--teal" onclick="pickGoalColor(this)" style="color:var(--teal)">Teal</span>
-            <span class="tag-pill" data-color="--blue" onclick="pickGoalColor(this)" style="color:var(--blue)">Blauw</span>
-            <span class="tag-pill" data-color="--purple" onclick="pickGoalColor(this)" style="color:var(--purple)">Paars</span>
-            <span class="tag-pill" data-color="--red" onclick="pickGoalColor(this)" style="color:var(--red)">Rood</span>
-          </div>
+      <!-- Color -->
+      <div class="manual-field">
+        <label>Kleur</label>
+        <div class="tag-pills" id="goalColorPicker">
+          <span class="tag-pill selected" data-color="--amber" onclick="pickGoalColor(this)" style="background:var(--amber-glow);border-color:var(--amber);color:var(--amber)">Amber</span>
+          <span class="tag-pill" data-color="--teal" onclick="pickGoalColor(this)" style="color:var(--teal)">Teal</span>
+          <span class="tag-pill" data-color="--blue" onclick="pickGoalColor(this)" style="color:var(--blue)">Blauw</span>
+          <span class="tag-pill" data-color="--purple" onclick="pickGoalColor(this)" style="color:var(--purple)">Paars</span>
+          <span class="tag-pill" data-color="--red" onclick="pickGoalColor(this)" style="color:var(--red)">Rood</span>
         </div>
       </div>
 
@@ -1794,10 +1887,11 @@ const today = () => {
 };
 const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 const SKILL_COLORS = {
-  listening: { color: 'var(--teal)', bg: 'var(--teal-dim)', label: 'Luisteren', icon: '🎧' },
-  reading:   { color: 'var(--blue)', bg: 'var(--blue-dim)', label: 'Lezen', icon: '📖' },
-  writing:   { color: 'var(--purple)', bg: 'var(--purple-dim)', label: 'Schrijven', icon: '✍️' },
-  grammar:   { color: 'var(--amber)', bg: 'var(--amber-glow)', label: 'Grammatica', icon: '📐' }
+  listening: { color: 'var(--teal)', bg: 'var(--teal-dim)', label: 'Luisteren', icon: '🎧', short: 'L' },
+  reading:   { color: 'var(--blue)', bg: 'var(--blue-dim)', label: 'Lezen', icon: '📖', short: 'R' },
+  writing:   { color: 'var(--purple)', bg: 'var(--purple-dim)', label: 'Schrijven', icon: '✍️', short: 'W' },
+  speaking:  { color: 'var(--red)', bg: 'var(--red-dim)', label: 'Spreken', icon: '🗣️', short: 'S' },
+  grammar:   { color: 'var(--amber)', bg: 'var(--amber-glow)', label: 'Grammatica', icon: '📐', short: 'G' }
 };
 const GOAL_COLORS = {
   '--amber': { color: 'var(--amber)', fill: 'var(--amber-glow)' },
@@ -1812,6 +1906,7 @@ let weekOffset = 0;
 let lastAction = null;
 let currentPeriod = 'week';
 let statsTagFilter = null;
+let statsSkillFilter = null;
 let isPassive = false;
 let isTimerPassive = false;
 
@@ -1954,21 +2049,47 @@ function timerReset() {
 // ══════════════════════════════════════════════════
 let calcValues = [];
 
-function calcAdd() {
+// Accepts "12:34" (12 min 34 sec), "1:02:30" (h:m:s) or decimal minutes ("24.5")
+function parseCalcInput() {
   const input = document.getElementById('calcInput');
-  const val = parseFloat(input.value);
-  if (isNaN(val) || val <= 0) { showToast('Vul een getal in!'); return; }
+  const raw = input.value.trim().replace(',', '.');
+  if (!raw) return null;
+  let val;
+  if (raw.includes(':')) {
+    const parts = raw.split(':').map(p => parseFloat(p));
+    if (parts.some(isNaN)) return null;
+    if (parts.length === 3) val = parts[0] * 60 + parts[1] + parts[2] / 60;
+    else val = parts[0] + parts[1] / 60;
+  } else {
+    val = parseFloat(raw);
+  }
+  return (isNaN(val) || val <= 0) ? null : val;
+}
+
+function fmtCalcVal(v) {
+  const sign = v < 0 ? '−' : '+';
+  const abs = Math.abs(v);
+  const m = Math.floor(abs);
+  const s = Math.round((abs - m) * 60);
+  return s > 0 ? `${sign}${m}:${String(s).padStart(2, '0')}` : `${sign}${m}m`;
+}
+
+function calcAdd() {
+  const val = parseCalcInput();
+  if (val === null) { showToast('Vul een tijd in! bijv. 12:34'); return; }
   calcValues.push(val);
-  input.value = '';
-  input.focus();
-  calcRender();
+  calcAfterInput();
 }
 
 function calcSubtract() {
-  const input = document.getElementById('calcInput');
-  const val = parseFloat(input.value);
-  if (isNaN(val) || val <= 0) { showToast('Vul een getal in!'); return; }
+  const val = parseCalcInput();
+  if (val === null) { showToast('Vul een tijd in! bijv. 12:34'); return; }
   calcValues.push(-val);
+  calcAfterInput();
+}
+
+function calcAfterInput() {
+  const input = document.getElementById('calcInput');
   input.value = '';
   input.focus();
   calcRender();
@@ -1986,9 +2107,19 @@ function calcClear() {
 
 function calcRender() {
   const total = calcValues.reduce((s, v) => s + v, 0);
-  document.getElementById('calcTotal').textContent = total.toFixed(2);
+  document.getElementById('calcTotal').textContent = total.toFixed(1);
+  const alt = document.getElementById('calcTotalAlt');
+  if (alt) {
+    if (total > 0) {
+      const m = Math.floor(total);
+      const s = Math.round((total - m) * 60);
+      alt.textContent = `= ${m} min ${String(s).padStart(2, '0')} sec`;
+    } else {
+      alt.textContent = '';
+    }
+  }
   document.getElementById('calcEntries').innerHTML = calcValues.map((v, i) =>
-    '<span class="calc-entry" style="color:' + (v < 0 ? 'var(--red)' : 'var(--text)') + '">' + (v > 0 ? '+' : '') + v.toFixed(2) +
+    '<span class="calc-entry' + (v < 0 ? ' neg' : '') + '">' + fmtCalcVal(v) +
     '<button class="calc-entry-remove" onclick="calcRemoveEntry(' + i + ')">&times;</button></span>'
   ).join('');
 }
@@ -2000,6 +2131,29 @@ function calcTransfer() {
   document.getElementById('manualMinutes').value = rounded;
   showToast(rounded + ' min overgenomen');
   document.getElementById('manualMinutes').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function calcSaveSession() {
+  const total = calcValues.reduce((s, v) => s + v, 0);
+  if (total <= 0) { showToast('Nog geen waarden!'); return; }
+  const mins = Math.max(1, Math.round(total));
+  const skill = document.getElementById('calcSkill').value;
+  quickLog(skill, mins);
+  calcClear();
+}
+
+// ── Skill chips & quick minutes ──
+function pickSkill(context, skill, el) {
+  const selId = context === 'timer' ? 'timerSkill' : 'manualSkill';
+  document.getElementById(selId).value = skill;
+  el.parentElement.querySelectorAll('.skill-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  if (context === 'timer') onTimerSkillChange(); else onSkillChange();
+}
+
+function quickMins(n, el) {
+  document.getElementById('manualMinutes').value = n;
+  document.querySelectorAll('.qa-chip').forEach(c => c.classList.toggle('selected', c === el));
 }
 
 // ── Tags & Manual Entry ──
@@ -2174,6 +2328,9 @@ async function refreshDashboard() {
   const totalMin = todayLogs.reduce((s, l) => s + l.minutes, 0);
   document.getElementById('todayHours').textContent = (totalMin / 60).toFixed(1);
 
+  // Today's sessions list
+  renderTodaySessions(todayLogs);
+
   // Total study hours (all time)
   const allTotalMin = logs.reduce((s, l) => s + l.minutes, 0);
   const totalHours = allTotalMin / 60;
@@ -2257,7 +2414,7 @@ function calcStreak(logs) {
 
 function renderSkillBars(containerId, logs, maxMin, showTotal) {
   const container = document.getElementById(containerId);
-  const skills = ['listening', 'reading', 'writing', 'grammar'];
+  const skills = ['listening', 'reading', 'writing', 'speaking', 'grammar'];
   let totalAll = 0;
   const mins = {};
   skills.forEach(s => {
@@ -2324,6 +2481,42 @@ function renderSkillBars(containerId, logs, maxMin, showTotal) {
     html += `<div class="skill-total">Totaal: ${(totalAll/60).toFixed(1)}u</div>`;
   }
   container.innerHTML = html;
+}
+
+function renderTodaySessions(todayLogs) {
+  const wrap = document.getElementById('todaySessions');
+  if (!wrap) return;
+  const countEl = document.getElementById('todaySessionCount');
+  const sorted = [...todayLogs].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  const totalMin = sorted.reduce((s, l) => s + l.minutes, 0);
+  if (countEl) {
+    countEl.textContent = sorted.length
+      ? `${sorted.length} · ${totalMin >= 60 ? (totalMin / 60).toFixed(1) + 'u' : totalMin + 'min'}`
+      : '';
+  }
+  if (sorted.length === 0) {
+    wrap.innerHTML = '<div class="empty-state">Nog geen sessies vandaag — start de stopwatch!</div>';
+    return;
+  }
+  let html = '';
+  for (const log of sorted) {
+    const sc = SKILL_COLORS[log.skill] || SKILL_COLORS.grammar;
+    const t = log.timestamp
+      ? new Date(log.timestamp).toLocaleTimeString('nl-BE', { hour: '2-digit', minute: '2-digit' })
+      : '—';
+    const meta = [...(log.tags || []), log.passive ? 'passief' : null].filter(Boolean).join(' · ');
+    html += `<div class="session-row">
+      <span class="session-time mono">${t}</span>
+      <span class="session-chip" style="background:${sc.bg};color:${sc.color}">${sc.short}</span>
+      <div class="session-info">
+        <div class="session-skill">${sc.label}${meta ? ` <span class="session-meta">· ${meta}</span>` : ''}</div>
+        ${log.notes ? `<div class="session-note">${log.notes}</div>` : ''}
+      </div>
+      <span class="session-mins mono">${log.minutes}m</span>
+      <button class="row-action" onclick="editEntry(${log.id})" title="Bewerken">✎</button>
+    </div>`;
+  }
+  wrap.innerHTML = html;
 }
 
 function renderWeekGrid(logs, effectiveDailyGoal) {
@@ -2416,6 +2609,16 @@ async function refreshStats() {
   });
   filterContainer.innerHTML = filterHtml;
 
+  // Skill filter pills for the history list
+  const skillPills = document.getElementById('statsSkillPills');
+  if (skillPills) {
+    let sHtml = '<span class="tag-pill' + (!statsSkillFilter ? ' selected' : '') + '" onclick="setStatsSkillFilter(null, this)">Alles</span>';
+    Object.entries(SKILL_COLORS).forEach(([key, sc]) => {
+      sHtml += '<span class="tag-pill' + (statsSkillFilter === key ? ' selected' : '') + '" onclick="setStatsSkillFilter(\'' + key + '\', this)">' + sc.label + '</span>';
+    });
+    skillPills.innerHTML = sHtml;
+  }
+
   // Apply tag filter
   const logs = statsTagFilter
     ? allLogs.filter(l => (l.tags || []).includes(statsTagFilter))
@@ -2450,7 +2653,7 @@ async function refreshStats() {
 
   // Skill distribution
   const skillTotals = {};
-  ['listening', 'reading', 'writing', 'grammar'].forEach(s => {
+  ['listening', 'reading', 'writing', 'speaking', 'grammar'].forEach(s => {
     const filtered = logs.filter(l => l.date >= dates[0] && l.date <= dates[dates.length - 1] && l.skill === s);
     skillTotals[s] = filtered.reduce((sum, l) => sum + l.minutes, 0);
   });
@@ -2471,6 +2674,13 @@ async function refreshStats() {
 function setStatsTagFilter(tag, el) {
   statsTagFilter = tag;
   document.querySelectorAll('#statsTagFilter .tag-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  refreshStats();
+}
+
+function setStatsSkillFilter(skill, el) {
+  statsSkillFilter = skill;
+  document.querySelectorAll('#statsSkillPills .tag-pill').forEach(p => p.classList.remove('selected'));
   el.classList.add('selected');
   refreshStats();
 }
@@ -2667,6 +2877,7 @@ function drawDonutChart(canvasId, skillTotals) {
     listening: style.getPropertyValue('--teal').trim(),
     reading: style.getPropertyValue('--blue').trim(),
     writing: style.getPropertyValue('--purple').trim(),
+    speaking: style.getPropertyValue('--red').trim(),
     grammar: style.getPropertyValue('--amber').trim()
   };
 
@@ -2699,7 +2910,7 @@ function drawDonutChart(canvasId, skillTotals) {
 
   // Legend
   const legendX = w * 0.65;
-  let ly = 20;
+  let ly = 10;
   Object.entries(SKILL_COLORS).forEach(([skill, info]) => {
     const mins = skillTotals[skill] || 0;
     const pct = total ? Math.round(mins / total * 100) : 0;
@@ -2714,13 +2925,14 @@ function drawDonutChart(canvasId, skillTotals) {
     ctx.fillStyle = style.getPropertyValue('--text2').trim();
     ctx.font = '11px JetBrains Mono, monospace';
     ctx.fillText(`${pct}%  ${mins >= 60 ? (mins/60).toFixed(1) + 'u' : mins + 'm'}`, legendX + 14, ly + 26);
-    ly += 40;
+    ly += 33;
   });
 }
 
 function renderHistory(dates, logs) {
   const container = document.getElementById('historyList');
-  const reversed = [...dates].reverse().slice(0, 30);
+  if (statsSkillFilter) logs = logs.filter(l => l.skill === statsSkillFilter);
+  const reversed = [...dates].reverse().slice(0, currentPeriod === 'all' ? 365 : 31);
   let html = '';
   for (const dt of reversed) {
     const dayLogs = logs.filter(l => l.date === dt);
@@ -3325,6 +3537,20 @@ async function init() {
   onSkillChange();
   onTimerSkillChange();
 
+  // Header date (serif, NL)
+  const hd = document.getElementById('headerDate');
+  if (hd) hd.textContent = new Date().toLocaleDateString('nl-BE', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  // Redraw canvas charts when the viewport changes (desktop resize / rotation)
+  let _resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => {
+      refreshDashboard();
+      if (document.getElementById('viewStats').classList.contains('active')) refreshStats();
+    }, 200);
+  });
+
   // Register service worker
   if ('serviceWorker' in navigator) {
     let refreshed = false;
@@ -3334,7 +3560,7 @@ async function init() {
       location.reload();
     });
 
-    navigator.serviceWorker.register('sw.js?v=5', { updateViaCache: 'none' }).then(reg => {
+    navigator.serviceWorker.register('sw.js?v=6', { updateViaCache: 'none' }).then(reg => {
       reg.update().catch(() => {});
       if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
       reg.addEventListener('updatefound', () => {
