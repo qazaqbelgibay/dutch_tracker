@@ -51,6 +51,11 @@
     <!-- ═══ DASHBOARD ═══ -->
     <div class="view active" id="viewDashboard">
 
+      <!-- Streak at risk -->
+      <section class="block wide" id="riskBannerBlock" style="display:none">
+        <div class="risk-banner show" id="riskBanner"></div>
+      </section>
+
       <!-- Hero: today + daily goal -->
       <section class="block wide">
         <div class="card hero-card">
@@ -77,12 +82,23 @@
         </div>
       </section>
 
+      <!-- Quick add -->
+      <section class="block">
+        <div class="card">
+          <span class="eyebrow" data-i18n="quick_add">Snel loggen</span>
+          <div class="qa-mins-row" id="qaMinsRow"></div>
+          <div class="qa-skill-grid" id="qaSkillGrid"></div>
+          <div class="qa-hint" data-i18n="quick_add_hint">Kies minuten, tik een vaardigheid — direct opgeslagen</div>
+        </div>
+      </section>
+
       <!-- Streak + Anki + total -->
       <section class="block">
         <div class="duo">
           <div class="card mini-card">
             <span class="eyebrow" data-i18n="streak_title">Reeks 🔥</span>
             <div class="big-num"><span class="serif-num" id="streakCount">0</span><span class="num-unit" data-i18n="days_unit">dagen</span></div>
+            <div class="mini-sub" id="streakBest"></div>
           </div>
           <div class="card mini-card">
             <span class="eyebrow" data-i18n="anki_today">Anki vandaag</span>
@@ -278,6 +294,11 @@
         <div class="tag-pills filter-pills" id="statsTagFilter"></div>
       </section>
 
+      <!-- Summary tiles -->
+      <section class="block wide">
+        <div class="summary-grid" id="summaryTiles"></div>
+      </section>
+
       <section class="block">
         <div class="section-head"><span class="eyebrow" data-i18n="chart_hours_title">Studietijd · uren per dag</span></div>
         <div class="card">
@@ -299,8 +320,30 @@
         </div>
       </section>
 
+      <!-- Activity heatmap -->
+      <section class="block">
+        <div class="section-head"><span class="eyebrow" data-i18n="heatmap_title">Activiteit · laatste 16 weken</span></div>
+        <div class="card">
+          <div class="heatmap-scroll"><div class="heatmap-grid" id="heatmapGrid"></div></div>
+          <div class="heatmap-legend">
+            <span data-i18n="hm_less">minder</span>
+            <span class="hm-cell"></span><span class="hm-cell low"></span>
+            <span class="hm-cell mid"></span><span class="hm-cell good"></span>
+            <span data-i18n="hm_more">meer</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Achievement badges -->
+      <section class="block wide">
+        <div class="section-head"><span class="eyebrow" data-i18n="badges_title">Prestaties</span></div>
+        <div class="badge-grid" id="badgesGrid"></div>
+      </section>
+
       <section class="block wide">
         <div class="section-head"><span class="eyebrow" data-i18n="history_title">Geschiedenis</span></div>
+        <input type="text" class="search-input" id="historySearch" data-i18n-ph="search_ph"
+          placeholder="Zoek in notities, tags…" oninput="onHistorySearch(this.value)">
         <div class="tag-pills filter-pills" id="statsSkillPills"></div>
         <div class="card" id="historyList"></div>
       </section>
@@ -331,6 +374,16 @@
               <div class="setting-desc" data-i18n="extend_day_desc">Tot 03:00 als gisteren meetellen</div>
             </div>
             <button class="toggle" id="extendDayToggle" onclick="toggleExtendDay()"></button>
+          </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label" data-i18n="reminder">Dagelijkse herinnering</div>
+              <div class="setting-desc" data-i18n="reminder_desc">Melding als je nog niet studeerde (app open)</div>
+            </div>
+            <div class="setting-controls">
+              <input type="time" id="reminderTime" class="time-input" value="19:00" onchange="updateReminderTime(this.value)">
+              <button class="toggle" id="reminderToggle" onclick="toggleReminder()"></button>
+            </div>
           </div>
         </div>
       </section>

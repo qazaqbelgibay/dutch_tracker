@@ -250,6 +250,7 @@ function applyLanguage() {
 
   renderLangSwitch();
   applyI18n();
+  renderQuickAdd();
   renderSkillChips('timerChips', 'timer');
   renderSkillChips('manualChips', 'manual');
   renderTagPills('manualTags');
@@ -290,9 +291,158 @@ async function switchLang(code) {
   document.getElementById('ankiDate').value = today();
   document.getElementById('manualMinutes').value = '';
   document.getElementById('manualNotes').value = '';
-  document.querySelectorAll('.qa-chip').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.manual-form .qa-chip').forEach(c => c.classList.remove('selected'));
+  historySearch = '';
+  document.getElementById('historySearch').value = '';
+  showArchivedGoals = false;
   refreshDashboard();
   if (document.getElementById('viewStats').classList.contains('active')) refreshStats();
+}
+
+// ══════════════════════════════════════════════════
+// QUICK ADD (one-tap logging on the dashboard)
+// ══════════════════════════════════════════════════
+let qaMinutes = 15;
+
+function renderQuickAdd() {
+  const minsRow = document.getElementById('qaMinsRow');
+  minsRow.innerHTML = [10, 15, 20, 30, 45, 60].map(m =>
+    `<button type="button" class="qa-chip ${m === qaMinutes ? 'selected' : ''}" onclick="qaSetMins(${m}, this)">${m}m</button>`
+  ).join('');
+  document.getElementById('qaSkillGrid').innerHTML = SKILLS.map(s => {
+    const sc = skillInfo(s);
+    return `<button type="button" class="qa-skill-btn" onclick="quickLog('${s}', qaMinutes)">
+      <span class="qa-ic">${sc.icon}</span>${sc.label}</button>`;
+  }).join('');
+}
+
+function qaSetMins(m, el) {
+  qaMinutes = m;
+  document.querySelectorAll('#qaMinsRow .qa-chip').forEach(c => c.classList.toggle('selected', c === el));
+}
+
+// ══════════════════════════════════════════════════
+// ACHIEVEMENT BADGES
+// ══════════════════════════════════════════════════
+function computeBestStreak(logs) {
+  const dates = [...new Set(logs.map(l => l.date))].sort();
+  let best = 0, run = 0, prev = null;
+  for (const ds of dates) {
+    if (prev) {
+      const nd = new Date(prev + 'T00:00:00');
+      nd.setDate(nd.getDate() + 1);
+      run = fmtDate(nd) === ds ? run + 1 : 1;
+    } else run = 1;
+    best = Math.max(best, run);
+    prev = ds;
+  }
+  return best;
+}
+
+function computeBadgeMetrics(logs, ankiEntries) {
+  const byDate = {};
+  logs.forEach(l => { byDate[l.date] = (byDate[l.date] || 0) + l.minutes; });
+
+  // Max distinct skills practised within a single ISO week
+  const weekSkills = {};
+  logs.forEach(l => {
+    const wk = l.date.slice(0, 4) + '-' + getISOWeek(new Date(l.date + 'T00:00:00'));
+    (weekSkills[wk] = weekSkills[wk] || new Set()).add(l.skill);
+  });
+
+  // Longest run of consecutive days meeting the daily goal
+  const goalMin = hourGoal * 60;
+  const goalDates = Object.keys(byDate).filter(dt => byDate[dt] >= goalMin).sort();
+  let pBest = 0, pRun = 0, pPrev = null;
+  for (const ds of goalDates) {
+    if (pPrev) {
+      const nd = new Date(pPrev + 'T00:00:00');
+      nd.setDate(nd.getDate() + 1);
+      pRun = fmtDate(nd) === ds ? pRun + 1 : 1;
+    } else pRun = 1;
+    pBest = Math.max(pBest, pRun);
+    pPrev = ds;
+  }
+
+  return {
+    sessions: logs.length,
+    streak: computeBestStreak(logs),
+    hours: logs.reduce((s, l) => s + l.minutes, 0) / 60,
+    maxday: Math.max(0, ...Object.values(byDate)) / 60,
+    allskills: Math.max(0, ...Object.values(weekSkills).map(s => s.size)),
+    anki: ankiEntries.reduce((s, a) => s + (a.cards || 0), 0),
+    perfectweek: pBest
+  };
+}
+
+function renderBadges(metrics) {
+  const grid = document.getElementById('badgesGrid');
+  grid.innerHTML = BADGE_DEFS.map(b => {
+    const val = metrics[b.metric] || 0;
+    const earned = val >= b.target;
+    return `<div class="badge-tile ${earned ? 'earned' : 'locked'}">
+      <span class="badge-ic">${b.icon}</span>
+      <div class="badge-name">${t(b.nameKey)}</div>
+      <div class="badge-desc">${t(b.descKey)}</div>
+      <div class="badge-progress">${earned ? '✓' : Math.floor(val) + '/' + b.target}</div>
+    </div>`;
+  }).join('');
+}
+
+async function checkNewBadges(metrics) {
+  let seen = [];
+  try {
+    const s = await dbGet('settings', 'badges_earned');
+    if (s && Array.isArray(s.value)) seen = s.value;
+  } catch (e) {}
+  const earned = BADGE_DEFS.filter(b => (metrics[b.metric] || 0) >= b.target).map(b => b.id);
+  const fresh = earned.filter(id => !seen.includes(id));
+  if (fresh.length === 0) return;
+  // Announce at most one per refresh to avoid toast spam
+  const def = BADGE_DEFS.find(b => b.id === fresh[0]);
+  setTimeout(() => showToast(`${def.icon} ${t('t_new_badge', { name: t(def.nameKey) })}`), 700);
+  await dbPut('settings', { key: 'badges_earned', value: [...new Set([...seen, ...earned])] });
+}
+
+// ══════════════════════════════════════════════════
+// DAILY REMINDER (in-app; notification when permitted)
+// ══════════════════════════════════════════════════
+let reminderEnabled = false;
+let reminderTime = '19:00';
+
+function toggleReminder() {
+  reminderEnabled = !reminderEnabled;
+  document.getElementById('reminderToggle').classList.toggle('on', reminderEnabled);
+  dbPut('settings', { key: 'reminderEnabled', value: reminderEnabled });
+  if (reminderEnabled && 'Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function updateReminderTime(v) {
+  reminderTime = v || '19:00';
+  dbPut('settings', { key: 'reminderTime', value: reminderTime });
+}
+
+async function checkReminder() {
+  if (!reminderEnabled || !db) return;
+  const now = new Date();
+  const [h, m] = reminderTime.split(':').map(Number);
+  if (now.getHours() < h || (now.getHours() === h && now.getMinutes() < m)) return;
+  const d = today();
+  try {
+    const last = await dbGet('settings', 'reminderLast');
+    if (last && last.value === d) return;
+    await dbPut('settings', { key: 'reminderLast', value: d });
+    const logs = await dbGetAll('logs');
+    if (logs.some(l => l.date === d)) return; // already studied today
+    const msg = t('reminder_msg');
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification(L.title, { body: msg });
+    } else {
+      showToast(msg);
+    }
+  } catch (e) {}
 }
 
 // ══════════════════════════════════════════════════
@@ -507,7 +657,7 @@ function pickSkill(context, skill, el) {
 
 function quickMins(n, el) {
   document.getElementById('manualMinutes').value = n;
-  document.querySelectorAll('.qa-chip').forEach(c => c.classList.toggle('selected', c === el));
+  el.parentElement.querySelectorAll('.qa-chip').forEach(c => c.classList.toggle('selected', c === el));
 }
 
 // ── Tags & Manual Entry ──
@@ -540,7 +690,7 @@ async function saveManualEntry() {
   document.getElementById('manualMinutes').value = '';
   document.getElementById('manualNotes').value = '';
   document.querySelectorAll('#manualTags .tag-pill').forEach(p => p.classList.remove('selected'));
-  document.querySelectorAll('.qa-chip').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.manual-form .qa-chip').forEach(c => c.classList.remove('selected'));
   isPassive = false;
   const pt = document.getElementById('passiveToggle');
   if (pt) pt.classList.remove('on');
@@ -686,11 +836,10 @@ async function refreshDashboard() {
   document.getElementById('totalStudyHours').textContent = (allTotalMin / 60).toFixed(2);
   document.getElementById('totalHoursUnit').textContent = ' ' + t('hours_short');
 
-  try {
-    const ankiEntries = await dbGetAll('anki');
-    const todayAnki = ankiEntries.filter(a => a.date === d).reduce((s, a) => s + (a.cards || 0), 0);
-    document.getElementById('todayAnki').textContent = todayAnki;
-  } catch (e) { document.getElementById('todayAnki').textContent = '0'; }
+  let ankiEntries = [];
+  try { ankiEntries = await dbGetAll('anki'); } catch (e) {}
+  const todayAnki = ankiEntries.filter(a => a.date === d).reduce((s, a) => s + (a.cards || 0), 0);
+  document.getElementById('todayAnki').textContent = todayAnki;
 
   await renderGoals(logs);
 
@@ -698,6 +847,17 @@ async function refreshDashboard() {
 
   const streak = calcStreak(logs);
   document.getElementById('streakCount').textContent = streak;
+  const bestStreak = computeBestStreak(logs);
+  document.getElementById('streakBest').textContent =
+    bestStreak > 0 && bestStreak !== streak ? t('best_streak', { n: bestStreak }) : '';
+
+  // Streak-at-risk banner: nothing logged today, active streak, evening
+  const riskBlock = document.getElementById('riskBannerBlock');
+  const showRisk = totalMin === 0 && streak > 0 && new Date().getHours() >= 17;
+  riskBlock.style.display = showRisk ? '' : 'none';
+  if (showRisk) document.getElementById('riskBanner').textContent = t('risk_banner', { n: streak });
+
+  checkNewBadges(computeBadgeMetrics(logs, ankiEntries));
 
   renderWeekGrid(logs, effectiveDailyGoal);
 
@@ -983,6 +1143,97 @@ async function refreshStats() {
   drawDonutChart('skillChart', skillTotals);
   drawTagChart(tagTotals);
   renderHistory(dates, logs);
+
+  // Fixed-window widgets (independent of period/tag filters)
+  renderSummaryTiles(allLogs);
+  renderHeatmap(allLogs);
+  let ankiEntries = [];
+  try { ankiEntries = await dbGetAll('anki'); } catch (e) {}
+  renderBadges(computeBadgeMetrics(allLogs, ankiEntries));
+}
+
+// ── Summary tiles: this week vs last, 30-day averages ──
+function renderSummaryTiles(logs) {
+  const el = document.getElementById('summaryTiles');
+  const dayStr = off => { const d = new Date(); d.setDate(d.getDate() + off); return fmtDate(d); };
+  const minsBetween = (from, to) => logs.filter(l => l.date >= from && l.date <= to).reduce((s, l) => s + l.minutes, 0);
+  const t0 = today();
+
+  const last7 = minsBetween(dayStr(-6), t0);
+  const prev7 = minsBetween(dayStr(-13), dayStr(-7));
+  let deltaHtml = `<div class="summary-delta">${t('summary_vs')}: —</div>`;
+  if (prev7 > 0) {
+    const pct = Math.round(((last7 - prev7) / prev7) * 100);
+    const cls = pct > 0 ? 'up' : pct < 0 ? 'down' : '';
+    deltaHtml = `<div class="summary-delta ${cls}">${pct >= 0 ? '+' : ''}${pct}% ${t('summary_vs')}</div>`;
+  }
+
+  const from30 = dayStr(-29);
+  const logs30 = logs.filter(l => l.date >= from30 && l.date <= t0);
+  const last30 = logs30.reduce((s, l) => s + l.minutes, 0);
+  const activeDays = new Set(logs30.map(l => l.date)).size;
+  const skillMins = {};
+  logs30.forEach(l => { skillMins[l.skill] = (skillMins[l.skill] || 0) + l.minutes; });
+  const top = Object.entries(skillMins).sort((a, b) => b[1] - a[1])[0];
+  const topInfo = top ? skillInfo(top[0]) : null;
+
+  el.innerHTML = `
+    <div class="card summary-tile">
+      <span class="eyebrow">${t('summary_week')}</span>
+      <div class="summary-val">${(last7 / 60).toFixed(1)}<span class="sm">${t('hours_short')}</span></div>
+      ${deltaHtml}
+    </div>
+    <div class="card summary-tile">
+      <span class="eyebrow">${t('summary_avg')}</span>
+      <div class="summary-val">${(last30 / 30 / 60).toFixed(1)}<span class="sm">${t('hours_short')}</span></div>
+    </div>
+    <div class="card summary-tile">
+      <span class="eyebrow">${t('summary_active')}</span>
+      <div class="summary-val">${activeDays}<span class="sm">/30</span></div>
+    </div>
+    <div class="card summary-tile">
+      <span class="eyebrow">${t('summary_top')}</span>
+      <div class="summary-val" style="font-size:17px;line-height:1.3">${topInfo ? topInfo.icon + ' ' + topInfo.label : '—'}</div>
+      ${top ? `<div class="summary-delta">${fmtHours(top[1])}</div>` : ''}
+    </div>`;
+}
+
+// ── GitHub-style activity heatmap, last 16 weeks ──
+function renderHeatmap(logs) {
+  const grid = document.getElementById('heatmapGrid');
+  const byDate = {};
+  logs.forEach(l => { byDate[l.date] = (byDate[l.date] || 0) + l.minutes; });
+  const todayStr = today();
+  const todayDate = new Date(todayStr + 'T00:00:00');
+  const start = new Date(todayDate);
+  start.setDate(todayDate.getDate() - ((todayDate.getDay() + 6) % 7) - 15 * 7);
+
+  const goalMin = hourGoal * 60;
+  const d = new Date(start);
+  let html = '';
+  for (let i = 0; i < 16 * 7; i++) {
+    const ds = fmtDate(d);
+    const mins = byDate[ds] || 0;
+    let cls = '';
+    if (ds > todayStr) cls = 'future';
+    else if (mins >= goalMin) cls = 'good';
+    else if (mins >= goalMin / 2) cls = 'mid';
+    else if (mins > 0) cls = 'low';
+    html += `<span class="hm-cell ${cls}${ds === todayStr ? ' today' : ''}" title="${ds} · ${(mins / 60).toFixed(1)}${t('hours_short')}"></span>`;
+    d.setDate(d.getDate() + 1);
+  }
+  grid.innerHTML = html;
+}
+
+// ── History search ──
+let historySearch = '';
+let _searchTimer;
+function onHistorySearch(v) {
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(() => {
+    historySearch = v.trim().toLowerCase();
+    refreshStats();
+  }, 200);
 }
 
 function setStatsTagFilter(tag, el) {
@@ -1217,6 +1468,12 @@ function drawDonutChart(canvasId, skillTotals) {
 function renderHistory(dates, logs) {
   const container = document.getElementById('historyList');
   if (statsSkillFilter) logs = logs.filter(l => l.skill === statsSkillFilter);
+  if (historySearch) {
+    logs = logs.filter(l =>
+      (l.notes || '').toLowerCase().includes(historySearch) ||
+      (l.tags || []).some(tag => tag.toLowerCase().includes(historySearch)) ||
+      t('skill_' + l.skill).toLowerCase().includes(historySearch));
+  }
   const reversed = [...dates].reverse().slice(0, currentPeriod === 'all' ? 365 : 31);
   let html = '';
   for (const dt of reversed) {
@@ -1361,12 +1618,29 @@ function computeDailyPace(goal, metricResult) {
   return { needed: (remaining / daysLeft).toFixed(1), unit: metricResult.unit, daysLeft };
 }
 
+let showArchivedGoals = false;
+
+function toggleArchivedGoals() {
+  showArchivedGoals = !showArchivedGoals;
+  refreshDashboard();
+}
+
+async function restoreGoal(id) {
+  const goal = await dbGet('goals', id);
+  if (!goal) return;
+  goal.status = 'active';
+  await dbPut('goals', goal);
+  showToast(t('t_goal_restored'));
+  refreshAll();
+}
+
 async function renderGoals(logs) {
   const container = document.getElementById('goalsSection');
   let goals = [];
   try { goals = await dbGetAll('goals'); } catch (e) {}
   const activeGoals = goals.filter(g => g.status === 'active' && g.pinToDashboard).sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
-  if (activeGoals.length === 0) {
+  const archivedGoals = goals.filter(g => g.status === 'archived');
+  if (activeGoals.length === 0 && archivedGoals.length === 0) {
     container.innerHTML = '';
     return;
   }
@@ -1440,6 +1714,26 @@ async function renderGoals(logs) {
       }
     }
     html += `</div>`;
+  }
+
+  // Archived goals: collapsible list with restore/delete
+  if (archivedGoals.length > 0) {
+    html += `<button class="archived-toggle" onclick="toggleArchivedGoals()">${showArchivedGoals ? '▾' : '▸'} ${t('archived_goals', { n: archivedGoals.length })}</button>`;
+    if (showArchivedGoals) {
+      html += '<div class="archived-list">';
+      for (const goal of archivedGoals) {
+        html += `<div class="goal-card-new" style="margin-top:8px">
+          <div class="goal-card-header" style="margin-bottom:0">
+            <div class="goal-card-name">${goal.icon || '🎯'} ${goal.name}</div>
+            <div class="goal-card-actions">
+              <button onclick="restoreGoal('${goal.id}')" title="${t('restore_action')}">↩️</button>
+              <button onclick="deleteGoal('${goal.id}')" title="${t('delete_action')}">🗑</button>
+            </div>
+          </div>
+        </div>`;
+      }
+      html += '</div>';
+    }
   }
   container.innerHTML = html;
 }
@@ -1717,6 +2011,10 @@ async function loadSettings() {
   document.getElementById('darkToggle').classList.add('on');
   document.getElementById('goalInput').value = 2;
   document.getElementById('extendDayToggle').classList.remove('on');
+  reminderEnabled = false;
+  reminderTime = '19:00';
+  document.getElementById('reminderToggle').classList.remove('on');
+  document.getElementById('reminderTime').value = '19:00';
 
   try {
     const theme = await dbGet('settings', 'theme');
@@ -1731,6 +2029,16 @@ async function loadSettings() {
     if (extend && extend.value) {
       extendDayPastMidnight = true;
       document.getElementById('extendDayToggle').classList.add('on');
+    }
+    const rEnabled = await dbGet('settings', 'reminderEnabled');
+    if (rEnabled && rEnabled.value) {
+      reminderEnabled = true;
+      document.getElementById('reminderToggle').classList.add('on');
+    }
+    const rTime = await dbGet('settings', 'reminderTime');
+    if (rTime && rTime.value) {
+      reminderTime = rTime.value;
+      document.getElementById('reminderTime').value = reminderTime;
     }
   } catch (e) {}
   updateThemeMeta();
@@ -1839,6 +2147,10 @@ async function init() {
 
   document.getElementById('manualDate').value = today();
   document.getElementById('ankiDate').value = today();
+
+  // Daily reminder: check once shortly after load, then every minute
+  setTimeout(checkReminder, 4000);
+  setInterval(checkReminder, 60000);
 
   // Redraw canvas charts when the viewport changes (desktop resize / rotation)
   let _resizeTimer;
