@@ -1,16 +1,16 @@
 {
-  "name": "Dutch B1 Tracker",
-  "short_name": "NL Tracker",
-  "description": "CNaVT B1 Exam Preparation Tracker - Belgian Dutch",
+  "name": "Language Tracker — NL & FR",
+  "short_name": "Tracker",
+  "description": "Language learning tracker for Dutch (Belgian) and French — offline-first",
   "start_url": "/dutch_tracker/",
   "scope": "/dutch_tracker/",
   "display": "standalone",
-  "background_color": "#17171a",
-  "theme_color": "#17171a",
+  "background_color": "#171613",
+  "theme_color": "#171613",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='96' fill='%2317171a'/><text x='256' y='332' font-size='250' text-anchor='middle' fill='%23d99c52' font-family='Georgia, serif' font-style='italic'>NL</text></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='96' fill='%23171613'/><text x='256' y='340' font-size='230' text-anchor='middle' fill='%23dfa93f' font-family='Georgia, serif' font-style='italic'>Aa</text></svg>",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
