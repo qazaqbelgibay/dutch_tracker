@@ -29,7 +29,7 @@ function skillInfo(skill) {
 // ══════════════════════════════════════════════════
 // DATABASE (IndexedDB, one per language)
 // ══════════════════════════════════════════════════
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 let db;
 
 function openDB(dbName) {
@@ -60,6 +60,17 @@ function openDB(dbName) {
         if (d.objectStoreNames.contains('anki')) d.deleteObjectStore('anki');
         const ankiStore = d.createObjectStore('anki', { keyPath: 'id', autoIncrement: true });
         ankiStore.createIndex('date', 'date');
+      }
+      if (oldV < 4) {
+        // In-app SRS (flashcards) + built-in grammar course
+        const cardsStore = d.createObjectStore('cards', { keyPath: 'id', autoIncrement: true });
+        cardsStore.createIndex('due', 'due');
+        cardsStore.createIndex('state', 'state');
+        cardsStore.createIndex('deck', 'deck');
+        const reviewsStore = d.createObjectStore('reviews', { keyPath: 'id', autoIncrement: true });
+        reviewsStore.createIndex('date', 'date');
+        reviewsStore.createIndex('cardId', 'cardId');
+        d.createObjectStore('grammar_progress', { keyPath: 'id' });
       }
     };
     req.onsuccess = e => { db = e.target.result; resolve(db); };
@@ -188,6 +199,7 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
   document.getElementById('calcHint').innerHTML = t('calc_hint');
+  document.getElementById('importHint').innerHTML = t('import_hint');
 }
 
 function skillOptionsHtml(includeAll) {
@@ -242,7 +254,7 @@ function applyLanguage() {
   document.title = L.title;
   document.getElementById('flagStripes').innerHTML =
     L.stripes.map(c => `<i style="background:${c}"></i>`).join('');
-  document.getElementById('versionTag').textContent = `${L.short}_TRACKER · V4 · OFFLINE`;
+  document.getElementById('versionTag').textContent = `${L.short}_TRACKER · V5 · OFFLINE`;
   document.getElementById('dataNote').innerHTML = t('data_note', { lang: L.name });
 
   const hd = document.getElementById('headerDate');
@@ -264,6 +276,7 @@ function applyLanguage() {
 async function switchLang(code) {
   if (code === L.code || !LANGS[code]) return;
   if (timerRunning || timerSeconds > 0) { showToast(t('t_stop_timer')); return; }
+  if (typeof studySessionActive === 'function' && studySessionActive()) { showToast(t('t_stop_timer')); return; }
 
   localStorage.setItem(LANG_STORE_KEY, code);
   if (db) { try { db.close(); } catch (e) {} }
@@ -277,6 +290,7 @@ async function switchLang(code) {
   isPassive = false;
   isTimerPassive = false;
   lastAction = null;
+  if (typeof deckFilter !== 'undefined') { deckFilter = ''; currentGrammarLevel = 'A1'; }
   document.getElementById('undoBar').classList.remove('show');
   closeEditModal();
   closeGoalModal();
@@ -297,6 +311,7 @@ async function switchLang(code) {
   showArchivedGoals = false;
   refreshDashboard();
   if (document.getElementById('viewStats').classList.contains('active')) refreshStats();
+  if (document.getElementById('viewStudy').classList.contains('active')) refreshStudy();
 }
 
 // ══════════════════════════════════════════════════
@@ -456,6 +471,7 @@ function switchTab(name, btn) {
   document.getElementById('content').scrollTop = 0;
   if (name === 'Dashboard') refreshDashboard();
   if (name === 'Stats') refreshStats();
+  if (name === 'Study') refreshStudy();
 }
 
 // ══════════════════════════════════════════════════
@@ -840,6 +856,16 @@ async function refreshDashboard() {
   try { ankiEntries = await dbGetAll('anki'); } catch (e) {}
   const todayAnki = ankiEntries.filter(a => a.date === d).reduce((s, a) => s + (a.cards || 0), 0);
   document.getElementById('todayAnki').textContent = todayAnki;
+
+  // Due / new flashcard counts under the Anki tile (in-app SRS)
+  const dueSub = document.getElementById('ankiDueSub');
+  if (dueSub && typeof flashCounts === 'function') {
+    try {
+      const fc = await flashCounts();
+      dueSub.textContent = (fc.due.length + fc.newAvailable) > 0
+        ? t('anki_due_line', { d: fc.due.length, n: fc.newAvailable }) : '';
+    } catch (e) { dueSub.textContent = ''; }
+  }
 
   await renderGoals(logs);
 
@@ -2015,6 +2041,7 @@ async function loadSettings() {
   reminderTime = '19:00';
   document.getElementById('reminderToggle').classList.remove('on');
   document.getElementById('reminderTime').value = '19:00';
+  if (typeof srsNewPerDay !== 'undefined') srsNewPerDay = 20;
 
   try {
     const theme = await dbGet('settings', 'theme');
@@ -2040,6 +2067,8 @@ async function loadSettings() {
       reminderTime = rTime.value;
       document.getElementById('reminderTime').value = reminderTime;
     }
+    const npd = await dbGet('settings', 'srsNewPerDay');
+    if (npd && npd.value > 0 && typeof srsNewPerDay !== 'undefined') srsNewPerDay = npd.value;
   } catch (e) {}
   updateThemeMeta();
 }
@@ -2072,10 +2101,13 @@ function toggleExtendDay() {
 async function exportData() {
   const logs = await dbGetAll('logs');
   const anki = await dbGetAll('anki');
-  let goals = [], goalProgress = [];
+  let goals = [], goalProgress = [], cards = [], reviews = [], grammarProgress = [];
   try { goals = await dbGetAll('goals'); } catch (e) {}
   try { goalProgress = await dbGetAll('goal_progress'); } catch (e) {}
-  const data = JSON.stringify({ language: L.code, logs, anki, goals, goal_progress: goalProgress, version: 4, exported: new Date().toISOString() }, null, 2);
+  try { cards = await dbGetAll('cards'); } catch (e) {}
+  try { reviews = await dbGetAll('reviews'); } catch (e) {}
+  try { grammarProgress = await dbGetAll('grammar_progress'); } catch (e) {}
+  const data = JSON.stringify({ language: L.code, logs, anki, goals, goal_progress: goalProgress, cards, reviews, grammar_progress: grammarProgress, version: 5, exported: new Date().toISOString() }, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -2100,8 +2132,12 @@ async function handleImport(e) {
     if (data.anki) { await dbClear('anki'); for (const a of data.anki) { delete a.id; await dbPut('anki', a); } }
     if (data.goals) { await dbClear('goals'); for (const g of data.goals) { await dbPut('goals', g); } }
     if (data.goal_progress) { await dbClear('goal_progress'); for (const p of data.goal_progress) { await dbPut('goal_progress', p); } }
+    if (data.cards) { await dbClear('cards'); for (const c of data.cards) { delete c.id; await dbPut('cards', c); } }
+    if (data.reviews) { await dbClear('reviews'); for (const r of data.reviews) { delete r.id; await dbPut('reviews', r); } }
+    if (data.grammar_progress) { await dbClear('grammar_progress'); for (const p of data.grammar_progress) { await dbPut('grammar_progress', p); } }
     showToast(t('t_imported'));
     refreshAll();
+    if (typeof refreshStudy === 'function') refreshStudy();
   } catch (err) {
     showToast(t('t_import_err'));
   }
@@ -2115,6 +2151,9 @@ async function resetData() {
   await dbClear('anki');
   try { await dbClear('goals'); } catch (e) {}
   try { await dbClear('goal_progress'); } catch (e) {}
+  try { await dbClear('cards'); } catch (e) {}
+  try { await dbClear('reviews'); } catch (e) {}
+  try { await dbClear('grammar_progress'); } catch (e) {}
   if (L.code === 'nl') {
     await dbPut('settings', { key: 'goals_migrated_v3', value: false });
     await migrateExistingGoals();
@@ -2171,7 +2210,7 @@ async function init() {
       location.reload();
     });
 
-    navigator.serviceWorker.register('sw.js?v=7', { updateViaCache: 'none' }).then(reg => {
+    navigator.serviceWorker.register('sw.js?v=8', { updateViaCache: 'none' }).then(reg => {
       reg.update().catch(() => {});
       if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
       reg.addEventListener('updatefound', () => {

@@ -1,12 +1,15 @@
-const CACHE_NAME = 'tracker-v10';
+const CACHE_NAME = 'tracker-v11';
 const BASE = '/dutch_tracker/';
 const ASSETS = [
   BASE,
   BASE + 'index.html',
   BASE + 'manifest.json',
-  BASE + 'styles.css?v=4',
-  BASE + 'i18n.js?v=4',
-  BASE + 'app.js?v=4'
+  BASE + 'styles.css?v=5',
+  BASE + 'i18n.js?v=5',
+  BASE + 'srs.js?v=5',
+  BASE + 'grammar_data.js?v=5',
+  BASE + 'app.js?v=5',
+  BASE + 'study.js?v=5'
 ];
 
 self.addEventListener('install', e => {

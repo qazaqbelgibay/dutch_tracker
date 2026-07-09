@@ -30,6 +30,7 @@ const LANGS = {
       { value: 'pagina', key: 'u_pages' },
       { value: 'stuk', key: 'u_pieces' }
     ],
+    grammarTag: 'grammatica',
     dayNames: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo']
   },
   fr: {
@@ -57,18 +58,20 @@ const LANGS = {
       { value: 'pages', key: 'u_pages' },
       { value: 'unités', key: 'u_pieces' }
     ],
+    grammarTag: 'grammaire',
     dayNames: ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di']
   }
 };
 
 /* Skill metadata shared across languages (labels live in I18N). */
-const SKILLS = ['listening', 'reading', 'writing', 'speaking', 'grammar'];
+const SKILLS = ['listening', 'reading', 'writing', 'speaking', 'grammar', 'vocab'];
 const SKILL_META = {
   listening: { color: 'var(--teal)',   bg: 'var(--teal-dim)',   icon: '🎧' },
   reading:   { color: 'var(--blue)',   bg: 'var(--blue-dim)',   icon: '📖' },
   writing:   { color: 'var(--purple)', bg: 'var(--purple-dim)', icon: '✍️' },
   speaking:  { color: 'var(--red)',    bg: 'var(--red-dim)',    icon: '🗣️' },
-  grammar:   { color: 'var(--amber)',  bg: 'var(--amber-glow)', icon: '📐' }
+  grammar:   { color: 'var(--amber)',  bg: 'var(--amber-glow)', icon: '📐' },
+  vocab:     { color: 'var(--green)',  bg: 'var(--green-dim)',  icon: '🃏' }
 };
 
 const I18N = {
@@ -95,9 +98,9 @@ const I18N = {
     risk_banner: '🔥 Reeks van {n} dagen in gevaar — studeer vandaag nog!',
     // skills
     skill_listening: 'Luisteren', skill_reading: 'Lezen', skill_writing: 'Schrijven',
-    skill_speaking: 'Spreken', skill_grammar: 'Grammatica',
+    skill_speaking: 'Spreken', skill_grammar: 'Grammatica', skill_vocab: 'Woordenschat',
     skill_listening_s: 'L', skill_reading_s: 'R', skill_writing_s: 'W',
-    skill_speaking_s: 'S', skill_grammar_s: 'G',
+    skill_speaking_s: 'S', skill_grammar_s: 'G', skill_vocab_s: 'V',
     active_label: 'Actief', passive_label: 'Passief', passive_tag: 'passief',
     // log view
     stopwatch: 'Stopwatch', start: 'Start', pause: 'Pauze', stop: 'Stop',
@@ -203,7 +206,60 @@ const I18N = {
     badge_day5_name: 'Marathon', badge_day5_desc: '5 uur op één dag',
     badge_all_name: 'Allrounder', badge_all_desc: 'Alle 5 vaardigheden in één week',
     badge_anki_name: 'Kaartenhaai', badge_anki_desc: '1000 Anki-kaarten',
-    badge_pw_name: 'Perfecte week', badge_pw_desc: 'Dagdoel 7 dagen op rij gehaald'
+    badge_pw_name: 'Perfecte week', badge_pw_desc: 'Dagdoel 7 dagen op rij gehaald',
+    // study tab
+    nav_study: 'Studeren',
+    flash_title: 'Flashcards · FSRS',
+    flash_sub: 'Ingebouwde Anki met FSRS-planning — je stats worden automatisch gelogd.',
+    flash_due: 'Te herhalen', flash_new_label: 'Nieuw', flash_total: 'Kaarten',
+    flash_start: '▶ Start sessie',
+    flash_all_done: 'Alles klaar voor vandaag 🎉',
+    flash_empty: 'Nog geen kaarten — importeer je Anki-deck of maak zelf een kaart.',
+    flash_new_per_day: 'Nieuwe kaarten per dag',
+    deck_all: 'Alle decks', deck_label: 'Deck',
+    btn_add_card: '+ Kaart', btn_import: '⬆ Import', btn_manage: '☰ Beheer',
+    add_card_title: 'Nieuwe kaart', card_front: 'Voorkant', card_back: 'Achterkant', card_deck: 'Deck',
+    t_card_added: 'Kaart toegevoegd!', t_fill_front_back: 'Vul voor- en achterkant in!',
+    import_title: 'Anki-deck importeren',
+    import_hint: 'In Anki op je computer: <b>Bestand → Exporteren</b> → kies <b>"Notities in platte tekst (.txt)"</b> (vink media uit), sla op en kies dat bestand hieronder. CSV/TSV werkt ook (kolom 1 = voorkant, kolom 2 = achterkant).',
+    import_pick: 'Kies bestand (.txt / .csv)',
+    t_imported_cards: '{n} kaarten geïmporteerd{skip}',
+    t_import_skip: ' · {n} dubbele overgeslagen',
+    t_import_none: 'Geen kaarten gevonden in dit bestand',
+    manage_title: 'Kaarten beheren', manage_search_ph: 'Zoek in kaarten…',
+    manage_empty: 'Geen kaarten gevonden',
+    c_delete_card: 'Deze kaart verwijderen?',
+    c_delete_deck: 'Deck "{name}" met {n} kaarten verwijderen?',
+    deck_delete: 'Deck wissen',
+    state_0: 'Nieuw', state_1: 'Leren', state_2: 'Herhalen', state_3: 'Herleren',
+    rate_1: 'Opnieuw', rate_2: 'Moeilijk', rate_3: 'Goed', rate_4: 'Makkelijk',
+    tap_reveal: 'Tik om het antwoord te tonen',
+    sess_left: '{n} te gaan',
+    sess_paused_note: '⏸ Gepauzeerd — tik op ▶ om verder te gaan',
+    c_end_flash: 'Sessie stoppen? Je beoordelingen zijn al bewaard; de sessie wordt gelogd.',
+    sess_done_title: 'Sessie voltooid',
+    sess_cards_stat: 'kaarten', sess_acc_stat: 'correct', sess_time_stat: 'minuten',
+    sess_close: 'Klaar',
+    t_session_logged: 'Stats bijgewerkt: {n} kaarten · {m} min',
+    flash_log_note: 'Flashcards · {n} kaarten · {p}% correct',
+    anki_due_line: '{d} te herhalen · {n} nieuw',
+    grammar_title: 'Vlaamse grammatica',
+    grammar_sub: 'Ingebouwde cursus A1 → C1 — les afronden logt je grammatica-tijd automatisch.',
+    grammar_none: 'Nog geen lessen voor deze taal.',
+    grammar_progress: '{done}/{total} lessen voltooid',
+    grammar_reading: 'Theorie — lees eerst, oefen daarna',
+    best_label: 'beste: {p}%',
+    lesson_quiz_btn: 'Start oefeningen ({n})',
+    quiz_q: 'Vraag {i}/{n}',
+    quiz_check: 'Controleer', quiz_next: 'Volgende', quiz_finish_btn: 'Naar resultaat',
+    quiz_correct: 'Juist!', quiz_wrong: 'Niet juist.',
+    quiz_answer_was: 'Antwoord: {a}',
+    quiz_type_ph: 'Typ je antwoord…',
+    lesson_done_title: 'Les voltooid', lesson_score: 'score',
+    grammar_save: 'Voltooien & opslaan',
+    c_end_grammar: 'Les verlaten? Deze les wordt niet opgeslagen.',
+    grammar_log_note: 'Grammatica · {title} · {p}%',
+    t_lesson_logged: 'Les opgeslagen — grammatica bijgewerkt!'
   },
 
   /* ─────────────── Français ─────────────── */
@@ -226,9 +282,9 @@ const I18N = {
     quick_add: 'Ajout rapide', quick_add_hint: 'Choisis les minutes, touche une compétence — enregistré direct',
     risk_banner: '🔥 Série de {n} jours en jeu — étudie encore aujourd\'hui !',
     skill_listening: 'Écoute', skill_reading: 'Lecture', skill_writing: 'Écriture',
-    skill_speaking: 'Oral', skill_grammar: 'Grammaire',
+    skill_speaking: 'Oral', skill_grammar: 'Grammaire', skill_vocab: 'Vocabulaire',
     skill_listening_s: 'E', skill_reading_s: 'L', skill_writing_s: 'É',
-    skill_speaking_s: 'O', skill_grammar_s: 'G',
+    skill_speaking_s: 'O', skill_grammar_s: 'G', skill_vocab_s: 'V',
     active_label: 'Active', passive_label: 'Passive', passive_tag: 'passive',
     stopwatch: 'Chronomètre', start: 'Démarrer', pause: 'Pause', stop: 'Stop',
     skill: 'Compétence', time_label: 'Temps :',
@@ -327,7 +383,60 @@ const I18N = {
     badge_day5_name: 'Marathon', badge_day5_desc: '5 h en une journée',
     badge_all_name: 'Polyvalent', badge_all_desc: 'Les 5 compétences en une semaine',
     badge_anki_name: 'As des cartes', badge_anki_desc: '1000 cartes Anki',
-    badge_pw_name: 'Semaine parfaite', badge_pw_desc: 'Objectif quotidien atteint 7 jours de suite'
+    badge_pw_name: 'Semaine parfaite', badge_pw_desc: 'Objectif quotidien atteint 7 jours de suite',
+    // study tab
+    nav_study: 'Étudier',
+    flash_title: 'Flashcards · FSRS',
+    flash_sub: 'Anki intégré avec planification FSRS — tes stats sont enregistrées automatiquement.',
+    flash_due: 'À réviser', flash_new_label: 'Nouvelles', flash_total: 'Cartes',
+    flash_start: '▶ Démarrer la séance',
+    flash_all_done: 'Tout est fait pour aujourd’hui 🎉',
+    flash_empty: 'Pas encore de cartes — importe ton deck Anki ou crée une carte.',
+    flash_new_per_day: 'Nouvelles cartes par jour',
+    deck_all: 'Tous les decks', deck_label: 'Deck',
+    btn_add_card: '+ Carte', btn_import: '⬆ Importer', btn_manage: '☰ Gérer',
+    add_card_title: 'Nouvelle carte', card_front: 'Recto', card_back: 'Verso', card_deck: 'Deck',
+    t_card_added: 'Carte ajoutée !', t_fill_front_back: 'Remplis le recto et le verso !',
+    import_title: 'Importer un deck Anki',
+    import_hint: 'Dans Anki sur ton ordinateur : <b>Fichier → Exporter</b> → choisis <b>« Notes en texte brut (.txt) »</b> (sans médias), enregistre puis choisis ce fichier ci-dessous. CSV/TSV fonctionne aussi (colonne 1 = recto, colonne 2 = verso).',
+    import_pick: 'Choisir un fichier (.txt / .csv)',
+    t_imported_cards: '{n} cartes importées{skip}',
+    t_import_skip: ' · {n} doublons ignorés',
+    t_import_none: 'Aucune carte trouvée dans ce fichier',
+    manage_title: 'Gérer les cartes', manage_search_ph: 'Chercher dans les cartes…',
+    manage_empty: 'Aucune carte trouvée',
+    c_delete_card: 'Supprimer cette carte ?',
+    c_delete_deck: 'Supprimer le deck « {name} » et ses {n} cartes ?',
+    deck_delete: 'Supprimer le deck',
+    state_0: 'Nouvelle', state_1: 'Apprentissage', state_2: 'Révision', state_3: 'Réapprentissage',
+    rate_1: 'Encore', rate_2: 'Difficile', rate_3: 'Correct', rate_4: 'Facile',
+    tap_reveal: 'Touche pour voir la réponse',
+    sess_left: '{n} restantes',
+    sess_paused_note: '⏸ En pause — touche ▶ pour continuer',
+    c_end_flash: 'Arrêter la séance ? Tes réponses sont déjà sauvegardées ; la séance sera enregistrée.',
+    sess_done_title: 'Séance terminée',
+    sess_cards_stat: 'cartes', sess_acc_stat: 'correct', sess_time_stat: 'minutes',
+    sess_close: 'Terminé',
+    t_session_logged: 'Stats mises à jour : {n} cartes · {m} min',
+    flash_log_note: 'Flashcards · {n} cartes · {p}% correct',
+    anki_due_line: '{d} à réviser · {n} nouvelles',
+    grammar_title: 'Grammaire',
+    grammar_sub: 'Cours intégré A1 → C1 — terminer une leçon enregistre ton temps de grammaire.',
+    grammar_none: 'Pas encore de leçons pour cette langue.',
+    grammar_progress: '{done}/{total} leçons terminées',
+    grammar_reading: 'Théorie — lis d’abord, pratique ensuite',
+    best_label: 'record : {p}%',
+    lesson_quiz_btn: 'Commencer les exercices ({n})',
+    quiz_q: 'Question {i}/{n}',
+    quiz_check: 'Vérifier', quiz_next: 'Suivant', quiz_finish_btn: 'Voir le résultat',
+    quiz_correct: 'Correct !', quiz_wrong: 'Incorrect.',
+    quiz_answer_was: 'Réponse : {a}',
+    quiz_type_ph: 'Tape ta réponse…',
+    lesson_done_title: 'Leçon terminée', lesson_score: 'score',
+    grammar_save: 'Terminer & enregistrer',
+    c_end_grammar: 'Quitter la leçon ? Elle ne sera pas enregistrée.',
+    grammar_log_note: 'Grammaire · {title} · {p}%',
+    t_lesson_logged: 'Leçon enregistrée — grammaire mise à jour !'
   }
 };
 

@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='96' fill='%23171613'/><text x='256' y='340' font-size='230' text-anchor='middle' fill='%23dfa93f' font-family='Georgia, serif' font-style='italic'>Aa</text></svg>">
 <title id="docTitle">Language Tracker</title>
-<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="styles.css?v=5">
 <!-- Fonts load async so the app never blocks on the network (offline-first) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -104,6 +104,7 @@
           <div class="card mini-card">
             <span class="eyebrow" data-i18n="anki_today">Anki vandaag</span>
             <div class="big-num"><span class="serif-num" id="todayAnki">0</span><span class="num-unit" data-i18n="cards_unit">kaarten</span></div>
+            <div class="mini-sub" id="ankiDueSub"></div>
           </div>
         </div>
         <div class="card slim-card">
@@ -282,6 +283,49 @@
       </section>
     </div>
 
+    <!-- ═══ STUDY (in-app Anki + grammar course) ═══ -->
+    <div class="view" id="viewStudy">
+
+      <!-- Flashcards / FSRS -->
+      <section class="block">
+        <div class="card">
+          <span class="eyebrow" data-i18n="flash_title">Flashcards · FSRS</span>
+          <div class="study-sub" data-i18n="flash_sub">Ingebouwde Anki met FSRS-planning.</div>
+          <div class="flash-stats">
+            <div class="flash-stat"><span class="serif-num md" id="flashDueCount">0</span><span class="flash-stat-label" data-i18n="flash_due">Te herhalen</span></div>
+            <div class="flash-stat"><span class="serif-num md" id="flashNewCount">0</span><span class="flash-stat-label" data-i18n="flash_new_label">Nieuw</span></div>
+            <div class="flash-stat"><span class="serif-num md" id="flashTotalCount">0</span><span class="flash-stat-label" data-i18n="flash_total">Kaarten</span></div>
+          </div>
+          <button class="btn primary full" id="flashStartBtn" onclick="startFlashSession()" data-i18n="flash_start">▶ Start sessie</button>
+          <div class="flash-status" id="flashStatus"></div>
+          <div class="manual-field" style="margin-top:12px">
+            <label data-i18n="deck_label">Deck</label>
+            <select id="deckFilter" class="select-input" onchange="setDeckFilter(this.value)"></select>
+          </div>
+          <div class="flash-manage-row">
+            <button class="ghost-btn slim" onclick="openAddCardModal()" data-i18n="btn_add_card">+ Kaart</button>
+            <button class="ghost-btn slim" onclick="openImportModal()" data-i18n="btn_import">⬆ Import</button>
+            <button class="ghost-btn slim" onclick="openManageModal()" data-i18n="btn_manage">☰ Beheer</button>
+          </div>
+          <div class="setting-row" style="margin-top:6px;border-top:1px solid var(--hairline);padding-top:12px">
+            <div class="setting-label" style="font-size:13px" data-i18n="flash_new_per_day">Nieuwe kaarten per dag</div>
+            <input type="number" id="srsNewPerDay" class="num-input" value="20" min="0" max="200" onchange="updateNewPerDay(this.value)">
+          </div>
+        </div>
+      </section>
+
+      <!-- Grammar course -->
+      <section class="block">
+        <div class="card">
+          <span class="eyebrow" data-i18n="grammar_title">Vlaamse grammatica</span>
+          <div class="study-sub" data-i18n="grammar_sub">Ingebouwde cursus A1 → C1.</div>
+          <div id="grammarProgress"></div>
+          <div class="level-tabs" id="grammarLevels"></div>
+          <div class="lesson-list" id="grammarLessons"></div>
+        </div>
+      </section>
+    </div>
+
     <!-- ═══ STATS ═══ -->
     <div class="view" id="viewStats">
       <section class="block wide">
@@ -310,7 +354,7 @@
       <section class="block">
         <div class="section-head"><span class="eyebrow" data-i18n="chart_skill_title">Vaardigheid verdeling</span></div>
         <div class="card">
-          <div class="chart-container"><canvas id="skillChart" class="chart-canvas"></canvas></div>
+          <div class="chart-container tall"><canvas id="skillChart" class="chart-canvas"></canvas></div>
         </div>
       </section>
 
@@ -420,10 +464,73 @@
   <!-- Bottom Nav -->
   <nav class="nav">
     <button class="nav-btn active" onclick="switchTab('Dashboard',this)"><span class="icon">◐</span><span class="nav-label" data-i18n="nav_dashboard">Overzicht</span></button>
+    <button class="nav-btn" onclick="switchTab('Study',this)"><span class="icon">▣</span><span class="nav-label" data-i18n="nav_study">Studeren</span></button>
     <button class="nav-btn" onclick="switchTab('Log',this)"><span class="icon">●</span><span class="nav-label" data-i18n="nav_log">Loggen</span></button>
     <button class="nav-btn" onclick="switchTab('Stats',this)"><span class="icon">▤</span><span class="nav-label" data-i18n="nav_stats">Stats</span></button>
     <button class="nav-btn" onclick="switchTab('Settings',this)"><span class="icon">⋯</span><span class="nav-label" data-i18n="nav_more">Meer</span></button>
   </nav>
+</div>
+
+<!-- ── Study session overlay (flashcards + grammar lessons) ── -->
+<div class="study-overlay" id="studyOverlay">
+  <div class="study-head">
+    <button class="sess-close" onclick="sessClose()">✕</button>
+    <div class="sess-timer mono" id="sessTimer">00:00</div>
+    <button class="sess-pause" id="sessPauseBtn" onclick="sessTogglePause()">⏸</button>
+  </div>
+  <div class="sess-paused-note" id="sessPausedNote" data-i18n="sess_paused_note">⏸ Gepauzeerd — tik op ▶ om verder te gaan</div>
+  <div class="study-body" id="studyBody"></div>
+</div>
+
+<!-- Add Card Modal -->
+<div class="modal-overlay" id="addCardModal">
+  <div class="modal">
+    <h3 data-i18n="add_card_title">Nieuwe kaart</h3>
+    <div class="manual-form">
+      <div class="manual-field">
+        <label data-i18n="card_front">Voorkant</label>
+        <textarea id="acFront" rows="2" style="font-family:var(--sans)"></textarea>
+      </div>
+      <div class="manual-field">
+        <label data-i18n="card_back">Achterkant</label>
+        <textarea id="acBack" rows="2" style="font-family:var(--sans)"></textarea>
+      </div>
+      <div class="manual-field">
+        <label data-i18n="card_deck">Deck</label>
+        <input type="text" id="acDeck" value="Mijn deck" style="font-family:var(--sans)">
+      </div>
+      <div class="modal-btns">
+        <button class="modal-btn cancel" onclick="closeAddCardModal()" data-i18n="cancel">Annuleer</button>
+        <button class="modal-btn confirm" onclick="saveNewCard()" data-i18n="save">Opslaan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal">
+    <h3 data-i18n="import_title">Anki-deck importeren</h3>
+    <p class="import-hint" id="importHint"></p>
+    <button class="btn primary full" onclick="pickImportFile()" data-i18n="import_pick">Kies bestand (.txt / .csv)</button>
+    <div class="modal-btns" style="margin-top:10px">
+      <button class="modal-btn cancel" onclick="closeImportModal()" data-i18n="cancel">Annuleer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Manage Cards Modal -->
+<div class="modal-overlay" id="manageModal">
+  <div class="modal manage-modal">
+    <h3 data-i18n="manage_title">Kaarten beheren</h3>
+    <div class="deck-chips" id="manageDecks"></div>
+    <input type="text" class="search-input" id="manageSearch" data-i18n-ph="manage_search_ph"
+      placeholder="Zoek in kaarten…" oninput="onManageSearch(this.value)">
+    <div class="manage-list" id="manageList"></div>
+    <div class="modal-btns" style="margin-top:10px">
+      <button class="modal-btn cancel" onclick="closeManageModal()" data-i18n="cancel">Annuleer</button>
+    </div>
+  </div>
 </div>
 
 <!-- Edit Entry Modal -->
@@ -641,10 +748,14 @@
   <button class="undo-btn" onclick="undoLast()" data-i18n="undo">Ongedaan</button>
 </div>
 
-<!-- Hidden file input for import -->
+<!-- Hidden file inputs for import -->
 <input type="file" id="fileImport" accept=".json" style="display:none" onchange="handleImport(event)">
+<input type="file" id="fileImportCards" accept=".txt,.csv,.tsv,text/plain,text/csv" style="display:none" onchange="handleCardImport(event)">
 
-<script src="i18n.js?v=4"></script>
-<script src="app.js?v=4"></script>
+<script src="i18n.js?v=5"></script>
+<script src="srs.js?v=5"></script>
+<script src="grammar_data.js?v=5"></script>
+<script src="app.js?v=5"></script>
+<script src="study.js?v=5"></script>
 </body>
 </html>
