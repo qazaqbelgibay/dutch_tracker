@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tracker-v13';
+const CACHE_NAME = 'tracker-v14';
 const BASE = '/dutch_tracker/';
 const ASSETS = [
   BASE,
@@ -7,7 +7,7 @@ const ASSETS = [
   BASE + 'styles.css?v=7',
   BASE + 'i18n.js?v=7',
   BASE + 'srs.js?v=7',
-  BASE + 'grammar_data.js?v=7',
+  BASE + 'grammar_data.js?v=8',
   BASE + 'app.js?v=7',
   BASE + 'study.js?v=7',
   BASE + 'decks/nl_freq_dict.json',
