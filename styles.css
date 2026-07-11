@@ -40,11 +40,13 @@
   --blue: #7aa5d8;
   --purple: #b08fd0;
   --red: #d4838f;
+  --green: #a3b45c;
   --amber-glow: rgba(217,156,82,0.14);
   --teal-dim: rgba(77,175,150,0.14);
   --blue-dim: rgba(122,165,216,0.14);
   --purple-dim: rgba(176,143,208,0.14);
   --red-dim: rgba(212,131,143,0.13);
+  --green-dim: rgba(163,180,92,0.14);
 
   --art-color: #dfa93f;
   --art-opacity: 0.05;
@@ -70,11 +72,13 @@
   --blue: #4f7fb5;
   --purple: #8a64ab;
   --red: #b85f6d;
+  --green: #6e8b2e;
   --amber-glow: rgba(184,122,46,0.12);
   --teal-dim: rgba(47,138,114,0.12);
   --blue-dim: rgba(79,127,181,0.12);
   --purple-dim: rgba(138,100,171,0.12);
   --red-dim: rgba(184,95,109,0.11);
+  --green-dim: rgba(110,139,46,0.12);
 
   --art-color: #171613;
   --art-opacity: 0.045;
@@ -102,11 +106,13 @@
   --blue: #6fb2d8;
   --purple: #ab8fd6;
   --red: #d88090;
+  --green: #7bbb8a;
   --amber-glow: rgba(217,164,92,0.14);
   --teal-dim: rgba(77,175,160,0.14);
   --blue-dim: rgba(111,178,216,0.14);
   --purple-dim: rgba(171,143,214,0.14);
   --red-dim: rgba(216,128,144,0.13);
+  --green-dim: rgba(123,187,138,0.14);
 
   --art-color: #cfa95c;         /* gilded fleur on navy */
   --art-opacity: 0.055;
@@ -132,11 +138,13 @@
   --blue: #3f7ba8;
   --purple: #7c5aa8;
   --red: #b85f70;
+  --green: #3f8a55;
   --amber-glow: rgba(176,129,46,0.12);
   --teal-dim: rgba(47,138,124,0.12);
   --blue-dim: rgba(63,123,168,0.12);
   --purple-dim: rgba(124,90,168,0.12);
   --red-dim: rgba(184,95,112,0.11);
+  --green-dim: rgba(63,138,85,0.12);
 
   --art-color: #1d2c55;
   --art-opacity: 0.05;
@@ -1438,3 +1446,228 @@ body {
   #viewDashboard.view.active { grid-template-columns: 1fr 1fr 1fr; }
   #viewDashboard .block.wide { grid-column: 1 / -1; }
 }
+
+/* ════════════ Study tab: flashcards (FSRS) + grammar ════════════ */
+.chart-container.tall { height: 224px; }
+
+.study-sub { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 14px; }
+
+.flash-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin-bottom: 14px; text-align: center;
+}
+.flash-stat {
+  background: var(--bg3); border-radius: var(--radius-sm);
+  padding: 12px 4px 10px; display: flex; flex-direction: column; gap: 2px;
+}
+.flash-stat-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.flash-status { font-size: 12px; color: var(--text2); text-align: center; margin-top: 10px; min-height: 1em; }
+#flashStartBtn:disabled { opacity: 0.45; }
+
+.flash-manage-row { display: flex; gap: 8px; margin-top: 12px; }
+.flash-manage-row .ghost-btn.slim { flex: 1; margin-top: 0; padding: 9px 4px; font-size: 12px; }
+
+/* ── Grammar course ── */
+.grammar-prog-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--text2); margin-bottom: 6px;
+}
+.level-tabs { display: flex; gap: 6px; margin: 14px 0 10px; }
+.level-tab {
+  flex: 1; padding: 8px 2px; border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline); background: var(--bg2);
+  color: var(--text2); font-family: var(--mono); font-size: 12.5px; font-weight: 600;
+  cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  transition: all 0.15s ease;
+}
+.level-tab .level-count { font-size: 9.5px; color: var(--text3); font-weight: 400; }
+.level-tab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.level-tab.active .level-count { color: var(--accent); }
+
+.lesson-list { display: flex; flex-direction: column; gap: 6px; }
+.lesson-row {
+  display: flex; align-items: center; gap: 10px; text-align: left;
+  padding: 11px 12px; border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline); background: var(--bg2);
+  color: var(--text); font-size: 13px; cursor: pointer; width: 100%;
+  transition: border-color 0.15s ease;
+}
+.lesson-row:active { border-color: var(--accent); }
+.lesson-check {
+  flex: 0 0 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--hairline); font-size: 11px; line-height: 18px;
+  text-align: center; color: var(--on-accent);
+}
+.lesson-check.done { background: var(--teal); border-color: var(--teal); }
+.lesson-title { flex: 1; line-height: 1.35; }
+.lesson-best { font-size: 10px; color: var(--text3); white-space: nowrap; }
+
+/* ── Session overlay ── */
+.study-overlay {
+  position: fixed; inset: 0; z-index: 300; display: none;
+  flex-direction: column; background: var(--bg);
+  padding: calc(var(--safe-top) + 10px) 16px calc(var(--safe-bottom) + 16px);
+}
+.study-overlay.show { display: flex; }
+.study-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 10px; border-bottom: 1px solid var(--hairline);
+}
+.sess-close, .sess-pause {
+  width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--hairline);
+  background: var(--bg2); color: var(--text2); font-size: 16px; cursor: pointer;
+}
+.sess-pause { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+.sess-timer { font-size: 22px; font-weight: 600; letter-spacing: 0.04em; }
+.sess-timer.paused { color: var(--text3); animation: blink 1.2s ease infinite; }
+@keyframes blink { 50% { opacity: 0.35; } }
+
+.sess-paused-note {
+  display: none; text-align: center; font-size: 13px; color: var(--accent);
+  padding: 12px; margin-top: 10px; border-radius: var(--radius-sm);
+  background: var(--accent-dim);
+}
+.sess-paused-note.show { display: block; }
+
+.study-body {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  display: flex; flex-direction: column; padding: 16px 2px 8px;
+  max-width: 620px; width: 100%; margin: 0 auto;
+}
+.study-body.sess-paused { visibility: hidden; }
+
+.sess-meta {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  font-size: 11px; color: var(--text3);
+}
+.sess-left { margin-left: auto; }
+.flash-deck { color: var(--text3); font-size: 11px; }
+.flash-state {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 3px 8px; border-radius: 20px; white-space: nowrap;
+}
+.flash-state.new { background: var(--blue-dim); color: var(--blue); }
+.flash-state.learn { background: var(--amber-glow); color: var(--amber); }
+.flash-state.rev { background: var(--teal-dim); color: var(--teal); }
+
+/* ── Flashcard face ── */
+.flash-card {
+  flex: 0 1 auto; min-height: 240px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px; text-align: center;
+  background: var(--bg2); border: 1px solid var(--hairline);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 30px 22px; cursor: pointer; margin-bottom: 16px;
+}
+.flash-front {
+  font-family: var(--serif); font-size: 28px; line-height: 1.25;
+  white-space: pre-line; word-break: break-word;
+}
+.flash-divider { width: 46px; border-top: 1px solid var(--hairline); }
+.flash-back {
+  font-size: 17px; line-height: 1.5; color: var(--text2);
+  white-space: pre-line; word-break: break-word;
+}
+.flash-hint { font-size: 11.5px; color: var(--text3); }
+
+/* ── Rating buttons ── */
+.rate-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.rate-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 12px 2px 10px; border-radius: var(--radius-sm); border: 1px solid;
+  font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: var(--sans);
+  transition: transform 0.08s ease;
+}
+.rate-btn:active { transform: scale(0.96); }
+.rate-ivl { font-size: 10px; opacity: 0.75; font-weight: 400; }
+.rate-btn.again { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+.rate-btn.hard { background: var(--amber-glow); color: var(--amber); border-color: var(--amber); }
+.rate-btn.good { background: var(--green-dim); color: var(--green); border-color: var(--green); }
+.rate-btn.easy { background: var(--blue-dim); color: var(--blue); border-color: var(--blue); }
+
+/* ── Session summary ── */
+.sess-summary {
+  margin: auto 0; text-align: center; display: flex; flex-direction: column; gap: 18px;
+}
+.sess-summary-icon { font-size: 44px; }
+.sess-summary h2 { font-family: var(--serif); font-weight: 400; font-size: 26px; }
+.sess-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.sess-stat {
+  background: var(--bg2); border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+  padding: 16px 6px; display: flex; flex-direction: column; gap: 4px;
+}
+.sess-stat span:last-child { font-size: 10.5px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ── Grammar lesson content ── */
+.lesson-content { margin-bottom: 18px; }
+.lesson-h { font-family: var(--serif); font-weight: 400; font-size: 24px; margin-bottom: 14px; line-height: 1.25; }
+.lesson-sec { margin-bottom: 18px; }
+.lesson-sec h3 { font-size: 14px; margin-bottom: 6px; color: var(--accent); }
+.lesson-sec p { font-size: 13.5px; line-height: 1.65; color: var(--text2); margin-bottom: 10px; }
+.lesson-ex {
+  border-left: 2px solid var(--accent); padding: 6px 12px; margin-bottom: 8px;
+  background: var(--bg2); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.lesson-ex-nl { font-size: 14px; font-weight: 500; }
+.lesson-ex-en { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+/* ── Quiz ── */
+.quiz-card { margin-bottom: 14px; }
+.quiz-q { font-family: var(--serif); font-size: 20px; line-height: 1.35; margin-bottom: 16px; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.quiz-opt {
+  text-align: left; padding: 13px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline); background: var(--bg2); color: var(--text);
+  font-size: 14px; line-height: 1.4; cursor: pointer; font-family: var(--sans);
+}
+.quiz-opt:disabled { cursor: default; opacity: 0.75; }
+.quiz-opt.correct { border-color: var(--teal); background: var(--teal-dim); color: var(--teal); opacity: 1; }
+.quiz-opt.wrong { border-color: var(--red); background: var(--red-dim); color: var(--red); opacity: 1; }
+.quiz-input { width: 100%; margin-bottom: 10px; font-size: 16px; }
+.quiz-input.correct { border-color: var(--teal); }
+.quiz-input.wrong { border-color: var(--red); }
+.quiz-feedback { margin-top: 4px; }
+.quiz-verdict { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+.quiz-verdict.ok { color: var(--teal); }
+.quiz-verdict.bad { color: var(--red); }
+.quiz-answer { font-size: 13px; margin-bottom: 6px; color: var(--text); }
+.quiz-why { font-size: 12.5px; line-height: 1.55; color: var(--text2); }
+
+/* ── Import & manage modals ── */
+.import-hint { font-size: 12.5px; line-height: 1.6; color: var(--text2); margin-bottom: 14px; }
+.bundled-head {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text3); margin: 18px 0 4px; padding-top: 14px;
+  border-top: 1px solid var(--hairline);
+}
+.bundle-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid var(--hairline);
+}
+.bundle-row:last-child { border-bottom: none; }
+.bundle-info { min-width: 0; }
+.bundle-name { font-size: 13.5px; font-weight: 500; line-height: 1.3; }
+.bundle-count { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.bundle-btn { padding: 8px 14px; font-size: 12.5px; white-space: nowrap; }
+.bundle-btn:disabled { opacity: 0.55; }
+.bundle-done { font-size: 12px; font-weight: 600; color: var(--teal); white-space: nowrap; }
+.deck-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.deck-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; padding: 5px 8px 5px 11px; border-radius: 20px;
+  border: 1px solid var(--hairline); background: var(--bg3); color: var(--text2);
+}
+.deck-chip b { color: var(--text); font-weight: 600; }
+.deck-chip button {
+  border: none; background: none; color: var(--text3); cursor: pointer;
+  font-size: 11px; padding: 2px;
+}
+.manage-modal { max-height: 85vh; display: flex; flex-direction: column; }
+.manage-list { flex: 1; overflow-y: auto; margin-top: 10px; min-height: 120px; }
+.manage-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 2px; border-bottom: 1px solid var(--hairline);
+}
+.manage-row:last-child { border-bottom: none; }
+.manage-txt { flex: 1; min-width: 0; }
+.manage-front { font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.manage-back { font-size: 11.5px; color: var(--text3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
