@@ -1481,26 +1481,41 @@ body {
   transition: all 0.15s ease;
 }
 .level-tab .level-count { font-size: 9.5px; color: var(--text3); font-weight: 400; }
-.level-tab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-.level-tab.active .level-count { color: var(--accent); }
+.level-tab { --lv: var(--accent); --lvd: var(--accent-dim); }
+.level-tab.active { border-color: var(--lv); color: var(--lv); background: var(--lvd); }
+.level-tab.active .level-count { color: var(--lv); }
+.level-tab.complete .level-count::after { content: ' ✓'; }
+.level-pill {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  padding: 3px 9px; border-radius: 20px; font-family: var(--mono);
+}
 
-.lesson-list { display: flex; flex-direction: column; gap: 6px; }
+.lesson-list { display: flex; flex-direction: column; gap: 7px; }
 .lesson-row {
-  display: flex; align-items: center; gap: 10px; text-align: left;
-  padding: 11px 12px; border-radius: var(--radius-sm);
-  border: 1px solid var(--hairline); background: var(--bg2);
-  color: var(--text); font-size: 13px; cursor: pointer; width: 100%;
-  transition: border-color 0.15s ease;
+  --lv: var(--accent);
+  display: flex; align-items: center; gap: 12px; text-align: left;
+  padding: 12px 13px; border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline); border-left: 3px solid var(--lv);
+  background: var(--bg2); color: var(--text); font-size: 13px;
+  cursor: pointer; width: 100%;
+  transition: border-color 0.15s ease, transform 0.08s ease;
 }
-.lesson-row:active { border-color: var(--accent); }
+.lesson-row:active { transform: scale(0.99); border-color: var(--lv); }
+.lesson-row.done { background: var(--bg); }
+.lesson-num {
+  flex: 0 0 auto; font-size: 12px; font-weight: 600; color: var(--lv);
+  opacity: 0.9;
+}
+.lesson-mid { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.lesson-title { line-height: 1.35; font-weight: 500; }
+.lesson-row.done .lesson-title { color: var(--text2); }
+.lesson-sub { font-size: 10.5px; color: var(--text3); font-family: var(--mono); }
 .lesson-check {
-  flex: 0 0 20px; height: 20px; border-radius: 50%;
-  border: 1.5px solid var(--hairline); font-size: 11px; line-height: 18px;
-  text-align: center; color: var(--on-accent);
+  flex: 0 0 22px; height: 22px; border-radius: 50%;
+  border: 1.5px solid var(--hairline); font-size: 12px; line-height: 19px;
+  text-align: center; color: var(--text3);
 }
-.lesson-check.done { background: var(--teal); border-color: var(--teal); }
-.lesson-title { flex: 1; line-height: 1.35; }
-.lesson-best { font-size: 10px; color: var(--text3); white-space: nowrap; }
+.lesson-check.done { background: var(--teal); border-color: var(--teal); color: var(--on-accent); }
 
 /* ── Session overlay ── */
 .study-overlay {
@@ -1513,11 +1528,39 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   padding-bottom: 10px; border-bottom: 1px solid var(--hairline);
 }
-.sess-close, .sess-pause {
+.sess-close, .sess-pause, .sess-icon-btn {
   width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--hairline);
   background: var(--bg2); color: var(--text2); font-size: 16px; cursor: pointer;
 }
 .sess-pause { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+.sess-head-actions { display: flex; gap: 8px; }
+.sess-icon-btn { font-size: 17px; }
+.sess-icon-btn.finish { font-size: 14px; }
+.sess-progress {
+  height: 3px; border-radius: 2px; background: var(--bg3);
+  margin-top: 10px; overflow: hidden;
+}
+.sess-progress-fill {
+  height: 100%; width: 0; background: var(--accent);
+  border-radius: 2px; transition: width 0.25s ease;
+}
+.sess-streak { color: var(--amber); font-size: 11px; font-weight: 600; }
+.kbd-hint {
+  display: none; text-align: center; font-size: 10px; color: var(--text3);
+  margin-top: 14px; letter-spacing: 0.03em;
+}
+@media (min-width: 760px) { .kbd-hint { display: block; } }
+.grade-break {
+  display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+}
+.gb {
+  font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 20px;
+}
+.gb b { font-weight: 700; }
+.gb.again { background: var(--red-dim); color: var(--red); }
+.gb.hard { background: var(--amber-glow); color: var(--amber); }
+.gb.good { background: var(--green-dim); color: var(--green); }
+.gb.easy { background: var(--blue-dim); color: var(--blue); }
 .sess-timer { font-size: 22px; font-weight: 600; letter-spacing: 0.04em; }
 .sess-timer.paused { color: var(--text3); animation: blink 1.2s ease infinite; }
 @keyframes blink { 50% { opacity: 0.35; } }
@@ -1552,16 +1595,42 @@ body {
 
 /* ── Flashcard face ── */
 .flash-card {
+  position: relative;
   flex: 0 1 auto; min-height: 240px; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 14px; text-align: center;
   background: var(--bg2); border: 1px solid var(--hairline);
   border-radius: var(--radius); box-shadow: var(--shadow);
   padding: 30px 22px; cursor: pointer; margin-bottom: 16px;
+  animation: cardIn 0.18s ease;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.99); }
+  to { opacity: 1; transform: none; }
 }
 .flash-front {
-  font-family: var(--serif); font-size: 28px; line-height: 1.25;
+  font-family: var(--serif); font-size: 28px; line-height: 1.3;
   white-space: pre-line; word-break: break-word;
 }
+.flash-word {
+  font-family: var(--serif); font-size: 32px; line-height: 1.2;
+  word-break: break-word;
+}
+.flash-sentence {
+  font-family: var(--serif); font-size: 17px; line-height: 1.5;
+  color: var(--text2); white-space: pre-line; word-break: break-word;
+  max-width: 46ch;
+}
+.flash-hl {
+  color: var(--accent); font-weight: 600;
+  background: var(--accent-dim); border-radius: 4px; padding: 0 3px;
+}
+.tts-btn {
+  position: absolute; top: 10px; right: 10px;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--hairline); background: var(--bg3);
+  font-size: 14px; cursor: pointer; opacity: 0.75;
+}
+.tts-btn:active { opacity: 1; border-color: var(--accent); }
 .flash-divider { width: 46px; border-top: 1px solid var(--hairline); }
 .flash-back {
   font-size: 17px; line-height: 1.5; color: var(--text2);
@@ -1599,16 +1668,32 @@ body {
 
 /* ── Grammar lesson content ── */
 .lesson-content { margin-bottom: 18px; }
-.lesson-h { font-family: var(--serif); font-weight: 400; font-size: 24px; margin-bottom: 14px; line-height: 1.25; }
-.lesson-sec { margin-bottom: 18px; }
-.lesson-sec h3 { font-size: 14px; margin-bottom: 6px; color: var(--accent); }
-.lesson-sec p { font-size: 13.5px; line-height: 1.65; color: var(--text2); margin-bottom: 10px; }
+.lesson-h { font-family: var(--serif); font-weight: 400; font-size: 26px; margin-bottom: 16px; line-height: 1.25; }
+.lesson-sec { --lv: var(--accent); margin-bottom: 22px; }
+.lesson-sec h3 {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14.5px; margin-bottom: 7px; color: var(--lv);
+}
+.sec-num {
+  flex: 0 0 20px; height: 20px; border-radius: 50%; font-size: 11px;
+  line-height: 20px; text-align: center; font-weight: 600;
+  background: var(--bg3); color: var(--lv);
+}
+.lesson-sec p { font-size: 13.5px; line-height: 1.7; color: var(--text2); margin-bottom: 11px; }
 .lesson-ex {
-  border-left: 2px solid var(--accent); padding: 6px 12px; margin-bottom: 8px;
+  border-left: 2px solid var(--lv); padding: 9px 13px; margin-bottom: 8px;
   background: var(--bg2); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
-.lesson-ex-nl { font-size: 14px; font-weight: 500; }
-.lesson-ex-en { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.lesson-ex-nl {
+  font-family: var(--serif); font-size: 16px; line-height: 1.45;
+  display: flex; align-items: baseline; gap: 8px;
+}
+.lesson-ex-en { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.tts-mini {
+  border: none; background: none; cursor: pointer; font-size: 12px;
+  opacity: 0.55; padding: 0 2px; flex: 0 0 auto;
+}
+.tts-mini:active { opacity: 1; }
 
 /* ── Quiz ── */
 .quiz-card { margin-bottom: 14px; }
@@ -1626,6 +1711,21 @@ body {
 .quiz-input.correct { border-color: var(--teal); }
 .quiz-input.wrong { border-color: var(--red); }
 .quiz-feedback { margin-top: 4px; }
+.quiz-feedback.show {
+  padding: 12px 14px; border-radius: var(--radius-sm);
+  background: var(--bg2); border: 1px solid var(--hairline);
+  border-left-width: 3px; animation: cardIn 0.15s ease;
+}
+.quiz-feedback.show.ok { border-left-color: var(--teal); }
+.quiz-feedback.show.bad { border-left-color: var(--red); }
+.quiz-dots { display: flex; gap: 5px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.qdot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--bg4); transition: all 0.2s ease;
+}
+.qdot.cur { background: var(--accent); transform: scale(1.25); }
+.qdot.ok { background: var(--teal); }
+.qdot.bad { background: var(--red); }
 .quiz-verdict { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
 .quiz-verdict.ok { color: var(--teal); }
 .quiz-verdict.bad { color: var(--red); }

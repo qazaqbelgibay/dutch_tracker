@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='96' fill='%23171613'/><text x='256' y='340' font-size='230' text-anchor='middle' fill='%23dfa93f' font-family='Georgia, serif' font-style='italic'>Aa</text></svg>">
 <title id="docTitle">Language Tracker</title>
-<link rel="stylesheet" href="styles.css?v=6">
+<link rel="stylesheet" href="styles.css?v=7">
 <!-- Fonts load async so the app never blocks on the network (offline-first) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -476,8 +476,13 @@
   <div class="study-head">
     <button class="sess-close" onclick="sessClose()">✕</button>
     <div class="sess-timer mono" id="sessTimer">00:00</div>
-    <button class="sess-pause" id="sessPauseBtn" onclick="sessTogglePause()">⏸</button>
+    <div class="sess-head-actions">
+      <button class="sess-icon-btn" id="sessUndoBtn" onclick="flashUndoLast()" title="Undo (z)">↶</button>
+      <button class="sess-icon-btn finish" id="sessFinishBtn" onclick="finishFlashSession()" data-i18n-title="sess_finish" title="Stop & opslaan">🏁</button>
+      <button class="sess-pause" id="sessPauseBtn" onclick="sessTogglePause()">⏸</button>
+    </div>
   </div>
+  <div class="sess-progress" id="sessProgress"><div class="sess-progress-fill" id="sessProgressFill"></div></div>
   <div class="sess-paused-note" id="sessPausedNote" data-i18n="sess_paused_note">⏸ Gepauzeerd — tik op ▶ om verder te gaan</div>
   <div class="study-body" id="studyBody"></div>
 </div>
@@ -754,10 +759,10 @@
 <input type="file" id="fileImport" accept=".json" style="display:none" onchange="handleImport(event)">
 <input type="file" id="fileImportCards" accept=".txt,.csv,.tsv,text/plain,text/csv" style="display:none" onchange="handleCardImport(event)">
 
-<script src="i18n.js?v=6"></script>
-<script src="srs.js?v=6"></script>
-<script src="grammar_data.js?v=6"></script>
-<script src="app.js?v=6"></script>
-<script src="study.js?v=6"></script>
+<script src="i18n.js?v=7"></script>
+<script src="srs.js?v=7"></script>
+<script src="grammar_data.js?v=7"></script>
+<script src="app.js?v=7"></script>
+<script src="study.js?v=7"></script>
 </body>
 </html>

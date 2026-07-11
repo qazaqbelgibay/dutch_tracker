@@ -208,8 +208,10 @@ function renderLangSwitch() {
 function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
   document.getElementById('calcHint').innerHTML = t('calc_hint');
   document.getElementById('importHint').innerHTML = t('import_hint');
+  if (typeof initTTS === 'function') initTTS();
 }
 
 function skillOptionsHtml(includeAll) {
@@ -2220,7 +2222,7 @@ async function init() {
       location.reload();
     });
 
-    navigator.serviceWorker.register('sw.js?v=9', { updateViaCache: 'none' }).then(reg => {
+    navigator.serviceWorker.register('sw.js?v=10', { updateViaCache: 'none' }).then(reg => {
       reg.update().catch(() => {});
       if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
       reg.addEventListener('updatefound', () => {
