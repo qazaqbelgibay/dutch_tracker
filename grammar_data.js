@@ -178,7 +178,11 @@ const GRAMMAR_COURSE = {
     { t: 'mc', q: 'De bakkerij is ___ het station. (opposite)', o: ['tegenover', 'tussen', 'onder'], a: 0, why: 'Tegenover = opposite/across from.' }
   ] },
 
-/* ═══════════════════════ A2 ═══════════════════════ */
+/* ═══════════════════════ A2 ═══════════════════════
+   Expanded A2 module — 18 lessons.
+   Same evidence-based recipe as B1: retrieval practice (8-question
+   quizzes with feedback), contrastive noticing (⚠️ trap sections),
+   chunking (fixed expressions as units) and pattern families.   */
 { id: 'a2_01', level: 'A2', title: 'Perfect tense & ’t kofschip',
   read: [
     { h: 'hebben/zijn + participle', p: 'The perfect = hebben or zijn + past participle at the END: Ik heb gewerkt. Regular participle: ge + stem + t or d. Use -t if the infinitive stem ends in a ’t kofschip consonant (t, k, f, s, ch, p) — else -d: werken → gewerkt, wonen → gewoond.',
@@ -186,13 +190,23 @@ const GRAMMAR_COURSE = {
            ['Wij hebben in Gent gewoond.', 'We lived in Ghent.']] },
     { h: 'Zijn instead of hebben', p: 'Verbs of movement to a destination and change of state take zijn: gaan, komen, vertrekken, beginnen, worden, blijven, zijn itself: Ik ben naar huis gegaan. No ge- for verbs starting with be-, ge-, ver-, ont-, her-: betalen → betaald.',
       ex: [['Zij is om acht uur vertrokken.', 'She left at eight.'],
-           ['Ik heb de rekening betaald.', 'I paid the bill.']] }
+           ['Ik heb de rekening betaald.', 'I paid the bill.']] },
+    { h: '💡 The real rule is your voice', p: 'The kofschip letters are simply the VOICELESS consonants — say the sound with a hand on your throat: no vibration → t, vibration → d. (English mnemonic: SoFT KeTCHuP, plus x: faxen → gefaxt.) One trap: judge by the INFINITIVE, not the stem spelling. Reizen and leven have voiced z and v, so even though the stems are spelled reis and leef, the participles take -d: gereisd, geleefd.',
+      ex: [['reizen → gereisd · leven → geleefd', 'to travel → travelled · to live → lived'],
+           ['verhuizen → verhuisd · geloven → geloofd', 'to move house → moved · to believe → believed']] },
+    { h: 'The participle parks at the end', p: 'However long the sentence gets, the participle stays at the very end of the clause: Ik heb gisteren de hele dag thuis gewerkt. Questions and inversion change nothing at the end: Heb je al gegeten? Wat heb je vandaag gedaan? Train the reflex: as soon as you say heb/ben, plan the participle for the final slot.',
+      ex: [['Ik heb gisteren de hele dag thuis gewerkt.', 'I worked at home all day yesterday.'],
+           ['Wat heb je dit weekend gedaan?', 'What did you do this weekend?']] }
   ],
   quiz: [
     { t: 'fill', q: 'Ik heb hard ___. (werken)', a: ['gewerkt'], why: 'Stem werk ends in k (’t kofschip) → gewerkt.' },
     { t: 'fill', q: 'Wij hebben daar drie jaar ___. (wonen)', a: ['gewoond'], why: 'n is not in ’t kofschip → -d: gewoond.' },
     { t: 'mc', q: 'Zij ___ naar Brugge gegaan.', o: ['heeft', 'is'], a: 1, why: 'Movement to a destination → zijn: zij is gegaan.' },
-    { t: 'fill', q: 'Hij heeft de huur ___. (betalen)', a: ['betaald'], why: 'Verbs in be- take no ge-: betaald.' }
+    { t: 'fill', q: 'Hij heeft de huur ___. (betalen)', a: ['betaald'], why: 'Verbs in be- take no ge-: betaald.' },
+    { t: 'fill', q: 'Wij hebben veel ___. (reizen)', a: ['gereisd'], why: 'Infinitive has voiced z → -d: gereisd (despite the s in the stem spelling).' },
+    { t: 'fill', q: 'Mijn oma heeft lang ___. (leven)', a: ['geleefd'], why: 'Infinitive has voiced v → -d: geleefd.' },
+    { t: 'mc', q: 'Participle of "fietsen":', o: ['gefietst', 'gefietsd'], a: 0, why: 'Voiceless s (’t kofschip) → -t: gefietst.' },
+    { t: 'fill', q: 'Hij heeft het pakket gisteren ___. (versturen)', a: ['verstuurd'], why: 'ver- verbs take no ge-; r is voiced → -d: verstuurd.' }
   ] },
 
 { id: 'a2_02', level: 'A2', title: 'Simple past: regular verbs',
@@ -202,13 +216,23 @@ const GRAMMAR_COURSE = {
            ['Zij woonden naast ons.', 'They lived next to us.']] },
     { h: 'When to use which past', p: 'Dutch mostly uses the PERFECT for single completed events in conversation ("Ik heb gegeten"), and the simple past for descriptions, habits and stories: "Het regende en we zaten binnen."',
       ex: [['Vroeger speelde ik elke dag voetbal.', 'I used to play football every day.'],
-           ['Ik heb vanmorgen gesport.', 'I exercised this morning.']] }
+           ['Ik heb vanmorgen gesport.', 'I exercised this morning.']] },
+    { h: '⚠️ The z/v trap returns', p: 'Exactly like in the perfect, judge by the infinitive: reizen (voiced z) → reisde, leven (voiced v) → leefde, verhuizen → verhuisde, geloven → geloofde. The stem spelling (reis, leef) tricks you into -te — resist it. Quick self-check: say the infinitive out loud; buzz = -de.',
+      ex: [['Wij reisden elke zomer naar zee.', 'We travelled to the seaside every summer.'],
+           ['Hij geloofde het verhaal niet.', 'He did not believe the story.']] },
+    { h: 'praatte, zette, antwoordde', p: 'If the stem already ends in -t or -d, you STILL add -te/-de: praten → praatte, zetten → zette, antwoorden → antwoordde. The past then sounds identical to the present — only context and time words reveal the tense. In the participle nothing doubles: gepraat, geantwoord.',
+      ex: [['Hij praatte urenlang met de buurman.', 'He talked with the neighbour for hours.'],
+           ['Zij antwoordde niet op mijn bericht.', 'She did not reply to my message.']] }
   ],
   quiz: [
     { t: 'fill', q: 'Hij ___ vroeger veel. (roken)', a: ['rookte'], why: 'Stem rook ends in k → -te: rookte.' },
     { t: 'fill', q: 'Wij ___ in een klein dorp. (wonen)', a: ['woonden'], why: 'Stem woon → -den (plural): woonden.' },
     { t: 'fill', q: 'Zij ___ de deur. (openen)', a: ['opende'], why: 'Stem open + de: opende.' },
-    { t: 'mc', q: 'Best tense in conversation for "I ate at noon":', o: ['Ik at om twaalf uur.', 'Ik heb om twaalf uur gegeten.'], a: 1, why: 'Single completed event in speech → perfect.' }
+    { t: 'mc', q: 'Best tense in conversation for "I ate at noon":', o: ['Ik at om twaalf uur.', 'Ik heb om twaalf uur gegeten.'], a: 1, why: 'Single completed event in speech → perfect.' },
+    { t: 'fill', q: 'Vroeger ___ wij elk jaar naar Spanje. (reizen)', a: ['reisden'], why: 'Infinitive reizen has voiced z → -den: reisden.' },
+    { t: 'fill', q: 'Als kind ___ ik in Sinterklaas. (geloven)', a: ['geloofde'], why: 'Voiced v in geloven → -de: geloofde.' },
+    { t: 'fill', q: 'Hij ___ uren met zijn buurman. (praten)', a: ['praatte'], why: 'Stem praat + te → praatte (double t, sounds like the present).' },
+    { t: 'fill', q: 'Zij ___ de vaas op de tafel. (zetten)', a: ['zette'], why: 'Stem zet + te → zette.' }
   ] },
 
 { id: 'a2_03', level: 'A2', title: 'Irregular past: the core verbs',
@@ -218,13 +242,23 @@ const GRAMMAR_COURSE = {
            ['Hij kocht brood en at het meteen.', 'He bought bread and ate it right away.']] },
     { h: 'Vowel-change families', p: 'Many strong verbs follow patterns: ij → ee (schrijven, schreef, geschreven), ie → oo (kiezen? koos, gekozen), i/e → o (drinken, dronk, gedronken; vinden, vond, gevonden). Spotting the family halves the memorising.',
       ex: [['schrijven — schreef — geschreven', 'to write — wrote — written'],
-           ['vinden — vond — gevonden', 'to find — found — found']] }
+           ['vinden — vond — gevonden', 'to find — found — found']] },
+    { h: 'The -cht family & mixed verbs', p: 'A tight little club shares the past in -cht: kopen → kocht → gekocht, zoeken → zocht → gezocht, brengen → bracht → gebracht, denken → dacht → gedacht. And two "mixed" verbs pair an irregular past with a regular participle: zeggen → zei (zeiden!) → gezegd, vragen → vroeg → gevraagd. 💡 Learning families instead of single verbs is classic pattern learning — one hook stores four verbs.',
+      ex: [['Hij bracht me naar het station en dacht na.', 'He took me to the station and reflected.'],
+           ['Ze zei niets en vroeg ook niets.', 'She said nothing and asked nothing either.']] },
+    { h: 'Singular short, plural long', p: 'Watch the vowel switch between singular and plural past: ik was / wij waren, ik at / wij aten, ik gaf / wij gaven, ik nam / wij namen, ik las / wij lazen. The plural stretches the vowel — say the pairs out loud, the rhythm (kort–lang) is easy to remember.',
+      ex: [['Ik at alleen, maar zij aten samen.', 'I ate alone, but they ate together.'],
+           ['Hij gaf niets, wij gaven alles.', 'He gave nothing, we gave everything.']] }
   ],
   quiz: [
     { t: 'fill', q: 'Gisteren ___ ik naar de markt. (gaan, past)', a: ['ging'], why: 'gaan → ging.' },
     { t: 'fill', q: 'Zij ___ een mooie film. (zien, past)', a: ['zag'], why: 'zien → zag.' },
     { t: 'fill', q: 'Wij ___ te veel koffie. (drinken, past)', a: ['dronken'], why: 'drinken → dronk(en).' },
-    { t: 'fill', q: 'Participle of "schrijven": Hij heeft een boek ___.', a: ['geschreven'], why: 'ij → ee family: geschreven.' }
+    { t: 'fill', q: 'Participle of "schrijven": Hij heeft een boek ___.', a: ['geschreven'], why: 'ij → ee family: geschreven.' },
+    { t: 'fill', q: 'Hij ___ me gisteren naar het station. (brengen, past)', a: ['bracht'], why: '-cht family: brengen → bracht.' },
+    { t: 'fill', q: 'Zij ___ niets tegen mij. (zeggen, past)', a: ['zei'], why: 'Mixed verb: zeggen → zei (plural zeiden).' },
+    { t: 'fill', q: 'Wij ___ elke zondag bij oma. (eten, past)', a: ['aten'], why: 'Plural past stretches the vowel: ik at → wij aten.' },
+    { t: 'fill', q: 'Ik ___ een cadeau van mijn collega. (krijgen, past)', a: ['kreeg'], why: 'ij → ee family: krijgen → kreeg → gekregen.' }
   ] },
 
 { id: 'a2_04', level: 'A2', title: 'Separable verbs',
@@ -235,13 +269,23 @@ const GRAMMAR_COURSE = {
            ['Ik ben vroeg opgestaan.', 'I got up early.']] },
     { h: 'With te and in subclauses', p: 'With om…te the te goes inside: om mee te nemen. In subclauses the verb doesn’t split: …omdat ik vroeg opsta.',
       ex: [['Vergeet niet om je paraplu mee te nemen.', 'Don’t forget to bring your umbrella.'],
-           ['…omdat de trein laat aankomt.', '…because the train arrives late.']] }
+           ['…omdat de trein laat aankomt.', '…because the train arrives late.']] },
+    { h: '💡 Meet the prefix families', p: 'Prefixes carry meaning — learn the prefix, unlock dozens of verbs: op- (up/start: opstaan, opbellen), aan- (on/towards: aankomen, aandoen), uit- (out/finish: uitnodigen, uitgaan), mee- (along: meenemen, meegaan), terug- (back: terugkomen, terugbellen), af- (off/done: afwassen, afspreken), weg- (away: weggaan). Store each verb as ONE word with its stress on the prefix: ÓPstaan.',
+      ex: [['Ik nodig je uit voor mijn feest.', 'I invite you to my party.'],
+           ['Zij belt me morgen terug.', 'She will call me back tomorrow.']] },
+    { h: 'After a modal: stays glued', p: 'After kunnen/moeten/mogen/willen the separable verb sits WHOLE at the end: Ik moet mijn oma terugbellen. Wil je meegaan? Compare the split main clause: Ik bel mijn oma terug. Two shapes, one verb — drill both until switching feels automatic.',
+      ex: [['Ik moet vanavond mijn oma terugbellen.', 'I have to call my grandma back tonight.'],
+           ['Wil je morgen meegaan naar de markt?', 'Do you want to come along to the market tomorrow?']] }
   ],
   quiz: [
     { t: 'fill', q: 'Ik ___ elke dag om 7 uur ___. (opstaan)', a: ['sta ... op', 'sta op', 'sta...op', 'sta … op'], why: 'Main clause: "Ik sta … op." — prefix at the end.' },
     { t: 'mc', q: 'Participle of "aankomen":', o: ['geaankomen', 'aangekomen', 'aankomd'], a: 1, why: 'ge- goes between prefix and verb: aangekomen.' },
     { t: 'mc', q: 'Correct with om…te:', o: ['om op te staan', 'om te opstaan'], a: 0, why: 'Te splits the separable verb: om op te staan.' },
-    { t: 'mc', q: '…omdat hij zijn zus ___.', o: ['belt op', 'opbelt'], a: 1, why: 'In a subclause the verb stays whole: opbelt.' }
+    { t: 'mc', q: '…omdat hij zijn zus ___.', o: ['belt op', 'opbelt'], a: 1, why: 'In a subclause the verb stays whole: opbelt.' },
+    { t: 'fill', q: 'Ik nodig je ___ voor mijn verjaardag. (uitnodigen)', a: ['uit'], why: 'Main clause: prefix to the end — "Ik nodig je uit."' },
+    { t: 'mc', q: 'Ik wil vanavond ___.', o: ['meegaan', 'ga mee'], a: 0, why: 'After a modal the separable verb stays whole at the end: wil … meegaan.' },
+    { t: 'fill', q: 'Hij heeft me nog niet ___. (terugbellen, participle)', a: ['teruggebeld'], why: 'ge- between the parts: terug + ge + beld.' },
+    { t: 'fill', q: 'Wij wassen na het eten altijd ___. (afwassen)', a: ['af'], why: 'Split in the main clause: "Wij wassen … af."' }
   ] },
 
 { id: 'a2_05', level: 'A2', title: 'Modal verbs',
@@ -252,13 +296,23 @@ const GRAMMAR_COURSE = {
            ['Wij willen Nederlands leren.', 'We want to learn Dutch.']] },
     { h: 'Meaning nuances', p: 'kunnen = ability/possibility · moeten = must · mogen = permission · willen = want · zullen = shall (future, offers: "Zal ik helpen?"). Hoeven replaces moeten in negatives: Je hoeft niet te komen (note: with te!).',
       ex: [['Je hoeft dat niet te doen.', 'You don’t have to do that.'],
-           ['Zal ik de deur openen?', 'Shall I open the door?']] }
+           ['Zal ik de deur openen?', 'Shall I open the door?']] },
+    { h: 'The past: kon, moest, mocht, wilde', p: 'kunnen → kon/konden · moeten → moest(en) · mogen → mocht(en) · willen → wilde(n) · zullen → zou(den). Ik kon gisteren niet komen. Als kind mocht ik nooit laat opblijven. 🦁 In Flemish (and casual Dutch) speech you will constantly hear wou for wilde: "Ik wou het net zeggen!"',
+      ex: [['Ik kon gisteren niet naar de les komen.', 'I could not come to class yesterday.'],
+           ['Als kind mocht ik geen cola drinken.', 'As a child I was not allowed to drink cola.']] },
+    { h: 'Dropping the main verb', p: 'When the action is obvious, Dutch drops the infinitive after a modal: Ik moet naar huis (no "gaan" needed). Ik wil graag een koffie. Dat mag niet. Hij kan dat niet. Sounding natural at A2 is often about leaving this verb OUT.',
+      ex: [['Ik moet nu echt naar huis.', 'I really have to go home now.'],
+           ['Wil je ook een koffie? — Nee, dat mag ik niet.', 'Do you want a coffee too? — No, I’m not allowed.']] }
   ],
   quiz: [
     { t: 'fill', q: '___ ik het raam openen? (permission)', a: ['mag'], why: 'Permission → mogen: "Mag ik…?".' },
     { t: 'mc', q: 'Correct:', o: ['Ik kan niet te komen.', 'Ik kan niet komen.', 'Ik kan niet kom.'], a: 1, why: 'Modal + bare infinitive at the end: "Ik kan niet komen."' },
     { t: 'mc', q: '"You don’t have to pay" =', o: ['Je moet niet betalen. (NL standard)', 'Je hoeft niet te betalen.'], a: 1, why: 'Negated obligation → hoeven + te. (🦁 In Flanders "ge moet niet" is common speech, but standard is hoeven.)' },
-    { t: 'fill', q: 'Hij ___ goed koken. (ability)', a: ['kan'], why: 'Ability → kunnen: hij kan.' }
+    { t: 'fill', q: 'Hij ___ goed koken. (ability)', a: ['kan'], why: 'Ability → kunnen: hij kan.' },
+    { t: 'fill', q: 'Ik ___ gisteren niet komen. (kunnen, past)', a: ['kon'], why: 'kunnen → kon in the simple past.' },
+    { t: 'fill', q: 'Als kind ___ ik geen cola drinken. (mogen, past)', a: ['mocht'], why: 'mogen → mocht: was (not) allowed to.' },
+    { t: 'fill', q: 'Zij ___ vroeger dokter worden. (willen, past)', a: ['wilde', 'wou'], why: 'willen → wilde (spoken also wou).' },
+    { t: 'mc', q: 'Natural Dutch for "I have to go home":', o: ['Ik moet naar huis gaan lopen.', 'Ik moet naar huis.', 'Ik moet naar huis te gaan.'], a: 1, why: 'With a direction the infinitive is dropped: "Ik moet naar huis."' }
   ] },
 
 { id: 'a2_06', level: 'A2', title: 'Subclauses: verb to the end',
@@ -268,13 +322,23 @@ const GRAMMAR_COURSE = {
            ['Als het regent, blijven we binnen.', 'If it rains, we stay inside.']] },
     { h: 'Subclause first → inversion', p: 'If the subclause comes first, it fills position 1 of the main clause, so the main verb comes immediately after the comma: Omdat ik ziek ben, blijf ik thuis.',
       ex: [['Omdat het laat was, ging ik slapen.', 'Because it was late, I went to sleep.'],
-           ['Terwijl ik kook, dekt hij de tafel.', 'While I cook, he sets the table.']] }
+           ['Terwijl ik kook, dekt hij de tafel.', 'While I cook, he sets the table.']] },
+    { h: 'Two verbs at the end: both orders OK', p: 'With a perfect tense in the subclause, two verbs pile up at the end — and BOTH orders are correct: …dat ik hard gewerkt heb = …dat ik hard heb gewerkt. 🦁 Flanders leans towards "gewerkt heb", the Netherlands towards "heb gewerkt"; exams accept both, so pick one and be consistent.',
+      ex: [['Ik denk dat zij de bus gemist heeft.', 'I think she has missed the bus.'],
+           ['Hij zegt dat hij nog nooit in Gent is geweest.', 'He says he has never been to Ghent.']] },
+    { h: 'The time crew: voordat, nadat, zodra, terwijl', p: 'Four time conjunctions carry half of daily conversation: voordat (before), nadat (after), zodra (as soon as), terwijl (while): Voordat ik ga slapen, lees ik een half uur. Zodra ik thuis ben, bel ik je. All of them send the verb to the end, like every subordinating conjunction.',
+      ex: [['Voordat ik ga slapen, lees ik nog even.', 'Before I go to sleep, I read for a bit.'],
+           ['Zodra de les klaar is, gaan we lunchen.', 'As soon as the class is finished, we go for lunch.']] }
   ],
   quiz: [
     { t: 'mc', q: 'Ik blijf thuis omdat ik ___.', o: ['ben ziek', 'ziek ben'], a: 1, why: 'Verb-final in the omdat-clause: "…omdat ik ziek ben."' },
     { t: 'fill', q: 'Zij zegt dat ze morgen ___. (komen)', a: ['komt'], why: 'Verb at the end of the dat-clause: "…dat ze morgen komt."' },
     { t: 'mc', q: 'Als het regent, ___ we binnen.', o: ['we blijven', 'blijven'], a: 1, why: 'Subclause first → inversion: "…, blijven we binnen."' },
-    { t: 'mc', q: 'Which conjunction does NOT send the verb to the end?', o: ['omdat', 'want', 'hoewel'], a: 1, why: '"Want" is coordinating — normal V2 word order follows.' }
+    { t: 'mc', q: 'Which conjunction does NOT send the verb to the end?', o: ['omdat', 'want', 'hoewel'], a: 1, why: '"Want" is coordinating — normal V2 word order follows.' },
+    { t: 'mc', q: '…dat ik hard gewerkt heb / …dat ik hard heb gewerkt:', o: ['only the first is correct', 'only the second is correct', 'both are correct'], a: 2, why: 'Both end-orders are standard (🦁 Flanders prefers "gewerkt heb", NL "heb gewerkt").' },
+    { t: 'fill', q: 'Ik lees nog even ___ ik ga slapen. (before)', a: ['voordat', 'voor'], why: 'voordat = before + clause, verb final.' },
+    { t: 'fill', q: '___ ik thuis ben, bel ik je. (as soon as)', a: ['zodra'], why: 'zodra = as soon as, subordinating.' },
+    { t: 'fill', q: 'Zij blijft thuis omdat ze zich niet goed ___. (voelen)', a: ['voelt'], why: 'Verb final: "…omdat ze zich niet goed voelt."' }
   ] },
 
 { id: 'a2_07', level: 'A2', title: 'Comparative & superlative',
@@ -284,13 +348,23 @@ const GRAMMAR_COURSE = {
            ['Zij is even oud als ik.', 'She is as old as me.']] },
     { h: 'Irregulars & usage', p: 'goed → beter → best · veel → meer → meest · weinig → minder → minst · graag → liever → liefst ("Ik drink liever thee" = I prefer tea). Superlative usually with het: het grootst / de grootste stad.',
       ex: [['Ik sport graag, maar ik lees liever.', 'I like sports, but I prefer reading.'],
-           ['Antwerpen is de grootste stad van Vlaanderen.', 'Antwerp is the largest city of Flanders.']] }
+           ['Antwerpen is de grootste stad van Vlaanderen.', 'Antwerp is the largest city of Flanders.']] },
+    { h: 'Adverbs: no -e, ever', p: 'The same word describes a noun (adjective) or a verb (adverb) — but after a verb it NEVER inflects: een snelle auto vs Hij rijdt snel. Ze zingt mooi. English adds -ly, Dutch adds nothing. This also holds for comparatives: Hij loopt sneller dan ik.',
+      ex: [['Zij zingt mooi en danst goed.', 'She sings beautifully and dances well.'],
+           ['Een langzame trein rijdt langzaam.', 'A slow train drives slowly.']] },
+    { h: 'Long words still take -er', p: 'Unlike English, Dutch happily glues -er/-st onto long adjectives: interessanter, belangrijkste. Use meer/meest mainly with participle-adjectives: meer geïnteresseerd, het meest gelezen boek. Attributive superlative always gets -ste: de grootste stad, het mooiste huis.',
+      ex: [['Dit boek is interessanter dan dat.', 'This book is more interesting than that one.'],
+           ['Wat is het belangrijkste woord in deze zin?', 'What is the most important word in this sentence?']] }
   ],
   quiz: [
     { t: 'fill', q: 'Brussel is ___ dan Leuven. (groot)', a: ['groter'], why: 'Comparative: groter + dan.' },
     { t: 'fill', q: 'Deze jas is ___ dan die. (duur)', a: ['duurder'], why: 'Adjectives in -r insert d: duurder.' },
     { t: 'fill', q: 'Ik drink ___ koffie dan thee. (graag, comparative)', a: ['liever'], why: 'graag → liever: expressing preference.' },
-    { t: 'mc', q: '"the best idea" =', o: ['het goedste idee', 'het beste idee'], a: 1, why: 'goed → best is irregular: het beste idee.' }
+    { t: 'mc', q: '"the best idea" =', o: ['het goedste idee', 'het beste idee'], a: 1, why: 'goed → best is irregular: het beste idee.' },
+    { t: 'mc', q: 'Ze zingt ___ .', o: ['mooi', 'mooie'], a: 0, why: 'Adverbs never take -e: ze zingt mooi.' },
+    { t: 'fill', q: 'Dit boek is ___ dan de film. (interessant)', a: ['interessanter'], why: 'Dutch adds -er even to long adjectives: interessanter.' },
+    { t: 'fill', q: 'Antwerpen is de ___ stad van Vlaanderen. (groot)', a: ['grootste'], why: 'Attributive superlative → -ste: de grootste stad.' },
+    { t: 'fill', q: 'Hij is ___ oud als ik. (just as)', a: ['even'], why: 'Equality: even + adjective + als.' }
   ] },
 
 { id: 'a2_08', level: 'A2', title: 'om + te + infinitive',
@@ -300,13 +374,23 @@ const GRAMMAR_COURSE = {
            ['Het is leuk om nieuwe mensen te ontmoeten.', 'It is nice to meet new people.']] },
     { h: 'Verbs with te (no om)', p: 'Some verbs link directly with te: proberen, beginnen, vergeten, beloven, hoeven: Ik probeer elke dag te oefenen. Separable verbs wrap te inside: op te staan.',
       ex: [['Vergeet niet te bellen!', 'Don’t forget to call!'],
-           ['Hij begint te begrijpen.', 'He is starting to understand.']] }
+           ['Hij begint te begrijpen.', 'He is starting to understand.']] },
+    { h: 'noun + om te', p: 'Nouns love the pattern too: tijd om te sporten, zin om uit te gaan, geld om op reis te gaan, een kans om te oefenen. The om…te block always comes after the noun it belongs to, and the infinitive closes the sentence.',
+      ex: [['Ik heb geen tijd om te sporten.', 'I have no time to exercise.'],
+           ['Heb je zin om mee te gaan?', 'Do you feel like coming along?']] },
+    { h: '💡 Is om required?', p: 'Rule of thumb: purpose → om is required (Ik spaar om te reizen). After adjectives and nouns om is standard and never wrong: Het is fijn om te zwemmen. After te-verbs like proberen/vergeten/beloven, use plain te. When in doubt at A2: include om in the adjective/noun patterns, drop it after the te-verbs.',
+      ex: [['Ik bel om een afspraak te maken.', 'I am calling (in order) to make an appointment.'],
+           ['Ze probeert minder snoep te eten.', 'She is trying to eat fewer sweets.']] }
   ],
   quiz: [
     { t: 'fill', q: 'Ik ga naar de winkel ___ brood ___ kopen.', a: ['om ... te', 'om te', 'om...te', 'om … te'], why: 'Purpose → om … te + infinitive at the end.' },
     { t: 'mc', q: 'Correct:', o: ['Ik probeer te elke dag oefenen.', 'Ik probeer elke dag te oefenen.'], a: 1, why: 'Te comes directly before the final infinitive.' },
     { t: 'mc', q: 'With separable "opbellen":', o: ['om op te bellen', 'om te opbellen'], a: 0, why: 'Te goes inside the separable verb.' },
-    { t: 'fill', q: 'Het is fijn ___ in de zon ___ zitten.', a: ['om ... te', 'om te', 'om...te', 'om … te'], why: 'After adjectives: Het is fijn om … te zitten.' }
+    { t: 'fill', q: 'Het is fijn ___ in de zon ___ zitten.', a: ['om ... te', 'om te', 'om...te', 'om … te'], why: 'After adjectives: Het is fijn om … te zitten.' },
+    { t: 'fill', q: 'Ik heb geen tijd ___ te sporten.', a: ['om'], why: 'noun + om te: geen tijd om te sporten.' },
+    { t: 'fill', q: 'Heb je zin ___ mee te gaan?', a: ['om'], why: 'zin om te + infinitive: feel like doing.' },
+    { t: 'mc', q: 'Purpose — which is correct?', o: ['Ik spaar om een auto te kopen.', 'Ik spaar een auto te kopen.'], a: 0, why: 'Purpose requires om: om … te kopen.' },
+    { t: 'mc', q: 'Ze vergeet vaak ___ .', o: ['te bellen', 'om bellen'], a: 0, why: 'vergeten + te + infinitive (om optional, te obligatory).' }
   ] },
 
 { id: 'a2_09', level: 'A2', title: 'Reflexives & the imperative',
@@ -316,13 +400,23 @@ const GRAMMAR_COURSE = {
            ['Zij haast zich naar het werk.', 'She hurries to work.']] },
     { h: 'Imperative', p: 'Use the stem: Kom hier! Wacht even! Polite with u: Komt u binnen. Softeners: eens, even, maar — "Kom eens kijken!" 🦁 Flemish speech often softens with "… hé" or "… zeker".',
       ex: [['Wacht even!', 'Wait a moment!'],
-           ['Neemt u plaats.', 'Please take a seat. (polite)']] }
+           ['Neemt u plaats.', 'Please take a seat. (polite)']] },
+    { h: 'Your day in reflexives', p: 'Daily routine runs on reflexives: zich wassen, zich aankleden (separable + reflexive: Hij kleedt zich aan), zich scheren, zich voelen (Ik voel me niet zo goed), zich vervelen (De kinderen vervelen zich), zich haasten. The pronoun comes right after the verb, before everything else.',
+      ex: [['Ik voel me vandaag niet zo goed.', 'I don’t feel so good today.'],
+           ['Hij kleedt zich snel aan en vertrekt.', 'He gets dressed quickly and leaves.']] },
+    { h: 'Wees! & don’t-commands', p: 'Zijn has an irregular imperative: wees — Wees voorzichtig! Wees niet bang! Negative commands use niet/geen as usual: Maak je geen zorgen (don’t worry), Vergeet niet te bellen. Very polite: Gaat u zitten. Maakt u zich geen zorgen.',
+      ex: [['Wees niet bang, de hond is lief.', 'Don’t be afraid, the dog is sweet.'],
+           ['Maak je geen zorgen, het komt goed.', 'Don’t worry, it will be fine.']] }
   ],
   quiz: [
     { t: 'fill', q: 'Hij vergist ___ vaak.', a: ['zich'], why: 'Third person reflexive → zich.' },
     { t: 'fill', q: 'Wij herinneren ___ dat feest nog.', a: ['ons'], why: 'First person plural reflexive → ons.' },
     { t: 'mc', q: 'Imperative of "komen":', o: ['Komt hier!', 'Kom hier!', 'Komen hier!'], a: 1, why: 'Imperative = stem: Kom!' },
-    { t: 'mc', q: '"Ik was ___ elke ochtend."', o: ['me', 'mezelf', 'mij zelf'], a: 0, why: 'Routine action → unstressed reflexive me.' }
+    { t: 'mc', q: '"Ik was ___ elke ochtend."', o: ['me', 'mezelf', 'mij zelf'], a: 0, why: 'Routine action → unstressed reflexive me.' },
+    { t: 'fill', q: 'Ik voel ___ vandaag niet zo goed.', a: ['me'], why: 'zich voelen: ik voel me.' },
+    { t: 'fill', q: 'De kinderen vervelen ___ in de vakantie.', a: ['zich'], why: 'zich vervelen = to be bored: de kinderen vervelen zich.' },
+    { t: 'mc', q: 'Imperative of "zijn": ___ voorzichtig!', o: ['Ben', 'Wees', 'Zijn'], a: 1, why: 'Irregular imperative: wees.' },
+    { t: 'fill', q: 'Kleed je snel ___, we vertrekken! (aankleden)', a: ['aan'], why: 'Separable + reflexive: "Kleed je … aan!"' }
   ] },
 
 { id: 'a2_10', level: 'A2', title: 'Future & diminutives',
@@ -332,13 +426,209 @@ const GRAMMAR_COURSE = {
            ['Zullen we samen studeren?', 'Shall we study together?']] },
     { h: 'Diminutives -je', p: 'Every diminutive is a het-word: het huisje. Endings: -je (huisje), -tje (autootje, vrouwtje), -etje (zonnetje), -pje (boompje), -kje (koninkje). 🦁 Flanders loves -ke in speech: een pintje/pintke, een koffieke — informal, warm, extremely common.',
       ex: [['een biertje, een terrasje, een momentje', 'a beer, a terrace visit, a moment'],
-           ['🦁 een koffieke doen (spoken Flemish)', 'to grab a coffee']] }
+           ['🦁 een koffieke doen (spoken Flemish)', 'to grab a coffee']] },
+    { h: 'Predictions you can see coming', p: 'Gaan is also for predictions based on evidence in front of you: Kijk, donkere wolken — het gaat regenen! Pas op, je gaat vallen! Zullen stays for promises and neutral predictions: Het zal wel lukken (it will probably work out). Wel + zullen = reassurance.',
+      ex: [['Kijk die lucht — het gaat regenen.', 'Look at that sky — it is going to rain.'],
+           ['Maak je geen zorgen, het zal wel lukken.', 'Don’t worry, it will work out.']] },
+    { h: 'Diminutive spelling gym', p: 'Vowel at the end doubles first: auto → autootje, foto → fotootje. Short vowel + single consonant → double consonant + -etje: zon → zonnetje, ring → ringetje, kam → kammetje. After -m comes -pje: boom → boompje, film → filmpje. Diminutives also soften and warm up your Dutch: een uurtje (a casual hour), een momentje (just a sec).',
+      ex: [['een autootje, een fotootje', 'a little car, a little photo'],
+           ['Ik kom over een uurtje.', 'I’ll come in an hour or so.']] }
   ],
   quiz: [
     { t: 'mc', q: 'A plan for tomorrow — most natural:', o: ['Ik zal morgen lopen.', 'Ik ga morgen lopen.'], a: 1, why: 'Plans/intentions → gaan + infinitive.' },
     { t: 'fill', q: '___ we vanavond samen eten? (proposal)', a: ['zullen'], why: 'Proposals → "Zullen we…?".' },
     { t: 'fill', q: 'Diminutive of "huis": het ___', a: ['huisje'], why: 'huis → huisje.' },
-    { t: 'mc', q: 'Diminutives are always…', o: ['de-words', 'het-words'], a: 1, why: 'All diminutives are neuter: het huisje, het meisje.' }
+    { t: 'mc', q: 'Diminutives are always…', o: ['de-words', 'het-words'], a: 1, why: 'All diminutives are neuter: het huisje, het meisje.' },
+    { t: 'fill', q: 'Kijk, donkere wolken! Het ___ regenen.', a: ['gaat'], why: 'Visible-evidence prediction → gaan: het gaat regenen.' },
+    { t: 'fill', q: 'Diminutive of "auto": het ___', a: ['autootje'], why: 'Final vowel doubles: auto → autootje.' },
+    { t: 'fill', q: 'Diminutive of "zon": het ___', a: ['zonnetje'], why: 'Short vowel doubles the consonant: zonnetje.' },
+    { t: 'fill', q: 'Diminutive of "boom": het ___', a: ['boompje'], why: 'After -m → -pje: boompje.' }
+  ] },
+
+{ id: 'a2_11', level: 'A2', title: 'Object pronouns: mij, jou, hem, haar, ze…',
+  read: [
+    { h: 'The object forms', p: 'me/mij, je/jou, u, hem, haar, het, ons, jullie, ze/hen/hun. Unstressed forms (me, je, ze) are the everyday default: Ik zie je morgen. Bel me! The full forms add stress or contrast: Hij kiest MIJ, niet jou. Same logic as subject je/jij.',
+      ex: [['Ik bel je vanavond, oké?', 'I’ll call you tonight, okay?'],
+           ['Ze heeft mij gekozen, niet jou!', 'She chose ME, not you!']] },
+    { h: 'Things are hem, het or ze', p: 'Surprise: things follow their article. A de-word thing → hem: Waar is mijn sleutel? Ik kan hem niet vinden. A het-word → het: Waar is het boek? Ik zie het niet. Plural things → ze (NEVER hen — hen is only for people): Mooie schoenen! Waar heb je ze gekocht?',
+      ex: [['Waar is de sleutel? Ik kan hem niet vinden.', 'Where is the key? I can’t find it.'],
+           ['Mooie schoenen! Waar heb je ze gekocht?', 'Nice shoes! Where did you buy them?']] },
+    { h: 'They: hen, hun of ze?', p: 'In speech ze is the safe all-rounder for people: Ik help ze wel. The written rules: hen as direct object and after prepositions (ik zie hen, voor hen), hun as indirect object without preposition (ik geef hun het boek). 🦁 Bonus: with ge/gij, Flemish speech uses u as the object form — "Ik bel u straks" can be perfectly informal in Flanders.',
+      ex: [['Ik heb een cadeau voor hen gekocht.', 'I bought a present for them.'],
+           ['Ik geef hun morgen het geld. / Ik geef ze morgen het geld.', 'I’ll give them the money tomorrow.']] }
+  ],
+  quiz: [
+    { t: 'fill', q: 'Dat is mijn boek — geef het aan ___! (me, stressed)', a: ['mij'], why: 'Stressed object form: aan mij.' },
+    { t: 'mc', q: 'Waar is de sleutel? — Ik kan ___ niet vinden.', o: ['het', 'hem', 'haar'], a: 1, why: 'De sleutel is a de-word → hem, even for a thing.' },
+    { t: 'mc', q: 'Waar zijn je schoenen? — Ik heb ___ aangedaan.', o: ['hen', 'ze', 'hun'], a: 1, why: 'Plural things → ze (hen/hun are only for people).' },
+    { t: 'fill', q: 'Wij helpen ___ met de verhuizing. (them — people, natural)', a: ['ze', 'hen'], why: 'Spoken: ze; written direct object: hen. Both correct.' },
+    { t: 'mc', q: 'Written standard: Ik heb een cadeau voor ___ .', o: ['hun', 'hen', 'zij'], a: 1, why: 'After a preposition → hen: voor hen.' },
+    { t: 'fill', q: 'Zie ik ___ morgen? (you — informal, unstressed)', a: ['je'], why: 'Everyday unstressed object: je.' },
+    { t: 'mc', q: 'HIJ heeft het gedaan, niet ___!', o: ['ze', 'zij', 'haar'], a: 1, why: 'Contrast on the subject → stressed subject form zij.' },
+    { t: 'mc', q: '🦁 With ge/gij, Flemish friends say:', o: ['Ik bel u straks.', 'Ik bel jij straks.', 'Ik bel hen straks.'], a: 0, why: 'U is the object form of ge/gij — informal in Flanders.' }
+  ] },
+
+{ id: 'a2_12', level: 'A2', title: 'liggen, staan, zitten, hangen — where things are',
+  read: [
+    { h: 'Dutch things have posture', p: 'Where English says "is", Dutch picks a position verb: ligt (lying — flat things: boek, krant), staat (standing — upright things: fles, vaas, auto), zit (inside something: sleutels in je zak), hangt (jas, schilderij). Het boek ligt op tafel — never "is op tafel".',
+      ex: [['Het boek ligt op de tafel.', 'The book is (lying) on the table.'],
+           ['De fles staat in de koelkast.', 'The bottle is (standing) in the fridge.'],
+           ['De jas hangt aan de kapstok.', 'The coat is (hanging) on the coat rack.']] },
+    { h: 'Putting things: leggen & zetten', p: 'The moving versions: leggen = put flat (result: it lies), zetten = put upright (result: it stands), hangen = hang, doen/stoppen in = put in. Ik leg de krant op tafel. Zet de borden maar in de kast. Doe de melk in de koelkast. Pairs to chunk: liggen↔leggen, staan↔zetten.',
+      ex: [['Ik leg de krant op de tafel.', 'I put the newspaper on the table.'],
+           ['Zet de glazen maar in de kast.', 'Just put the glasses in the cupboard.']] },
+    { h: 'staan for words & pictures', p: 'Text and images "stand": Wat staat er in de brief? (What does the letter say?) Er staat een foto van jou op Instagram. Dat staat op pagina tien. And people sit in institutions: De kinderen zitten op school. Mijn zoon zit in het derde jaar.',
+      ex: [['Wat staat er in de e-mail?', 'What does the email say?'],
+           ['De kinderen zitten op school.', 'The children are at school.']] }
+  ],
+  quiz: [
+    { t: 'mc', q: 'De fles wijn ___ op tafel.', o: ['ligt', 'staat', 'zit'], a: 1, why: 'Bottles stand upright → staat.' },
+    { t: 'mc', q: 'De krant ___ op de stoel.', o: ['ligt', 'staat'], a: 0, why: 'Flat things lie → ligt.' },
+    { t: 'fill', q: 'Mijn sleutels ___ in mijn jaszak. (position verb)', a: ['zitten'], why: 'Inside something → zitten: de sleutels zitten in je zak.' },
+    { t: 'fill', q: 'De jas ___ aan de kapstok. (position verb)', a: ['hangt'], why: 'Coats hang: hangt aan de kapstok.' },
+    { t: 'mc', q: 'Put the book flat on the table: Ik ___ het boek op tafel.', o: ['zet', 'leg'], a: 1, why: 'Result is lying → leggen.' },
+    { t: 'mc', q: 'Ik ___ de glazen in de kast.', o: ['leg', 'zet'], a: 1, why: 'Glasses end up standing → zetten.' },
+    { t: 'fill', q: 'Wat ___ er in de e-mail? (says)', a: ['staat'], why: 'Text "stands": Wat staat er in…?' },
+    { t: 'mc', q: '"Er staat een foto van jou in de krant" means…', o: ['There is a photo of you in the paper', 'You must pose for a photo', 'Your photo is standing on the paper'], a: 0, why: 'Images "stand" in/on media: er staat een foto in de krant.' }
+  ] },
+
+{ id: 'a2_13', level: 'A2', title: 'op school, aan zee, naar huis: tricky place words',
+  read: [
+    { h: 'op, in, aan — learn the chunks', p: 'Some place phrases are fixed — memorise them as chunks, don’t translate: op school, op het werk, op kantoor, op straat, op de markt, op vakantie, op internet · in de klas, in bed, in de tuin · aan zee, aan tafel, aan de telefoon. 💡 Chunk learning: store "op school" as one word, exactly like natives do.',
+      ex: [['De kinderen zijn op school en papa is op het werk.', 'The kids are at school and dad is at work.'],
+           ['We zitten aan tafel — kom je?', 'We are at the table — are you coming?']] },
+    { h: 'naar huis vs thuis', p: 'Movement → naar: Ik ga naar huis (I am going home). Being there → thuis: Ik ben thuis. Ik blijf thuis. Origin → uit: Ik kom uit Kazachstan. Coming from a place you visited → van: Ik kom net van het werk.',
+      ex: [['Ik ga om vijf uur naar huis.', 'I am going home at five.'],
+           ['Blijf je vanavond thuis?', 'Are you staying home tonight?'],
+           ['Zij komt uit Marokko.', 'She is from Morocco.']] },
+    { h: '🦁 op de trein', p: 'The Netherlands sits IN vehicles: in de trein, in de bus. Belgium sits ON them: op de trein, op de bus — both are correct standard usage in their country. Travelling is always met: met de trein, met de fiets. 🦁 More Belgian: in/met verlof (on leave) where NL says met vakantie.',
+      ex: [['🦁 Ik zat op de trein naar Leuven.', 'I was on the train to Leuven. (BE)'],
+           ['Ik ga altijd met de fiets naar het werk.', 'I always cycle to work.']] }
+  ],
+  quiz: [
+    { t: 'fill', q: 'De kinderen zijn ___ school.', a: ['op'], why: 'Fixed chunk: op school.' },
+    { t: 'fill', q: 'We eten samen ___ tafel.', a: ['aan'], why: 'Fixed chunk: aan tafel.' },
+    { t: 'mc', q: 'Het is al laat, ik ga ___ .', o: ['thuis', 'naar huis'], a: 1, why: 'Movement → naar huis.' },
+    { t: 'mc', q: 'Hij werkt vandaag ___ .', o: ['thuis', 'naar huis'], a: 0, why: 'No movement → thuis: hij werkt thuis.' },
+    { t: 'fill', q: 'Zij komt ___ Marokko. (origin)', a: ['uit'], why: 'Country of origin → uit: komen uit.' },
+    { t: 'fill', q: 'Mama kan nu niet praten, ze is ___ de telefoon.', a: ['aan'], why: 'Fixed chunk: aan de telefoon.' },
+    { t: 'mc', q: '🦁 Typically Belgian:', o: ['op de trein zitten', 'in de trein zitten'], a: 0, why: 'BE: op de trein/bus; NL: in de trein/bus. Both standard in their country.' },
+    { t: 'fill', q: 'Wij gaan in juli twee weken ___ vakantie.', a: ['op'], why: 'Fixed chunk: op vakantie gaan.' }
+  ] },
+
+{ id: 'a2_14', level: 'A2', title: 'Clock times & dates',
+  read: [
+    { h: '⚠️ The half-trick', p: 'Dutch half looks FORWARD to the next hour: half vier = 3:30 (half an hour before four!). The rest is friendly: drie uur (3:00), kwart over drie (3:15), kwart voor vier (3:45). At = om: De les begint om half negen (8:30).',
+      ex: [['Het is half vier.', 'It is half past three (3:30!).'],
+           ['De film begint om kwart over acht.', 'The film starts at a quarter past eight.']] },
+    { h: 'Minutes cluster around half', p: 'Within ten minutes of the half hour, Dutch anchors on half: vijf voor half vier = 3:25, vijf over half vier = 3:35, tien voor half vier = 3:20. Close to the full hour it anchors on the hour: tien over drie (3:10), tien voor vier (3:50). Sounds wild, becomes automatic with practice — say the time out loud every time you check your phone (free retrieval practice!).',
+      ex: [['vijf voor half zes = 5:25', 'five to half six = 5:25'],
+           ['tien over half vier = 3:40', 'ten past half four = 3:40']] },
+    { h: 'Parts of the day & dates', p: 'The apostrophe-s words (from old Dutch "des"): ’s morgens/’s ochtends, ’s middags, ’s avonds, ’s nachts. Days: op maandag, maandagochtend. Dates use plain numbers: één mei, elf juli — Vandaag is het elf juli. Ordinals for rankings: de eerste, de tweede, de derde.',
+      ex: [['Ik sport ’s morgens en ik lees ’s avonds.', 'I exercise in the morning and read in the evening.'],
+           ['Op maandagochtend heb ik les.', 'I have class on Monday morning.']] }
+  ],
+  quiz: [
+    { t: 'mc', q: '"Half vier" =', o: ['4:30', '3:30', '4:15'], a: 1, why: 'Half looks forward: half vier = half an hour before four = 3:30.' },
+    { t: 'fill', q: '3:15 → Het is kwart ___ drie.', a: ['over'], why: 'Quarter past → kwart over.' },
+    { t: 'fill', q: '7:45 → Het is kwart ___ acht.', a: ['voor'], why: 'Quarter to → kwart voor acht.' },
+    { t: 'mc', q: '"Vijf voor half zes" =', o: ['5:25', '5:35', '6:25'], a: 0, why: 'Five minutes before half six (5:30) = 5:25.' },
+    { t: 'fill', q: 'De les begint ___ negen uur. (at)', a: ['om'], why: 'At + clock time → om: om negen uur.' },
+    { t: 'fill', q: 'Ik kijk ___ graag een film. (in the evening — two words)', a: ["'s avonds", 's avonds', 'savonds'], why: '’s avonds = in the evening (from old "des avonds").' },
+    { t: 'mc', q: '___ zaterdag ga ik naar de markt.', o: ['Op', 'In', 'Aan'], a: 0, why: 'Days take op: op zaterdag.' },
+    { t: 'mc', q: '"’s Nachts" means…', o: ['at night', 'tonight', 'last night'], a: 0, why: '’s nachts = at night (in general).' }
+  ] },
+
+{ id: 'a2_15', level: 'A2', title: 'vaak, nooit, graag, heel & te',
+  read: [
+    { h: 'How often? The ladder', p: 'altijd → meestal → vaak → soms → af en toe → zelden → bijna nooit → nooit. Position: after the finite verb and any pronouns: Ik sport vaak. Ik zie hem nooit. ⚠️ Nooit is already negative — never add niet: Ik ga nooit (not "nooit niet").',
+      ex: [['Ik ga meestal met de fiets, maar soms met de bus.', 'I usually cycle, but sometimes take the bus.'],
+           ['Hij komt altijd te laat.', 'He is always late.']] },
+    { h: 'graag = like doing', p: 'Verb + graag = to like doing it: Ik zwem graag (I like swimming). Ik drink graag koffie. It sits in the same slot as vaak. You already know its comparative ladder: graag → liever → het liefst. Ordering politely: Ik wil graag…',
+      ex: [['Ik kook graag, maar ik bak liever.', 'I like cooking, but I prefer baking.'],
+           ['Zij werkt graag in de tuin.', 'She likes working in the garden.']] },
+    { h: '⚠️ heel vs veel + te', p: 'Degree words tune adjectives: heel/erg/echt = very (heel lekker), best = quite, te = too — always negative (te duur = too expensive, sadly). The classic mix-up: heel = very (before adjectives), veel = much/many (before nouns): heel lekker ✓, veel koekjes ✓ — never "veel lekker".',
+      ex: [['De soep is heel lekker, maar te zout.', 'The soup is very tasty, but too salty.'],
+           ['Veel mensen vinden Nederlands heel moeilijk.', 'Many people find Dutch very difficult.']] }
+  ],
+  quiz: [
+    { t: 'fill', q: 'Ik drink ___ een cappuccino in de ochtend. (like to)', a: ['graag'], why: 'Verb + graag = like doing: Ik drink graag…' },
+    { t: 'mc', q: 'Correct:', o: ['Ik ga nooit niet naar de disco.', 'Ik ga nooit naar de disco.'], a: 1, why: 'Nooit is already negative — no extra niet.' },
+    { t: 'mc', q: '___ mensen leren Nederlands. (many)', o: ['Heel', 'Veel'], a: 1, why: 'Before a noun → veel (many); heel = very, before adjectives.' },
+    { t: 'mc', q: 'De soep is ___ lekker. (very)', o: ['veel', 'heel'], a: 1, why: 'Before an adjective → heel (very).' },
+    { t: 'fill', q: 'Deze jas is ___ duur — ik koop hem niet. (too)', a: ['te'], why: 'te = too (negative): te duur.' },
+    { t: 'mc', q: 'Word order:', o: ['Ik vaak ga naar de bioscoop.', 'Ik ga vaak naar de bioscoop.'], a: 1, why: 'V2 first, then the frequency adverb: Ik ga vaak…' },
+    { t: 'fill', q: 'Hij komt ___ te laat — elke dag weer! (always)', a: ['altijd'], why: 'altijd = always: Hij komt altijd te laat.' },
+    { t: 'mc', q: '"Ik zwem graag" =', o: ['I swim well', 'I like swimming', 'I want to swim now'], a: 1, why: 'graag = enjoy doing: I like swimming.' }
+  ] },
+
+{ id: 'a2_16', level: 'A2', title: 'veel, een beetje, een paar, genoeg, allebei',
+  read: [
+    { h: 'veel, weinig, een beetje, een paar', p: 'Veel (much/many) and weinig (little/few) work everywhere. Een beetje only with uncountables: een beetje suiker, een beetje tijd. Een paar only with countables: een paar vragen, een paar dagen. Test: can you count it? → een paar; can’t you? → een beetje.',
+      ex: [['Mag ik een beetje melk in mijn koffie?', 'May I have a little milk in my coffee?'],
+           ['Ik heb nog een paar vragen.', 'I still have a few questions.']] },
+    { h: 'genoeg, te veel, nog', p: 'Genoeg can stand before or after its noun: genoeg tijd = tijd genoeg. Te veel / te weinig = too much / too little. Nog een = another: Nog een koffie? Mag ik nog wat water? (some more water).',
+      ex: [['Heb je genoeg geld bij je? / Geld genoeg!', 'Do you have enough money on you? / Plenty!'],
+           ['Ik heb te veel gegeten.', 'I have eaten too much.']] },
+    { h: 'allebei & beide', p: 'Both: allebei stands on its own after the verb (Wij komen allebei. Ik wil ze allebei!), beide comes before a noun (Beide boeken zijn goed). In doubt, allebei is the natural spoken choice. And to ask amounts: Hoeveel kost dat? Hoeveel mensen komen er?',
+      ex: [['Mijn broer en ik houden allebei van voetbal.', 'My brother and I both love football.'],
+           ['Beide antwoorden zijn juist.', 'Both answers are correct.']] }
+  ],
+  quiz: [
+    { t: 'mc', q: 'Wil je ___ melk in je koffie?', o: ['een paar', 'een beetje'], a: 1, why: 'Milk is uncountable → een beetje.' },
+    { t: 'mc', q: 'Ik heb nog ___ vragen.', o: ['een beetje', 'een paar'], a: 1, why: 'Questions are countable → een paar.' },
+    { t: 'fill', q: 'Heb je ___ geld bij je? Het restaurant is duur. (enough)', a: ['genoeg'], why: 'genoeg = enough: genoeg geld / geld genoeg.' },
+    { t: 'fill', q: 'Au, mijn buik — ik heb ___ veel gegeten! (too)', a: ['te'], why: 'te veel = too much.' },
+    { t: 'fill', q: 'Mag ik ___ een koffie? (another)', a: ['nog'], why: 'nog een = another: Nog een koffie?' },
+    { t: 'mc', q: 'Mijn broer en ik houden ___ van voetbal.', o: ['beide', 'allebei'], a: 1, why: 'Standing alone after the verb → allebei.' },
+    { t: 'mc', q: '___ boeken zijn interessant.', o: ['Allebei', 'Beide'], a: 1, why: 'Before a noun → beide: beide boeken.' },
+    { t: 'fill', q: '___ mensen komen er vanavond? (how many)', a: ['hoeveel'], why: 'hoeveel = how many/much.' }
+  ] },
+
+{ id: 'a2_17', level: 'A2', title: 'Polite Dutch: u, mag ik, alstublieft',
+  read: [
+    { h: 'je or u?', p: 'U for strangers, older people, officials, customers: u bent, u hebt/heeft (both fine). Address people as meneer/mevrouw. When someone says "Zeg maar je/jij", you are officially invited to switch to informal. Flanders switches to informal a bit slower than the Netherlands — with ge/gij taking over among friends.',
+      ex: [['Mevrouw, u bent de volgende.', 'Madam, you are next.'],
+           ['Zeg maar gewoon je, hoor!', 'Just call me "je", really!']] },
+    { h: 'The request ladder', p: 'From casual to very polite: Mag ik…? → Kan ik…? → Kunt u…? → Zou u … kunnen…? Each step adds distance and politeness. Ordering: Ik wil graag twee croissants. 🦁 The classic Flemish shop phrase uses a past tense for extra softness: Ik had graag een pistolet (gehad) — learn it, you will hear it every day in Belgium.',
+      ex: [['Mag ik de rekening, alstublieft?', 'May I have the bill, please?'],
+           ['🦁 Ik had graag twee pistolets gehad.', 'I would like two bread rolls. (BE shop style)']] },
+    { h: 'alstublieft, bedankt & merci', p: 'Please: alstublieft (with u) / alsjeblieft (with je) — also said when HANDING something over ("here you are"). Thanks: dank u wel / dank je wel / bedankt; answer with graag gedaan (you’re welcome). 🦁 In Flanders merci is everywhere ("Merci, hé!"), often answered with graag gedaan or 🦁 "geen dank".',
+      ex: [['Alstublieft, meneer. — Dank u wel!', 'Here you are, sir. — Thank you!'],
+           ['🦁 Merci hé! — Graag gedaan.', 'Thanks! — You’re welcome. (BE)']] }
+  ],
+  quiz: [
+    { t: 'fill', q: 'Formeel: ___ bent van harte welkom, mevrouw.', a: ['u'], why: 'Formal address → u bent.' },
+    { t: 'fill', q: 'In de bakkerij: Ik wil ___ twee croissants.', a: ['graag'], why: 'Ordering politely: Ik wil graag…' },
+    { t: 'mc', q: 'The politest request:', o: ['Geef me dat brood.', 'Mag ik dat brood?', 'Zou u mij dat brood kunnen geven?'], a: 2, why: 'Zou u … kunnen…? tops the politeness ladder.' },
+    { t: 'mc', q: 'You hand a pen to a stranger:', o: ['alsjeblieft', 'alstublieft'], a: 1, why: 'Formal situation → alstublieft (also when handing something over).' },
+    { t: 'mc', q: '🦁 The Flemish bakery classic:', o: ['Ik had graag een pistolet gehad.', 'Ik zal een pistolet gehad hebben.', 'Ik was graag een pistolet.'], a: 0, why: '"Ik had graag … (gehad)" = soft, very Belgian way to order.' },
+    { t: 'fill', q: '"You’re welcome" = ___ gedaan.', a: ['graag'], why: 'graag gedaan = you’re welcome / my pleasure.' },
+    { t: 'mc', q: '"Zeg maar jij" means…', o: ['Please address me informally', 'Say "jij" out loud now', 'Goodbye'], a: 0, why: 'An invitation to drop u and switch to je/jij.' },
+    { t: 'fill', q: '___ ik u iets vragen, meneer? (may)', a: ['mag'], why: 'Polite question: Mag ik u iets vragen?' }
+  ] },
+
+{ id: 'a2_18', level: 'A2', title: 'honger hebben, jarig zijn: fixed expressions',
+  read: [
+    { h: 'hebben + bare noun', p: 'Dutch HAS what English IS: honger hebben (to be hungry), dorst, slaap, haast, gelijk (to be right), geluk (to be lucky), pijn, koorts — all without an article: Ik heb honger. Heb je haast? Plus the star pattern zin hebben in + noun / zin hebben om te + infinitive (to feel like).',
+      ex: [['Ik heb honger én dorst.', 'I am hungry AND thirsty.'],
+           ['Jij hebt gelijk — het is woensdag.', 'You are right — it is Wednesday.']] },
+    { h: 'het + hebben', p: 'A small het sneaks into: het koud/warm hebben (Ik heb het koud = I am cold — never "Ik ben koud"!), het druk hebben (to be busy), het naar je zin hebben (to have a good time). Chunk the whole thing: HET-KOUD-HEBBEN.',
+      ex: [['Brr, ik heb het koud!', 'Brr, I am cold!'],
+           ['Sorry, ik heb het vandaag heel druk.', 'Sorry, I am very busy today.']] },
+    { h: 'zijn-expressions', p: 'And some states ARE: jarig zijn (Ik ben jarig = it is my birthday!), klaar zijn (met) (to be finished), op zijn (used up: De melk is op), weg zijn (gone), open/dicht zijn, aan de beurt zijn (Wie is er aan de beurt? = whose turn is it?).',
+      ex: [['Hij is vandaag jarig — proficiat!', 'It is his birthday today — congratulations!'],
+           ['De melk is op, we moeten naar de winkel.', 'The milk is finished, we need to go to the shop.']] }
+  ],
+  quiz: [
+    { t: 'fill', q: 'Ik heb ___ — is er nog brood? (hungry)', a: ['honger'], why: 'honger hebben = to be hungry.' },
+    { t: 'mc', q: '"I am cold" =', o: ['Ik ben koud.', 'Ik heb het koud.'], a: 1, why: 'Fixed chunk: het koud hebben — "Ik ben koud" describes your personality!' },
+    { t: 'fill', q: 'Hij is vandaag ___ — hij wordt dertig! (birthday)', a: ['jarig'], why: 'jarig zijn = to have your birthday.' },
+    { t: 'fill', q: 'De melk is ___ — we moeten naar de winkel. (used up)', a: ['op'], why: 'op zijn = to be finished/used up.' },
+    { t: 'fill', q: 'Heb je ___ in een pizza vanavond? (feel like)', a: ['zin'], why: 'zin hebben in + noun = to feel like.' },
+    { t: 'mc', q: 'Jij hebt ___ — het is inderdaad woensdag.', o: ['gelijk', 'recht', 'juist'], a: 0, why: 'gelijk hebben = to be right.' },
+    { t: 'mc', q: '"Ik heb het druk" =', o: ['I am busy', 'I feel pressure on me', 'The printer is working'], a: 0, why: 'het druk hebben = to be busy.' },
+    { t: 'fill', q: 'Wie is er aan de ___? (whose turn is it)', a: ['beurt'], why: 'aan de beurt zijn = to be next / your turn.' }
   ] },
 
 /* ═══════════════════════ B1 ═══════════════════════
