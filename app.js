@@ -87,6 +87,16 @@ function dbPut(store, data) {
   });
 }
 
+function dbBulkPut(store, items) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    const s = tx.objectStore(store);
+    items.forEach(it => s.put(it));
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
 function dbDelete(store, id) {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(store, 'readwrite');
@@ -2210,7 +2220,7 @@ async function init() {
       location.reload();
     });
 
-    navigator.serviceWorker.register('sw.js?v=8', { updateViaCache: 'none' }).then(reg => {
+    navigator.serviceWorker.register('sw.js?v=9', { updateViaCache: 'none' }).then(reg => {
       reg.update().catch(() => {});
       if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
       reg.addEventListener('updatefound', () => {

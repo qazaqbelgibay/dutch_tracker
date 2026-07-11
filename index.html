@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='96' fill='%23171613'/><text x='256' y='340' font-size='230' text-anchor='middle' fill='%23dfa93f' font-family='Georgia, serif' font-style='italic'>Aa</text></svg>">
 <title id="docTitle">Language Tracker</title>
-<link rel="stylesheet" href="styles.css?v=5">
+<link rel="stylesheet" href="styles.css?v=6">
 <!-- Fonts load async so the app never blocks on the network (offline-first) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -513,6 +513,8 @@
     <h3 data-i18n="import_title">Anki-deck importeren</h3>
     <p class="import-hint" id="importHint"></p>
     <button class="btn primary full" onclick="pickImportFile()" data-i18n="import_pick">Kies bestand (.txt / .csv)</button>
+    <div class="bundled-head" id="bundledHead" data-i18n="bundled_title">Meegeleverde decks</div>
+    <div id="bundledDecks"></div>
     <div class="modal-btns" style="margin-top:10px">
       <button class="modal-btn cancel" onclick="closeImportModal()" data-i18n="cancel">Annuleer</button>
     </div>
@@ -752,10 +754,10 @@
 <input type="file" id="fileImport" accept=".json" style="display:none" onchange="handleImport(event)">
 <input type="file" id="fileImportCards" accept=".txt,.csv,.tsv,text/plain,text/csv" style="display:none" onchange="handleCardImport(event)">
 
-<script src="i18n.js?v=5"></script>
-<script src="srs.js?v=5"></script>
-<script src="grammar_data.js?v=5"></script>
-<script src="app.js?v=5"></script>
-<script src="study.js?v=5"></script>
+<script src="i18n.js?v=6"></script>
+<script src="srs.js?v=6"></script>
+<script src="grammar_data.js?v=6"></script>
+<script src="app.js?v=6"></script>
+<script src="study.js?v=6"></script>
 </body>
 </html>

@@ -321,6 +321,78 @@ async function saveNewCard() {
 
 function openImportModal() {
   document.getElementById('importModal').classList.add('show');
+  renderBundledDecks();
+}
+
+// ── Bundled decks (converted from the user's .apkg exports, with
+//    native FSRS memory state — progress carries over losslessly) ──
+const BUNDLED_DECKS = [
+  { id: 'nl_freq_dict', file: 'decks/nl_freq_dict.json', lang: 'nl', name: 'A Frequency Dictionary of Dutch', count: 5834 },
+  { id: 'nl_refold',    file: 'decks/nl_refold.json',    lang: 'nl', name: 'Dutch Refold', count: 102 }
+];
+
+async function renderBundledDecks() {
+  const wrap = document.getElementById('bundledDecks');
+  const mine = BUNDLED_DECKS.filter(b => b.lang === L.code);
+  const head = document.getElementById('bundledHead');
+  if (head) head.style.display = mine.length ? '' : 'none';
+  if (mine.length === 0) { wrap.innerHTML = ''; return; }
+  let html = '';
+  for (const b of mine) {
+    let installed = false;
+    try {
+      const s = await dbGet('settings', 'bundled_installed_' + b.id);
+      installed = !!(s && s.value);
+    } catch (e) {}
+    html += `<div class="bundle-row">
+      <div class="bundle-info">
+        <div class="bundle-name">${esc(b.name)}</div>
+        <div class="bundle-count mono">${t('bundled_cards', { n: b.count })}</div>
+      </div>
+      ${installed
+        ? `<span class="bundle-done">${t('bundled_installed')}</span>`
+        : `<button class="btn primary bundle-btn" id="bundleBtn_${b.id}" onclick="installBundledDeck('${b.id}')">${t('bundled_install')}</button>`}
+    </div>`;
+  }
+  wrap.innerHTML = html;
+}
+
+async function installBundledDeck(id) {
+  const def = BUNDLED_DECKS.find(b => b.id === id);
+  if (!def) return;
+  const btn = document.getElementById('bundleBtn_' + id);
+  if (btn) { btn.disabled = true; btn.textContent = t('bundled_installing'); }
+  try {
+    const res = await fetch(def.file);
+    if (!res.ok) throw new Error('http ' + res.status);
+    const data = await res.json();
+
+    const existing = await dbGetAll('cards');
+    const seen = new Set(existing.map(c => (c.front + '' + c.back).toLowerCase()));
+    const now = Date.now();
+    const cards = [];
+    data.cards.forEach((c, i) => {
+      const key = (c.front + '' + c.back).toLowerCase();
+      if (seen.has(key)) return;
+      seen.add(key);
+      cards.push({
+        front: c.front, back: c.back, deck: data.deck,
+        state: c.state, due: c.due || now,
+        stability: c.stability, difficulty: c.difficulty,
+        reps: c.reps, lapses: c.lapses,
+        lastReview: c.lastReview, addedAt: now + i
+      });
+    });
+    await dbBulkPut('cards', cards);
+    await dbPut('settings', { key: 'bundled_installed_' + id, value: true });
+    showToast(t('t_bundled_done', { name: data.name, n: cards.length }));
+    renderBundledDecks();
+    refreshStudy();
+    refreshAll();
+  } catch (err) {
+    showToast(t('t_bundled_fetch_err'));
+    if (btn) { btn.disabled = false; btn.textContent = t('bundled_install'); }
+  }
 }
 function closeImportModal() {
   document.getElementById('importModal').classList.remove('show');

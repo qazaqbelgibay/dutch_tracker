@@ -1634,6 +1634,22 @@ body {
 
 /* ── Import & manage modals ── */
 .import-hint { font-size: 12.5px; line-height: 1.6; color: var(--text2); margin-bottom: 14px; }
+.bundled-head {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text3); margin: 18px 0 4px; padding-top: 14px;
+  border-top: 1px solid var(--hairline);
+}
+.bundle-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid var(--hairline);
+}
+.bundle-row:last-child { border-bottom: none; }
+.bundle-info { min-width: 0; }
+.bundle-name { font-size: 13.5px; font-weight: 500; line-height: 1.3; }
+.bundle-count { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.bundle-btn { padding: 8px 14px; font-size: 12.5px; white-space: nowrap; }
+.bundle-btn:disabled { opacity: 0.55; }
+.bundle-done { font-size: 12px; font-weight: 600; color: var(--teal); white-space: nowrap; }
 .deck-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
 .deck-chip {
   display: inline-flex; align-items: center; gap: 6px;
