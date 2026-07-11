@@ -123,6 +123,14 @@ function openSessionOverlay(kind) {
   document.getElementById('sessTimer').textContent = '00:00';
   document.getElementById('sessTimer').classList.remove('paused');
   document.getElementById('sessPauseBtn').textContent = '⏸';
+  // A previous session may have been closed while paused — always reset
+  document.getElementById('sessPausedNote').classList.remove('show');
+  document.getElementById('studyBody').classList.remove('sess-paused');
+  const isFlash = kind === 'flash';
+  document.getElementById('sessUndoBtn').style.display = isFlash ? '' : 'none';
+  document.getElementById('sessFinishBtn').style.display = isFlash ? '' : 'none';
+  document.getElementById('sessProgress').style.display = isFlash ? '' : 'none';
+  document.getElementById('sessProgressFill').style.width = '0%';
   document.getElementById('studyOverlay').classList.add('show');
   document.body.classList.add('no-scroll');
 }
@@ -133,6 +141,10 @@ function closeSessionOverlay() {
   clearInterval(sessInterval);
   flashSession = null;
   grammarSession = null;
+  flashUndo = null;
+  if ('speechSynthesis' in window) try { speechSynthesis.cancel(); } catch (e) {}
+  document.getElementById('sessPausedNote').classList.remove('show');
+  document.getElementById('studyBody').classList.remove('sess-paused');
   document.getElementById('studyOverlay').classList.remove('show');
   document.body.classList.remove('no-scroll');
   refreshStudy();
@@ -141,6 +153,8 @@ function closeSessionOverlay() {
 
 function sessTogglePause() {
   if (!sessKind) return;
+  if (flashSession && flashSession.phase !== 'run') return;
+  if (grammarSession && grammarSession.phase === 'done') return;
   sessRunning = !sessRunning;
   clearInterval(sessInterval);
   if (sessRunning) sessInterval = setInterval(sessTimerTick, 1000);
@@ -154,7 +168,7 @@ function sessClose() {
   if (sessKind === 'flash' && flashSession) {
     if (flashSession.phase === 'done') { closeSessionOverlay(); return; }
     if (flashSession.reviewed === 0) { closeSessionOverlay(); return; }
-    if (confirm(t('c_end_flash'))) finishFlashSession();
+    if (confirm(t('c_end_flash', { n: flashSession.reviewed }))) finishFlashSession();
     return;
   }
   if (sessKind === 'grammar' && grammarSession) {
@@ -165,6 +179,33 @@ function sessClose() {
   closeSessionOverlay();
 }
 
+// ── Text-to-speech: built-in voices stand in for the deck audio
+//    that .apkg exports don't carry ──
+let ttsVoice = null;
+function initTTS() {
+  if (!('speechSynthesis' in window)) return;
+  const pick = () => {
+    const vs = speechSynthesis.getVoices();
+    ttsVoice = vs.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(L.code)) || null;
+  };
+  pick();
+  speechSynthesis.onvoiceschanged = pick;
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window) || !text) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = L.code === 'fr' ? 'fr-FR' : 'nl-BE';
+    if (ttsVoice) u.voice = ttsVoice;
+    u.rate = 0.92;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+function speakEl(el) { speak(el.dataset.say); }
+
 function sessMinutes() {
   return Math.max(1, Math.round(sessSeconds / 60));
 }
@@ -173,6 +214,7 @@ function sessMinutes() {
 // FLASHCARD SESSION
 // ══════════════════════════════════════════════════
 let flashSession = null;
+let flashUndo = null;
 
 async function startFlashSession() {
   const { due, fresh, newAllowed } = await flashCounts();
@@ -183,9 +225,11 @@ async function startFlashSession() {
   if (queue.length === 0) { showToast(t('flash_all_done')); return; }
 
   flashSession = {
-    phase: 'run', queue, current: null, revealed: false,
-    reviewed: 0, correct: 0, logged: false
+    phase: 'run', queue, current: null, revealed: false, rating: false,
+    reviewed: 0, correct: 0, streak: 0,
+    grades: { 1: 0, 2: 0, 3: 0, 4: 0 }, logged: false
   };
+  flashUndo = null;
   openSessionOverlay('flash');
   flashNext();
 }
@@ -200,21 +244,74 @@ function flashNext() {
   renderFlashCard();
 }
 
+function flashProgressUpdate() {
+  const s = flashSession;
+  const total = s.reviewed + s.queue.length;
+  document.getElementById('sessProgressFill').style.width =
+    (total > 0 ? (s.reviewed / total) * 100 : 0) + '%';
+}
+
+// ── Target-word highlighting ──
+// *word* markers (Refold-style) → accent highlight
+function markerHtml(text) {
+  return esc(text).replace(/\*([^*\n]+)\*/g, '<span class="flash-hl">$1</span>');
+}
+
+// Highlight the headword (plus simple inflections) inside the example sentence
+const HL_SUFFIXES = ['', 'e', 'en', 'n', 's', 'je', 'jes', 't', 'te', 'ten', 'd', 'de', 'den', 'er', 'ers', 'st', 'ste'];
+function headwordStems(word) {
+  const stems = [word];
+  // Dutch spelling alternations before -en: huis→huizen, brief→brieven
+  if (word.endsWith('s')) stems.push(word.slice(0, -1) + 'z');
+  if (word.endsWith('f')) stems.push(word.slice(0, -1) + 'v');
+  return stems;
+}
+function highlightHeadword(escText, word) {
+  const w = (word || '').toLowerCase();
+  if (!w) return escText;
+  const stems = headwordStems(w);
+  return escText.replace(/[\p{L}]+/gu, tok => {
+    const lt = tok.toLowerCase();
+    const hit = stems.some(st => lt.startsWith(st) && HL_SUFFIXES.includes(lt.slice(st.length)));
+    return hit ? '<span class="flash-hl">' + tok + '</span>' : tok;
+  });
+}
+
+function flashSpeakText() {
+  const c = flashSession && flashSession.current;
+  if (!c) return '';
+  const lines = c.front.split('\n');
+  const head = lines[0].replace(/\s*\([^)]*\)/g, '').trim();
+  return (head + '. ' + lines.slice(1).join('. ')).replace(/\*/g, '').trim();
+}
+
 function renderFlashCard() {
   const s = flashSession;
   const c = s.current;
   const stateLabel = t('state_' + c.state);
   const stateCls = ['new', 'learn', 'rev', 'learn'][c.state];
+
+  // Two-line fronts (word + example sentence) get structured typography;
+  // single-line fronts (e.g. Refold sentences) render as one big face.
+  const lines = c.front.split('\n');
+  const headword = lines[0].replace(/\s*\(.*$/, '').trim();
+  const face = lines.length > 1
+    ? `<div class="flash-word">${markerHtml(lines[0])}</div>
+       <div class="flash-sentence">${highlightHeadword(markerHtml(lines.slice(1).join('\n')), headword)}</div>`
+    : `<div class="flash-front">${markerHtml(c.front)}</div>`;
+
   let html = `
     <div class="sess-meta">
       <span class="flash-state ${stateCls}">${stateLabel}</span>
       ${c.deck ? `<span class="flash-deck">${esc(c.deck)}</span>` : ''}
+      ${s.streak >= 3 ? `<span class="sess-streak mono">🔥${s.streak}</span>` : ''}
       <span class="sess-left mono">${t('sess_left', { n: s.queue.length })}</span>
     </div>
     <div class="flash-card ${s.revealed ? 'revealed' : ''}" onclick="flashReveal()">
-      <div class="flash-front">${esc(c.front)}</div>
+      ${'speechSynthesis' in window ? `<button class="tts-btn" onclick="event.stopPropagation();speak(flashSpeakText())" title="🔊">🔊</button>` : ''}
+      ${face}
       ${s.revealed
-        ? `<div class="flash-divider"></div><div class="flash-back">${esc(c.back)}</div>`
+        ? `<div class="flash-divider"></div><div class="flash-back">${markerHtml(c.back)}</div>`
         : `<div class="flash-hint">${t('tap_reveal')}</div>`}
     </div>`;
 
@@ -227,7 +324,9 @@ function renderFlashCard() {
       <button class="rate-btn easy" onclick="flashRate(4)"><span>${t('rate_4')}</span><span class="rate-ivl mono">${prev[4]}</span></button>
     </div>`;
   }
+  html += `<div class="kbd-hint mono">${t('kbd_hint')}</div>`;
   document.getElementById('studyBody').innerHTML = html;
+  flashProgressUpdate();
 }
 
 function flashReveal() {
@@ -238,37 +337,66 @@ function flashReveal() {
 
 async function flashRate(grade) {
   const s = flashSession;
-  if (!s || !sessRunning) return;
+  if (!s || !sessRunning || !s.revealed || s.rating) return;
+  s.rating = true;
   const before = s.current;
   const wasNew = before.state === 0;
   const updated = FSRS.schedule(before, grade);
 
   await dbPut('cards', updated);
-  await dbPut('reviews', {
+  const reviewId = await dbPut('reviews', {
     cardId: updated.id, date: today(), grade,
     newCard: wasNew, timestamp: Date.now()
   });
+  flashUndo = { before: { ...before }, reviewId, grade, prevStreak: s.streak };
 
   s.reviewed++;
-  if (grade > 1) s.correct++;
+  s.grades[grade]++;
+  if (grade > 1) { s.correct++; s.streak++; } else { s.streak = 0; }
+  if (navigator.vibrate) try { navigator.vibrate(grade === 1 ? 25 : 8); } catch (e) {}
 
   // Replace in queue; learning/relearning cards come back this session
   s.queue.shift();
   if (updated.state === 1 || updated.state === 3) s.queue.push(updated);
+  s.rating = false;
   flashNext();
+}
+
+async function flashUndoLast() {
+  const s = flashSession;
+  if (!s || s.phase !== 'run' || !flashUndo || !sessRunning) return;
+  const u = flashUndo;
+  flashUndo = null;
+  await dbPut('cards', u.before);
+  await dbDelete('reviews', u.reviewId);
+  s.reviewed--;
+  s.grades[u.grade]--;
+  if (u.grade > 1) s.correct--;
+  s.streak = u.prevStreak;
+  s.queue = s.queue.filter(c => c.id !== u.before.id);
+  s.queue.unshift(u.before);
+  s.current = u.before;
+  s.revealed = false;
+  showToast(t('t_undo_rating'));
+  renderFlashCard();
 }
 
 async function finishFlashSession() {
   const s = flashSession;
-  if (!s) return;
+  if (!s || s.phase === 'done') return;
+  if (s.reviewed === 0) { closeSessionOverlay(); return; }
   s.phase = 'done';
   sessRunning = false;
   clearInterval(sessInterval);
+  document.getElementById('sessUndoBtn').style.display = 'none';
+  document.getElementById('sessFinishBtn').style.display = 'none';
+  document.getElementById('sessProgressFill').style.width = '100%';
 
   const mins = sessMinutes();
-  const acc = s.reviewed > 0 ? Math.round((s.correct / s.reviewed) * 100) : 0;
+  const acc = Math.round((s.correct / s.reviewed) * 100);
+  const g = s.grades;
 
-  if (!s.logged && s.reviewed > 0) {
+  if (!s.logged) {
     s.logged = true;
     await dbPut('anki', { date: today(), cards: s.reviewed, timestamp: Date.now() });
     await dbPut('logs', {
@@ -287,6 +415,12 @@ async function finishFlashSession() {
         <div class="sess-stat"><span class="serif-num lg">${s.reviewed}</span><span>${t('sess_cards_stat')}</span></div>
         <div class="sess-stat"><span class="serif-num lg">${acc}%</span><span>${t('sess_acc_stat')}</span></div>
         <div class="sess-stat"><span class="serif-num lg">${mins}</span><span>${t('sess_time_stat')}</span></div>
+      </div>
+      <div class="grade-break">
+        <span class="gb again">${t('rate_1')} <b class="mono">${g[1]}</b></span>
+        <span class="gb hard">${t('rate_2')} <b class="mono">${g[2]}</b></span>
+        <span class="gb good">${t('rate_3')} <b class="mono">${g[3]}</b></span>
+        <span class="gb easy">${t('rate_4')} <b class="mono">${g[4]}</b></span>
       </div>
       <button class="btn primary full" onclick="closeSessionOverlay()">${t('sess_close')}</button>
     </div>`;
@@ -581,6 +715,13 @@ function grammarLessons() {
   return (GRAMMAR_COURSE[L.code] || []);
 }
 
+const LEVEL_COLORS = { A1: '--teal', A2: '--blue', B1: '--purple', B2: '--amber', C1: '--red' };
+const LEVEL_DIMS = { A1: '--teal-dim', A2: '--blue-dim', B1: '--purple-dim', B2: '--amber-glow', C1: '--red-dim' };
+
+function levelPill(lv) {
+  return `<span class="level-pill" style="color:var(${LEVEL_COLORS[lv]});background:var(${LEVEL_DIMS[lv]})">${lv}</span>`;
+}
+
 async function renderGrammarSection() {
   const lessons = grammarLessons();
   const levelsEl = document.getElementById('grammarLevels');
@@ -611,16 +752,20 @@ async function renderGrammarSection() {
   levelsEl.innerHTML = GRAMMAR_LEVELS.map(lv => {
     const inLevel = lessons.filter(l => l.level === lv);
     const done = inLevel.filter(l => progMap[l.id]).length;
-    return `<button class="level-tab ${lv === currentGrammarLevel ? 'active' : ''}" onclick="setGrammarLevel('${lv}')">
+    return `<button class="level-tab ${lv === currentGrammarLevel ? 'active' : ''} ${done === inLevel.length && inLevel.length ? 'complete' : ''}"
+      style="--lv:var(${LEVEL_COLORS[lv]});--lvd:var(${LEVEL_DIMS[lv]})" onclick="setGrammarLevel('${lv}')">
       ${lv}<span class="level-count mono">${done}/${inLevel.length}</span></button>`;
   }).join('');
 
-  listEl.innerHTML = lessons.filter(l => l.level === currentGrammarLevel).map(l => {
+  listEl.innerHTML = lessons.filter(l => l.level === currentGrammarLevel).map((l, idx) => {
     const p = progMap[l.id];
-    return `<button class="lesson-row" onclick="startGrammarLesson('${l.id}')">
-      <span class="lesson-check ${p ? 'done' : ''}">${p ? '✓' : ''}</span>
-      <span class="lesson-title">${esc(l.title)}</span>
-      ${p ? `<span class="lesson-best mono">${t('best_label', { p: p.best })}</span>` : ''}
+    return `<button class="lesson-row ${p ? 'done' : ''}" style="--lv:var(${LEVEL_COLORS[l.level]})" onclick="startGrammarLesson('${l.id}')">
+      <span class="lesson-num mono">${String(idx + 1).padStart(2, '0')}</span>
+      <span class="lesson-mid">
+        <span class="lesson-title">${esc(l.title)}</span>
+        <span class="lesson-sub">${t('lesson_ex_count', { n: l.quiz.length })}${p ? ' · ' + t('best_label', { p: p.best }) : ''}</span>
+      </span>
+      <span class="lesson-check ${p ? 'done' : ''}">${p ? '✓' : '›'}</span>
     </button>`;
   }).join('');
 }
@@ -643,24 +788,27 @@ function startGrammarLesson(id) {
 
 function renderGrammarRead() {
   const l = grammarSession.lesson;
+  const tts = 'speechSynthesis' in window;
   let html = `
     <div class="sess-meta">
-      <span class="flash-state rev">${l.level}</span>
+      ${levelPill(l.level)}
       <span class="sess-left">${t('grammar_reading')}</span>
     </div>
     <div class="lesson-content">
       <h2 class="lesson-h">${esc(l.title)}</h2>`;
-  for (const sec of l.read) {
-    html += `<div class="lesson-sec">
-      <h3>${esc(sec.h)}</h3>
+  l.read.forEach((sec, i) => {
+    html += `<div class="lesson-sec" style="--lv:var(${LEVEL_COLORS[l.level]})">
+      <h3><span class="sec-num mono">${i + 1}</span>${esc(sec.h)}</h3>
       <p>${esc(sec.p)}</p>
       ${sec.ex.map(([nl, en]) => `
         <div class="lesson-ex">
-          <div class="lesson-ex-nl">${esc(nl)}</div>
+          <div class="lesson-ex-nl">${esc(nl)}
+            ${tts ? `<button class="tts-mini" data-say="${esc(nl)}" onclick="speakEl(this)">🔊</button>` : ''}
+          </div>
           <div class="lesson-ex-en">${esc(en)}</div>
         </div>`).join('')}
     </div>`;
-  }
+  });
   html += `</div>
     <button class="btn primary full" onclick="grammarStartQuiz()">${t('lesson_quiz_btn', { n: l.quiz.length })}</button>`;
   document.getElementById('studyBody').innerHTML = html;
@@ -672,7 +820,17 @@ function grammarStartQuiz() {
   grammarSession.phase = 'quiz';
   grammarSession.qIndex = 0;
   grammarSession.score = 0;
+  grammarSession.results = [];
   renderGrammarQuestion();
+}
+
+function quizDotsHtml(s, showCurrent) {
+  return `<div class="quiz-dots">` + s.lesson.quiz.map((_, i) => {
+    let cls = '';
+    if (i < s.results.length) cls = s.results[i] ? 'ok' : 'bad';
+    else if (showCurrent && i === s.qIndex) cls = 'cur';
+    return `<span class="qdot ${cls}"></span>`;
+  }).join('') + `</div>`;
 }
 
 function renderGrammarQuestion() {
@@ -681,9 +839,10 @@ function renderGrammarQuestion() {
   s.answered = false;
   let html = `
     <div class="sess-meta">
-      <span class="flash-state rev">${s.lesson.level}</span>
+      ${levelPill(s.lesson.level)}
       <span class="sess-left mono">${t('quiz_q', { i: s.qIndex + 1, n: s.lesson.quiz.length })}</span>
     </div>
+    ${quizDotsHtml(s, true)}
     <div class="quiz-card">
       <div class="quiz-q">${esc(q.q)}</div>`;
   if (q.t === 'mc') {
@@ -711,12 +870,17 @@ function grammarShowFeedback(correct, q) {
   const s = grammarSession;
   s.answered = true;
   if (correct) s.score++;
+  s.results.push(correct);
+  if (navigator.vibrate) try { navigator.vibrate(correct ? 8 : 25); } catch (e) {}
   const fb = document.getElementById('quizFeedback');
   const answerTxt = q.t === 'mc' ? q.o[q.a] : q.a[0];
+  fb.className = 'quiz-feedback show ' + (correct ? 'ok' : 'bad');
   fb.innerHTML = `
     <div class="quiz-verdict ${correct ? 'ok' : 'bad'}">${correct ? '✓ ' + t('quiz_correct') : '✗ ' + t('quiz_wrong')}</div>
     ${!correct ? `<div class="quiz-answer">${t('quiz_answer_was', { a: esc(answerTxt) })}</div>` : ''}
     <div class="quiz-why">${esc(q.why)}</div>`;
+  const dots = document.querySelector('.quiz-dots');
+  if (dots) dots.outerHTML = quizDotsHtml(s, false);
   const next = document.getElementById('quizNextBtn');
   next.style.display = '';
   next.textContent = s.qIndex + 1 < s.lesson.quiz.length ? t('quiz_next') : t('quiz_finish_btn');
@@ -770,6 +934,7 @@ function renderGrammarResult() {
     <div class="sess-summary">
       <div class="sess-summary-icon">${pct === 100 ? '🏆' : pct >= 60 ? '🎓' : '📚'}</div>
       <h2>${t('lesson_done_title')}</h2>
+      ${quizDotsHtml(s, false)}
       <div class="sess-stats">
         <div class="sess-stat"><span class="serif-num lg">${s.score}/${total}</span><span>${t('lesson_score')}</span></div>
         <div class="sess-stat"><span class="serif-num lg">${pct}%</span><span>${t('sess_acc_stat')}</span></div>
@@ -810,3 +975,36 @@ async function finishGrammarLesson() {
   showToast(t('t_lesson_logged'));
   closeSessionOverlay();
 }
+
+// ══════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS (desktop): space = reveal,
+// 1–4 = rate, z = undo, enter = next, esc = stop
+// ══════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (!sessKind) return;
+  if (e.key === 'Escape') { sessClose(); return; }   // works even from an input
+  const tag = e.target && e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+  if (sessKind === 'flash' && flashSession) {
+    if (flashSession.phase === 'done') {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeSessionOverlay(); }
+      return;
+    }
+    if (!sessRunning) return;
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      if (!flashSession.revealed) flashReveal();
+    } else if (flashSession.revealed && ['1', '2', '3', '4'].includes(e.key)) {
+      flashRate(parseInt(e.key));
+    } else if (e.key === 'z' || e.key === 'u') {
+      flashUndoLast();
+    }
+  } else if (sessKind === 'grammar' && grammarSession) {
+    if (e.key === 'Enter' && grammarSession.phase === 'quiz' && grammarSession.answered) {
+      grammarNextQuestion();
+    }
+  }
+});
+
+initTTS();
