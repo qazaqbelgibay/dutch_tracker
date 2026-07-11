@@ -341,21 +341,37 @@ const GRAMMAR_COURSE = {
     { t: 'mc', q: 'Diminutives are always…', o: ['de-words', 'het-words'], a: 1, why: 'All diminutives are neuter: het huisje, het meisje.' }
   ] },
 
-/* ═══════════════════════ B1 ═══════════════════════ */
+/* ═══════════════════════ B1 ═══════════════════════
+   Expanded B1 module — 18 lessons.
+   Built on evidence-based learning principles: retrieval practice
+   (bigger quizzes with elaborative feedback), contrastive noticing
+   (⚠️ error sections), chunking (fixed expressions taught as units)
+   and spacing (feed hard items into the Anki tab).            */
 { id: 'b1_01', level: 'B1', title: 'The word "er" — five jobs',
   read: [
     { h: 'Place, subject, quantity', p: '1) Place (= daar, unstressed): Ik woon er al jaren. 2) Dummy subject with indefinite subjects: Er loopt een kat in de tuin. 3) Quantity, with numbers: Hoeveel heb je er? Ik heb er drie ("of them" — obligatory in Dutch!).',
       ex: [['Er staat een man aan de deur.', 'There is a man at the door.'],
            ['Ik heb er twee.', 'I have two (of them).']] },
-    { h: 'With prepositions & passive', p: '4) Er + preposition replaces preposition + thing: Ik denk eraan. Ik ben er trots op. 5) Impersonal passive: Er wordt gelachen (there is laughing). Combinations: max one er — "Er wordt er…" collapses.',
+    { h: 'With prepositions & passive', p: '4) Er + preposition replaces preposition + thing: Ik denk eraan. Ik ben er trots op. 5) Impersonal passive: Er wordt gelachen (there is laughing). Combining: prepositional er merges with another er — "Er wordt veel over gepraat", never "er wordt erover" — but quantitative er may sit next to one: Er zitten er twee in de doos.',
       ex: [['Denk je aan je afspraak? — Ja, ik denk eraan.', 'Are you thinking of your appointment? — Yes, I am.'],
-           ['Er wordt hier hard gewerkt.', 'People work hard here.']] }
+           ['Er wordt hier hard gewerkt.', 'People work hard here.']] },
+    { h: 'Where does er go?', p: 'Unstressed er hugs the finite verb: directly after it (Ik woon er al jaren), or directly after the subject in questions and inversion (Woon je er nog? Sinds 2020 woon ik er). Test: if you could stress the word in English ("I live THERE"), Dutch wants daar; if it is a colourless little "there", it is er. Er can never carry stress, never start an answer alone, and never be pointed at.',
+      ex: [['Ik werk er sinds maart.', 'I have been working there since March.'],
+           ['Ken je Brugge? — Ja, ik kom er vaak.', 'Do you know Bruges? — Yes, I go there often.'],
+           ['Daar wil ik wonen, precies daar!', 'THERE is where I want to live, right there!']] },
+    { h: '⚠️ The three classic mistakes', p: 'Hunt these in your own speech: 1) dropping quantitative er — "Ik heb drie" ✗ → Ik heb er drie ✓; 2) preposition + het for a thing — "Ik ben blij met het" ✗ → Ik ben er blij mee ✓; 3) opening with het instead of er — "Het is een pakje voor jou" ✗ → Er is een pakje voor jou ✓. 💡 Learning science: errors you notice and immediately repair are remembered best (error-driven learning) — say the wrong and the right version out loud as a pair.',
+      ex: [['Hoeveel broers heb je? — Ik heb er één.', 'How many brothers do you have? — I have one.'],
+           ['Ben je tevreden met je score? — Ja, ik ben er tevreden mee.', 'Happy with your score? — Yes, I am happy with it.']] }
   ],
   quiz: [
     { t: 'fill', q: 'Hoeveel katten heb je? — Ik heb ___ twee.', a: ['er'], why: 'Quantitative er is obligatory with numbers: "Ik heb er twee."' },
     { t: 'mc', q: '___ staat een fiets voor de deur.', o: ['Het', 'Er', 'Daar (unstressed)'], a: 1, why: 'Indefinite subject introduced → er.' },
     { t: 'fill', q: 'Ben je tevreden met het resultaat? — Ja, ik ben ___ tevreden mee.', a: ['er'], why: 'Er + preposition (er…mee) replaces "met het resultaat".' },
-    { t: 'mc', q: '"Er wordt gedanst" means…', o: ['It is being danced (nonsense)', 'People are dancing', 'The dance happens tomorrow'], a: 1, why: 'Impersonal passive: an activity without a specific subject.' }
+    { t: 'mc', q: '"Er wordt gedanst" means…', o: ['It is being danced (nonsense)', 'People are dancing', 'The dance happens tomorrow'], a: 1, why: 'Impersonal passive: an activity without a specific subject.' },
+    { t: 'fill', q: 'Ik woon al vijf jaar in Gent en ik woon ___ heel graag.', a: ['er'], why: 'Unstressed place er replaces "in Gent": "ik woon er graag".' },
+    { t: 'mc', q: 'Which answer to "Hoeveel kinderen hebben ze?" is wrong?', o: ['Ze hebben er drie.', 'Ze hebben drie.', 'Drie.'], a: 1, why: 'When the noun is dropped after a number, er is obligatory: "Ze hebben er drie."' },
+    { t: 'fill', q: 'Praten jullie over de film? — Ja, we praten ___. (over + het, one word)', a: ['erover'], why: 'over + het → erover: "We praten erover."' },
+    { t: 'mc', q: '"Er zitten er twee in de doos." The second er is…', o: ['place er', 'quantity er (= of them)', 'a mistake'], a: 1, why: 'Presentative er + quantitative er can co-occur: there are two of them in the box.' }
   ] },
 
 { id: 'b1_02', level: 'B1', title: 'Relative clauses: die & dat',
@@ -365,13 +381,23 @@ const GRAMMAR_COURSE = {
            ['De mensen die hier wonen, zijn vriendelijk.', 'The people who live here are friendly.']] },
     { h: 'wie and wat', p: 'Wat after alles, iets, niets, dat and after a whole clause: Alles wat je zegt… Dat is iets wat ik niet begrijp. Wie for people after a preposition: de vrouw met wie ik werk.',
       ex: [['Er is niets wat ik liever doe.', 'There is nothing I’d rather do.'],
-           ['De collega met wie ik samenwerk, is ziek.', 'The colleague I work with is ill.']] }
+           ['De collega met wie ik samenwerk, is ziek.', 'The colleague I work with is ill.']] },
+    { h: 'Position: glue it to the noun', p: 'The relative clause comes immediately after its noun, even when the main clause has to wait: De koffie die ik gemaakt heb, is koud. Never let the main verb sneak into the relative clause — inside it the verbs pile up at the end (gemaakt heb / heb gemaakt: both orders are correct). A comma usually closes the clause before the main sentence resumes.',
+      ex: [['De koffie die ik gemaakt heb, is al koud.', 'The coffee I made is already cold.'],
+           ['De buurman die naast ons woont, heeft twee honden.', 'The neighbour who lives next to us has two dogs.']] },
+    { h: '⚠️ dat vs wat — the exam traps', p: 'After a concrete het-word the standard language wants dat, not wat: het boek dat ik lees (spoken Dutch often says wat — exams count it wrong). But after a superlative used without a noun → wat: het mooiste wat ik ooit gezien heb. 💡 Contrast pairs like "het boek dat…" vs "het beste wat…" are ideal flashcards: your brain learns categories fastest from minimal pairs.',
+      ex: [['Dat is het beste wat me ooit is overkomen.', 'That is the best thing that ever happened to me.'],
+           ['Het liedje dat je hoorde, is van Stromae.', 'The song you heard is by Stromae.']] }
   ],
   quiz: [
     { t: 'mc', q: 'Het huis ___ te koop staat, is oud.', o: ['die', 'dat', 'wat'], a: 1, why: 'Het huis → dat.' },
     { t: 'mc', q: 'De trein ___ naar Brussel rijdt, heeft vertraging.', o: ['die', 'dat'], a: 0, why: 'De trein → die.' },
     { t: 'fill', q: 'Alles ___ hij zegt, is waar.', a: ['wat'], why: 'After alles → wat.' },
-    { t: 'mc', q: 'De vriend ___ ik op reis ga…', o: ['met die', 'met wie', 'waarmee'], a: 1, why: 'Person after preposition → met wie (waarmee is for things).' }
+    { t: 'mc', q: 'De vriend ___ ik op reis ga…', o: ['met die', 'met wie', 'waarmee'], a: 1, why: 'Person after preposition → met wie (waarmee is for things).' },
+    { t: 'mc', q: 'Dat is het mooiste ___ ik ooit heb gezien.', o: ['dat', 'wat', 'die'], a: 1, why: 'After a superlative without a noun → wat.' },
+    { t: 'fill', q: 'Het meisje ___ daar fietst, is mijn nichtje.', a: ['dat'], why: 'Het meisje is grammatically neuter → dat (grammar beats natural gender).' },
+    { t: 'mc', q: 'Which is correct standard Dutch?', o: ['De koffie die heb ik gemaakt, is koud.', 'De koffie die ik gemaakt heb, is koud.'], a: 1, why: 'Relative clause = subclause order: verbs at the end, no inversion inside.' },
+    { t: 'mc', q: 'Er is iets ___ ik je moet vertellen.', o: ['dat', 'wat', 'die'], a: 1, why: 'After iets → wat.' }
   ] },
 
 { id: 'b1_03', level: 'B1', title: 'Relatives with prepositions: waar + prep',
@@ -381,13 +407,23 @@ const GRAMMAR_COURSE = {
            ['Het liedje waarnaar we luisteren…', 'The song we’re listening to…']] },
     { h: 'met → waarmee, tot → waartoe', p: 'Note the fused forms: met → waarmee, tot → waartoe. Same logic for question words: Waarmee schrijf je? (With what do you write?). For people keep prep + wie: met wie, voor wie.',
       ex: [['De pen waarmee ik schrijf, is leeg.', 'The pen I write with is empty.'],
-           ['Waarover praten jullie?', 'What are you talking about?']] }
+           ['Waarover praten jullie?', 'What are you talking about?']] },
+    { h: 'Pure place: waar alone', p: 'When the meaning is simply location, waar stands on its own — no preposition needed: de stad waar ik woon, het land waar zij vandaan komt (waar … vandaan = where … from). Compare: de stad waar ik woon (place) vs de baan waarvoor ik verhuis (verhuizen voor iets).',
+      ex: [['De stad waar ik geboren ben, ligt aan de kust.', 'The city where I was born lies on the coast.'],
+           ['Het dorp waar hij vandaan komt, is piepklein.', 'The village he comes from is tiny.']] },
+    { h: '💡 Split or fused? Register', p: 'Fused (waarmee, waarover) sounds neutral-to-formal and is the safe choice in writing; split (waar … mee, waar … over) is what you hear in conversation. For people, standard writing wants prep + wie (de man met wie ik praat); spoken Flemish happily says "de man waarmee ik praat" — understand it, avoid it in exam writing. Memory hook: things → WAAR, people → WIE.',
+      ex: [['Waar denk je aan? = Waaraan denk je?', 'What are you thinking about? (split = spoken, fused = written)'],
+           ['de klant voor wie ik dit maak', 'the client I am making this for']] }
   ],
   quiz: [
     { t: 'fill', q: 'Het bedrijf ___ ik werk, groeit snel. (voor)', a: ['waarvoor'], why: 'Thing + voor → waarvoor.' },
     { t: 'mc', q: 'De muziek ___ we dansen…', o: ['op die', 'waarop', 'op wat'], a: 1, why: 'Thing + op → waarop.' },
     { t: 'fill', q: 'De vork ___ ik eet… (met)', a: ['waarmee'], why: 'met fuses to waarmee.' },
-    { t: 'mc', q: 'Correct for a person:', o: ['de man waarmee ik praat', 'de man met wie ik praat'], a: 1, why: 'Standard language prefers met wie for people (waarmee is common in speech but informal).' }
+    { t: 'mc', q: 'Correct for a person:', o: ['de man waarmee ik praat', 'de man met wie ik praat'], a: 1, why: 'Standard language prefers met wie for people (waarmee is common in speech but informal).' },
+    { t: 'fill', q: 'De stad ___ ik geboren ben, ligt in Vlaanderen. (place)', a: ['waar'], why: 'Pure location → waar alone, no preposition.' },
+    { t: 'fill', q: 'Waar kijk je ___? (naar — split question)', a: ['naar'], why: 'Split pronominal question: "Waar kijk je naar?" = What are you looking at?' },
+    { t: 'mc', q: 'Formal writing, about a laptop:', o: ['de laptop waarmee ik werk', 'de laptop met wie ik werk', 'de laptop met die ik werk'], a: 0, why: 'Thing → waarmee; met wie is only for people.' },
+    { t: 'fill', q: 'Het land ___ zij vandaan komt, is Marokko.', a: ['waar'], why: '"waar … vandaan" = where … from: waar alone before vandaan.' }
   ] },
 
 { id: 'b1_04', level: 'B1', title: 'The passive: worden & zijn',
@@ -397,13 +433,23 @@ const GRAMMAR_COURSE = {
            ['Ik werd door een vriend uitgenodigd.', 'I was invited by a friend.']] },
     { h: 'Perfect passive: zijn (no geworden)', p: 'In the perfect, Dutch drops "geworden": Het brood is gebakken (= has been baked). So "is + participle" can be a completed passive — context tells you whether it’s a state or an event.',
       ex: [['De fout is gisteren ontdekt.', 'The mistake was discovered yesterday.'],
-           ['De deur is al gesloten.', 'The door is already closed / has been closed.']] }
+           ['De deur is al gesloten.', 'The door is already closed / has been closed.']] },
+    { h: 'When natives reach for it', p: 'Use the passive when the doer is unknown, obvious or unimportant, and the action itself is the news: Mijn fiets is gestolen (who cares who did it — the bike is gone!). Typical habitats: news reports, instructions, formal letters. With an indefinite subject the sentence starts with er: Er worden hier veel huizen gebouwd. In casual speech an active sentence with ze or men often sounds more natural.',
+      ex: [['Mijn fiets is gisteren gestolen.', 'My bike was stolen yesterday.'],
+           ['Er worden hier veel appartementen gebouwd.', 'A lot of flats are being built here.']] },
+    { h: '💡 The full tense map', p: 'One frame, four tenses: het huis wordt gebouwd (is being built) · werd gebouwd (was being built) · is gebouwd (has been built) · was gebouwd (had been built). Future/modal: zal worden gebouwd, moet worden gebouwd. Drill the frame with one verb until it is automatic, then swap verbs in — pattern drills with variation beat memorising isolated sentences.',
+      ex: [['De brug werd in 1930 gebouwd en is nooit gerenoveerd.', 'The bridge was built in 1930 and has never been renovated.'],
+           ['De brief was al verstuurd toen ik het merkte.', 'The letter had already been sent when I noticed.']] }
   ],
   quiz: [
     { t: 'fill', q: 'Deze kerk ___ in 1300 gebouwd. (past)', a: ['werd'], why: 'Simple past passive → werd + participle.' },
     { t: 'mc', q: '"The email has been sent" =', o: ['De e-mail is verstuurd geworden.', 'De e-mail is verstuurd.'], a: 1, why: 'Perfect passive drops geworden: "is verstuurd".' },
     { t: 'fill', q: 'Het gras wordt elke week ___. (maaien)', a: ['gemaaid'], why: 'worden + participle: gemaaid.' },
-    { t: 'mc', q: 'The doer in a passive sentence is introduced by…', o: ['van', 'door', 'bij'], a: 1, why: '"door": Het boek werd door haar geschreven.' }
+    { t: 'mc', q: 'The doer in a passive sentence is introduced by…', o: ['van', 'door', 'bij'], a: 1, why: '"door": Het boek werd door haar geschreven.' },
+    { t: 'fill', q: '___ worden hier veel appartementen gebouwd.', a: ['er'], why: 'Indefinite subject in the passive → the sentence opens with er.' },
+    { t: 'mc', q: '"De brief was al verstuurd toen ik aankwam." The tense is…', o: ['perfect passive', 'past perfect passive', 'present passive'], a: 1, why: 'was + participle = past perfect passive: had already been sent.' },
+    { t: 'fill', q: 'De regels moeten ___ gevolgd. (infinitive of the passive auxiliary)', a: ['worden'], why: 'Modal + worden + participle: moeten worden gevolgd.' },
+    { t: 'mc', q: 'Most natural report of a theft:', o: ['Mijn fiets is gisteren gestolen.', 'Iemand heeft gisteren door iemand mijn fiets gestolen.'], a: 0, why: 'Unknown doer, the event is the news → passive.' }
   ] },
 
 { id: 'b1_05', level: 'B1', title: 'Conjunctions: two word orders',
@@ -413,13 +459,23 @@ const GRAMMAR_COURSE = {
            ['Het regent, dus nemen we de bus. / dus we nemen de bus.', 'It’s raining, so we take the bus.']] },
     { h: 'Subordinating: verb final', p: 'omdat, hoewel, terwijl, zodra, voordat, nadat, zodat, tenzij, toen… → verb to the end. Meaning pairs to watch: want/omdat (because), maar/hoewel (but/although), of = "or" ánd "whether/if".',
       ex: [['Ik weet niet of hij komt.', 'I don’t know whether he’s coming.'],
-           ['Zodra ik thuis ben, bel ik je.', 'As soon as I’m home, I’ll call you.']] }
+           ['Zodra ik thuis ben, bel ik je.', 'As soon as I’m home, I’ll call you.']] },
+    { h: '💡 Position zero', p: 'Why no inversion after maar/want/en? They sit in "position 0" — outside the sentence — so position 1 is still free: Maar (0) ik (1) blijf (2) thuis. Adverbs like daarom, toch, daarna DO fill position 1 → inversion follows: Daarom blijf ik thuis. This single insight solves the classic exam trap want vs daarom and maar vs toch. Note dus is a hybrid: both "dus we nemen de bus" (position 0) and "dus nemen we de bus" (position 1) are correct.',
+      ex: [['Hij is ziek, dus hij komt niet. / dus komt hij niet.', 'He is ill, so he is not coming. (both orders fine)'],
+           ['Ik was moe. Toch ben ik gekomen.', 'I was tired. Still, I came.']] },
+    { h: 'Pair conjunctions', p: 'B1 texts love correlative pairs: zowel … als (both … and), niet alleen … maar ook (not only … but also), of … of (either … or), noch … noch (neither … nor, formal). The verb agrees with the nearest subject in of…of / noch…noch; zowel…als usually takes a plural verb.',
+      ex: [['Ze leert niet alleen Nederlands, maar ook Frans.', 'She learns not only Dutch but also French.'],
+           ['Zowel mijn broer als mijn zus woont in Gent.', 'Both my brother and my sister live in Ghent.']] }
   ],
   quiz: [
     { t: 'mc', q: 'Ik blijf binnen, want ___.', o: ['het regent', 'het regent hard vandaag → regent het', 'regent het'], a: 0, why: 'Want = coordinating → normal V2: "want het regent".' },
     { t: 'mc', q: 'Ik blijf binnen omdat ___.', o: ['het regent', 'regent het', 'het aan het regenen'], a: 0, why: 'Omdat sends the verb to the end: "omdat het regent" — here that happens to look identical; the verb regent is final.' },
     { t: 'fill', q: 'Ik weet niet ___ zij morgen komt. (whether)', a: ['of'], why: '"Of" = whether in indirect questions.' },
-    { t: 'mc', q: '___ hij rijk is, leeft hij zuinig. (although)', o: ['Maar', 'Hoewel', 'Want'], a: 1, why: 'Hoewel = although (subordinating).' }
+    { t: 'mc', q: '___ hij rijk is, leeft hij zuinig. (although)', o: ['Maar', 'Hoewel', 'Want'], a: 1, why: 'Hoewel = although (subordinating).' },
+    { t: 'mc', q: 'After "dus" you may use…', o: ['only inversion (dus nemen we…)', 'only normal order (dus we nemen…)', 'both orders'], a: 2, why: 'Dus works as coordinator (position 0) and as adverb (position 1) — both are standard.' },
+    { t: 'mc', q: 'Ze spreekt niet alleen Engels, ___ ook Spaans.', o: ['maar', 'en', 'of'], a: 0, why: 'Correlative pair: niet alleen … maar ook.' },
+    { t: 'fill', q: 'Hij is ziek, ___ hij komt niet. (so — no inversion follows)', a: ['dus'], why: 'Dus in position 0 → normal order: "dus hij komt niet".' },
+    { t: 'mc', q: 'Which word forces inversion when it opens the sentence?', o: ['maar', 'want', 'daarom'], a: 2, why: 'Daarom is an adverb in position 1 → verb second, subject third.' }
   ] },
 
 { id: 'b1_06', level: 'B1', title: 'Indirect speech & questions',
@@ -429,13 +485,23 @@ const GRAMMAR_COURSE = {
            ['Hij vraagt of we morgen vrij zijn.', 'He asks whether we are free tomorrow.']] },
     { h: 'Question-word clauses', p: 'WH-questions keep their question word, subclause order: Ik weet niet waar hij woont. Never invert inside: NOT "waar woont hij" as a subclause.',
       ex: [['Weet jij hoe laat de winkel opengaat?', 'Do you know what time the shop opens?'],
-           ['Ik vraag me af waarom dat gebeurd is.', 'I wonder why that happened.']] }
+           ['Ik vraag me af waarom dat gebeurd is.', 'I wonder why that happened.']] },
+    { h: 'Tense: shift or keep?', p: 'After a past reporting verb, shift the tense back like in English: "Ik ben moe" → Ze zei dat ze moe was; zal → zou. But Dutch happily keeps the present when the fact is still true now: Ze zei dat ze in Gent woont (she still lives there). English forces the shift; Dutch lets you choose based on meaning — a nuance examiners love.',
+      ex: [['Ze zei dat ze zou komen.', 'She said she would come.'],
+           ['Hij zei dat hij in Antwerpen woont.', 'He said he lives in Antwerp. (still true)']] },
+    { h: 'Reporting requests & commands', p: 'A question about willingness: vragen of — Hij vroeg of ik wilde helpen. A polite request: vragen om te + infinitive — Ze vroeg me om haar te helpen. A command or advice: zeggen/moeten — De dokter zei dat ik moest rusten. Learn these three frames as chunks; they cover nearly every reported interaction at B1.',
+      ex: [['Ze vroeg me om de deur dicht te doen.', 'She asked me to close the door.'],
+           ['De leraar zei dat we stil moesten zijn.', 'The teacher said we had to be quiet.']] }
   ],
   quiz: [
     { t: 'fill', q: 'Hij zegt ___ hij ziek is.', a: ['dat'], why: 'Indirect statement → dat.' },
     { t: 'fill', q: 'Zij vraagt ___ ik morgen kan komen.', a: ['of'], why: 'Indirect yes/no question → of.' },
     { t: 'mc', q: 'Correct indirect question:', o: ['Ik weet niet waar woont hij.', 'Ik weet niet waar hij woont.'], a: 1, why: 'Subclause order: subject before verb, verb final.' },
-    { t: 'mc', q: '"Ze zei dat ze morgen ___ komen."', o: ['zal', 'zou'], a: 1, why: 'Past reporting verb → zou (tense shift).' }
+    { t: 'mc', q: '"Ze zei dat ze morgen ___ komen."', o: ['zal', 'zou'], a: 1, why: 'Past reporting verb → zou (tense shift).' },
+    { t: 'fill', q: '"Woon je hier?" → Hij vroeg ___ ik hier woonde.', a: ['of'], why: 'Reported yes/no question → of.' },
+    { t: 'fill', q: 'De leraar zei dat we stil ___ zijn. (reported command, past)', a: ['moesten'], why: 'Commands are reported with moeten: "…dat we stil moesten zijn".' },
+    { t: 'mc', q: '"Hij zei dat hij in Gent woont." This is…', o: ['wrong — must be woonde', 'fine — the fact is still true', 'only correct in Flanders'], a: 1, why: 'Dutch may keep the present tense when the reported fact still holds.' },
+    { t: 'mc', q: '"She asked me to call her" =', o: ['Ze vroeg me om haar te bellen.', 'Ze vroeg me haar bellen.', 'Ze vroeg dat ik bel haar.'], a: 0, why: 'Polite request → vragen om te + infinitive.' }
   ] },
 
 { id: 'b1_07', level: 'B1', title: 'Conditionals with zou',
@@ -445,13 +511,23 @@ const GRAMMAR_COURSE = {
            ['Zou u dat kunnen herhalen?', 'Could you repeat that, please?']] },
     { h: 'Als-sentences', p: 'Realistic: Als het regent, blijven we thuis (present). Hypothetical: Als ik rijk was, zou ik reizen (past tense in the als-clause + zou). Very common alternative: double past — Als ik rijk was, reisde ik de wereld rond.',
       ex: [['Als ik jou was, zou ik het vragen.', 'If I were you, I would ask.'],
-           ['Als we tijd hadden, zouden we langskomen.', 'If we had time, we would drop by.']] }
+           ['Als we tijd hadden, zouden we langskomen.', 'If we had time, we would drop by.']] },
+    { h: 'Regret: past hypotheticals', p: 'For things that did NOT happen, use the past perfect in the als-clause and zou(den) + hebben/zijn + infinitive — or simply a second past perfect: Als ik het had geweten, zou ik gekomen zijn / was ik gekomen. Both are standard; the double past perfect is shorter and very common in speech.',
+      ex: [['Als ik het had geweten, was ik gekomen.', 'If I had known, I would have come.'],
+           ['Als je harder had gestudeerd, zou je geslaagd zijn.', 'If you had studied harder, you would have passed.']] },
+    { h: '💡 dan & the word-order reflex', p: 'After a fronted als-clause the main clause inverts — the whole als-clause counts as position 1: Als het regent, (dan) blijven we thuis. The little dan is optional and just echoes the condition. Train the reflex: als-clause → comma → verb. Say five of your own als-sentences out loud today; producing them (retrieval practice) cements the pattern far better than rereading rules.',
+      ex: [['Als het sneeuwt, dan nemen we de trein.', 'If it snows, (then) we take the train.'],
+           ['Als je wint, krijg je een prijs.', 'If you win, you get a prize.']] }
   ],
   quiz: [
     { t: 'fill', q: 'Als ik jou ___, zou ik gaan. (zijn, past)', a: ['was'], why: 'Hypothetical als-clause takes the simple past: "Als ik jou was…".' },
     { t: 'fill', q: '___ je het raam kunnen sluiten? (polite)', a: ['zou'], why: 'Polite request: "Zou je … kunnen …?".' },
     { t: 'mc', q: '"Dat ___ fantastisch zijn!"', o: ['zal', 'zou', 'zult'], a: 1, why: 'Hypothetical → zou: "Dat zou fantastisch zijn!"' },
-    { t: 'mc', q: 'Realistic condition:', o: ['Als het sneeuwt, zouden we skiën gingen.', 'Als het sneeuwt, gaan we skiën.'], a: 1, why: 'Realistic conditions use the present in both halves.' }
+    { t: 'mc', q: 'Realistic condition:', o: ['Als het sneeuwt, zouden we skiën gingen.', 'Als het sneeuwt, gaan we skiën.'], a: 1, why: 'Realistic conditions use the present in both halves.' },
+    { t: 'fill', q: 'Als ik het had geweten, ___ ik je geholpen hebben.', a: ['zou'], why: 'Past hypothetical: zou + hebben + participle group.' },
+    { t: 'mc', q: 'Which sentence talks about something that did NOT happen?', o: ['Als ik tijd heb, kom ik.', 'Als ik tijd had gehad, was ik gekomen.'], a: 1, why: 'Past perfect in both halves = unreal past: I did not have time, so I did not come.' },
+    { t: 'fill', q: 'Als je wint, ___ je een prijs. (krijgen)', a: ['krijg'], why: 'Als-clause first → inversion in the main clause: "…, krijg je een prijs."' },
+    { t: 'mc', q: 'Very polite: "___ ik u iets mogen vragen?"', o: ['Zou', 'Zal', 'Wil'], a: 0, why: 'Zou + mogen = the politest request frame in Dutch.' }
   ] },
 
 { id: 'b1_08', level: 'B1', title: 'te + infinitive constructions',
@@ -461,13 +537,23 @@ const GRAMMAR_COURSE = {
            ['Je hoeft niet te wachten.', 'You don’t need to wait.']] },
     { h: 'Without te / zonder te', p: 'No te after modals, laten, gaan, komen, blijven, zien, horen: Ik laat mijn fiets repareren. Ik zie hem lopen. Fixed: zonder te (without -ing), in plaats van te (instead of -ing).',
       ex: [['Hij vertrok zonder iets te zeggen.', 'He left without saying anything.'],
-           ['Ik hoor de buren zingen.', 'I hear the neighbours singing.']] }
+           ['Ik hoor de buren zingen.', 'I hear the neighbours singing.']] },
+    { h: 'door te = by …-ing', p: 'Door te + infinitive says HOW something is achieved: Je leert een taal door veel te luisteren (by listening a lot). Same family: zonder te (without …-ing), in plaats van te (instead of …-ing), om te (in order to). These four preposition + te frames carry a huge share of B1 writing tasks — learn them as one set.',
+      ex: [['Je wordt beter door elke dag te oefenen.', 'You get better by practising every day.'],
+           ['Hij nam de auto in plaats van te fietsen.', 'He took the car instead of cycling.']] },
+    { h: '💡 Chunk strategy', p: 'Do not memorise a rule list — memorise chunks: proberen te, vergeten te, beloven te, weigeren te, besluiten te, hopen te, hoeven te (only with negation!). Native speakers store these as single units (collocational chunking), which is why they never hesitate. Put each chunk on a card with your own example sentence and let the app’s spaced repetition do the scheduling.',
+      ex: [['Ik probeer elke dag Nederlands te spreken.', 'I try to speak Dutch every day.'],
+           ['Ze beloofde op tijd te komen.', 'She promised to come on time.']] }
   ],
   quiz: [
     { t: 'mc', q: 'Ik probeer elke dag ___ .', o: ['sporten', 'te sporten'], a: 1, why: 'proberen + te + infinitive.' },
     { t: 'mc', q: 'Ik laat mijn haar ___ .', o: ['knippen', 'te knippen'], a: 0, why: 'laten + bare infinitive: "laten knippen".' },
     { t: 'fill', q: 'Hij ging weg zonder gedag ___ zeggen.', a: ['te'], why: 'zonder te + infinitive.' },
-    { t: 'mc', q: 'With separable "opgeven":', o: ['Ze belooft niet op te geven.', 'Ze belooft niet te opgeven.'], a: 0, why: 'Te goes inside separable verbs: op te geven.' }
+    { t: 'mc', q: 'With separable "opgeven":', o: ['Ze belooft niet op te geven.', 'Ze belooft niet te opgeven.'], a: 0, why: 'Te goes inside separable verbs: op te geven.' },
+    { t: 'fill', q: 'Je wordt beter ___ elke dag te oefenen. (by)', a: ['door'], why: 'door te + infinitive = by …-ing.' },
+    { t: 'mc', q: 'Hij nam de lift in plaats van ___ .', o: ['de trap te nemen', 'de trap nemen'], a: 0, why: 'in plaats van te + infinitive.' },
+    { t: 'mc', q: 'Ik hoef vandaag niet ___ .', o: ['werken', 'te werken'], a: 1, why: 'hoeven always takes te: niet hoeven te werken.' },
+    { t: 'fill', q: 'Zij vergat de deur ___ sluiten.', a: ['te'], why: 'vergeten + te + infinitive.' }
   ] },
 
 { id: 'b1_09', level: 'B1', title: 'Pronominal adverbs: eraan, ermee, waarvan',
@@ -477,13 +563,23 @@ const GRAMMAR_COURSE = {
            ['Daar heb ik geen zin in.', 'I don’t feel like that.']] },
     { h: 'Splitting', p: 'The parts usually split around other material: Ik denk er vaak aan. Waar ben je mee bezig? The er-part comes early, the preposition lands near the end.',
       ex: [['Ik kijk er echt naar uit.', 'I’m really looking forward to it.'],
-           ['Waar ben je bang voor?', 'What are you afraid of?']] }
+           ['Waar ben je bang voor?', 'What are you afraid of?']] },
+    { h: '⚠️ People keep their pronoun', p: 'Er/daar/waar + preposition is for THINGS and ideas only. For people, keep preposition + pronoun: Ik denk aan hem (not eraan), Ik ben trots op haar (not erop). Mixed cases (a team, a company) can go either way, but when in doubt about a human: aan hem, op haar, met hen.',
+      ex: [['Ik denk vaak aan haar.', 'I often think of her.'],
+           ['Ik werk graag met hem samen.', 'I like working together with him.']] },
+    { h: 'The full ladder: er / daar / hier + ergens / nergens / overal', p: 'Unstressed er, pointing daar (that), nearby hier (this): Daar hou ik niet van (THAT I don’t like). The indefinites join the same system: ergens/nergens/overal + preposition — Ik ben nergens bang voor (I fear nothing), Zij weet overal iets van (she knows something about everything).',
+      ex: [['Wil je suiker? — Nee, daar hou ik niet van.', 'Sugar? — No, I don’t like that.'],
+           ['Ik ben nergens bang voor.', 'I’m not afraid of anything.']] }
   ],
   quiz: [
     { t: 'mc', q: '"I agree with it" =', o: ['Ik ben akkoord met het.', 'Ik ben ermee akkoord.'], a: 1, why: 'met + het → ermee.' },
     { t: 'fill', q: 'Ik kijk ___ naar uit. (split, unstressed)', a: ['er'], why: 'Split pronominal adverb: "Ik kijk er … naar uit."' },
     { t: 'fill', q: '___ denk je aan? (question, split)', a: ['waar'], why: '"Waar denk je aan?" = What are you thinking about?' },
-    { t: 'mc', q: 'Stressed variant of "eraan" pointing to something just mentioned:', o: ['hieraan/daaraan', 'eraan blijft', 'aan dat'], a: 0, why: 'Stressed: daaraan (that) / hieraan (this).' }
+    { t: 'mc', q: 'Stressed variant of "eraan" pointing to something just mentioned:', o: ['hieraan/daaraan', 'eraan blijft', 'aan dat'], a: 0, why: 'Stressed: daaraan (that) / hieraan (this).' },
+    { t: 'mc', q: '"I often think of her" =', o: ['Ik denk er vaak aan.', 'Ik denk vaak aan haar.'], a: 1, why: 'People keep preposition + pronoun: aan haar, never eraan.' },
+    { t: 'fill', q: 'Ik ben ___ bang voor — echt helemaal niets! (afraid of nothing)', a: ['nergens'], why: 'nergens + preposition: "Ik ben nergens bang voor."' },
+    { t: 'mc', q: 'Wil je melk in je thee? — Nee, ___ hou ik niet van.', o: ['daar', 'er', 'het'], a: 0, why: 'Stressed, pointing back at the idea → daar: "Daar hou ik niet van."' },
+    { t: 'fill', q: 'Ik ben er al de hele dag ___ bezig. (met)', a: ['mee'], why: 'Split er + met → er … mee: "Ik ben er … mee bezig."' }
   ] },
 
 { id: 'b1_10', level: 'B1', title: 'Fixed verb + preposition pairs',
@@ -493,13 +589,210 @@ const GRAMMAR_COURSE = {
            ['Zij lijkt op haar moeder.', 'She resembles her mother.']] },
     { h: 'More pairs + usage', p: 'zich verheugen op (look forward to), afhangen van (depend on), deelnemen aan (participate in), twijfelen aan (doubt), genieten van (enjoy). Combine with er/waar: Waar wacht je op? Ik geniet ervan.',
       ex: [['Dat hangt van het weer af.', 'That depends on the weather.'],
-           ['Ik neem deel aan de cursus.', 'I take part in the course.']] }
+           ['Ik neem deel aan de cursus.', 'I take part in the course.']] },
+    { h: 'Adjective + preposition', p: 'Adjectives pick fixed prepositions too: trots op (proud of), bang voor (afraid of), blij met (happy with), tevreden over/met (satisfied with), geïnteresseerd in, goed/slecht in (good/bad at), gek op (crazy about), jaloers op, verantwoordelijk voor. Notice the mismatches with English: good AT = goed IN, afraid OF = bang VOOR.',
+      ex: [['Ik ben trots op mijn dochter.', 'I am proud of my daughter.'],
+           ['Hij is goed in wiskunde, maar slecht in talen.', 'He is good at maths but bad at languages.']] },
+    { h: '💡 How to actually memorise these', p: 'Cognitive science, applied: 1) Chunk — store "wachten op" as ONE word, never as verb + separate preposition. 2) Personalise — write your own true sentence for each pair (self-generated examples stick far better). 3) Test, don’t reread — retrieval practice beats reviewing lists (the testing effect). 4) Space it — add each pair as a card in the Anki tab and let FSRS schedule the review right before you would forget (the spacing effect). 5) Group by preposition: the op-family (wachten op, trots op, gek op, jaloers op) becomes one mental drawer.',
+      ex: [['Waar ben je gek op? — Ik ben gek op frieten.', 'What are you crazy about? — I love fries.'],
+           ['Ik ben tevreden over mijn vooruitgang.', 'I am satisfied with my progress.']] }
   ],
   quiz: [
     { t: 'fill', q: 'Ik wacht ___ de trein.', a: ['op'], why: 'wachten op = to wait for.' },
     { t: 'fill', q: 'Zij houdt ___ chocolade.', a: ['van'], why: 'houden van = to love.' },
     { t: 'fill', q: 'Dat hangt ___ jou af.', a: ['van'], why: 'afhangen van = to depend on.' },
-    { t: 'fill', q: 'Hij lijkt ___ zijn vader.', a: ['op'], why: 'lijken op = to resemble.' }
+    { t: 'fill', q: 'Hij lijkt ___ zijn vader.', a: ['op'], why: 'lijken op = to resemble.' },
+    { t: 'fill', q: 'Ik ben trots ___ jou.', a: ['op'], why: 'trots op = proud of.' },
+    { t: 'fill', q: 'Zij is geïnteresseerd ___ geschiedenis.', a: ['in'], why: 'geïnteresseerd in = interested in.' },
+    { t: 'fill', q: 'Hij is bang ___ spinnen.', a: ['voor'], why: 'bang voor = afraid of.' },
+    { t: 'fill', q: 'Mijn zoon is heel goed ___ wiskunde. (at)', a: ['in'], why: 'goed in = good at — Dutch uses in, not "at".' }
+  ] },
+
+{ id: 'b1_11', level: 'B1', title: 'Word order: the middle field (Time–Manner–Place)',
+  read: [
+    { h: 'TeMPo: Time – Manner – Place', p: 'Between the verb in position 2 and the verbs at the end lies the "middle field". Its default order is Time, then Manner, then Place: Ik ga morgen (T) met de trein (M) naar Brussel (P). English does the opposite (place before time), which produces the number-one interference error: "Ik ga naar school morgen" ✗. Memory hook: Dutch keeps the TeMPo.',
+      ex: [['Ik ga morgen met de trein naar Brussel.', 'I am going to Brussels by train tomorrow.'],
+           ['Wij eten vanavond gezellig in de keuken.', 'Tonight we are having a cosy dinner in the kitchen.']] },
+    { h: 'Pronouns race to the front', p: 'Unstressed object pronouns (me, je, het, hem, haar, ze) and er come as early as possible — right after the finite verb (or after the subject in inversion): Ik heb het gisteren gekocht. Ik zie hem vaak in de stad. Full nouns follow later: Ik heb gisteren een boek gekocht. Rule of thumb: known & light information early, new & heavy information late.',
+      ex: [['Ik heb het gisteren gekocht.', 'I bought it yesterday.'],
+           ['Ik heb haar vorige week in Gent gezien.', 'I saw her in Ghent last week.']] },
+    { h: '⚠️ Interference errors', p: 'Three to unlearn: 1) time after place — "Ik was in Brussel gisteren" ✗ → Ik was gisteren in Brussel ✓; 2) pronoun left late — "Ik heb gisteren het gekocht" ✗ → Ik heb het gisteren gekocht ✓; 3) breaking the verbal bracket — "Ik heb gekocht een boek" ✗ → the participle stays at the end. 💡 Contrastive noticing: your brain only fixes word order once it consciously registers the difference — read a Dutch sentence, predict the order, then check.',
+      ex: [['Ik was gisteren met vrienden in Antwerpen.', 'I was in Antwerp with friends yesterday.'],
+           ['Zij heeft het me nooit verteld.', 'She never told me (it).']] }
+  ],
+  quiz: [
+    { t: 'mc', q: 'Pick the natural sentence:', o: ['Ik ga morgen met de fiets naar het werk.', 'Ik ga naar het werk morgen met de fiets.', 'Ik ga met de fiets morgen naar het werk.'], a: 0, why: 'Time – Manner – Place: morgen · met de fiets · naar het werk.' },
+    { t: 'mc', q: 'Where does "haar" go? ', o: ['Ik heb gisteren haar gezien.', 'Ik heb haar gisteren gezien.'], a: 1, why: 'Unstressed pronouns come right after the finite verb, before time.' },
+    { t: 'mc', q: 'The standard middle-field order is…', o: ['place – manner – time', 'time – manner – place', 'manner – time – place'], a: 1, why: 'TeMPo: Time, Manner, Place.' },
+    { t: 'mc', q: 'Zij reist ___ naar Spanje.', o: ['volgende week met het vliegtuig', 'met het vliegtuig volgende week'], a: 0, why: 'Time (volgende week) before manner (met het vliegtuig).' },
+    { t: 'mc', q: 'Which sentence is wrong?', o: ['Ik zie hem vaak in de stad.', 'Ik zie vaak hem in de stad.'], a: 1, why: 'The unstressed pronoun hem must come before the adverb vaak.' },
+    { t: 'fill', q: 'Wij eten vanavond ___ in de keuken. (manner slot: cosily)', a: ['gezellig'], why: 'Manner sits between time (vanavond) and place (in de keuken).' },
+    { t: 'fill', q: 'Hij gaat elke dag ___ de bus naar school. (preposition of manner)', a: ['met'], why: 'Transport = met: met de bus, met de trein, met de fiets.' },
+    { t: 'mc', q: '"I was in Ghent yesterday" =', o: ['Ik was in Gent gisteren.', 'Ik was gisteren in Gent.'], a: 1, why: 'Time before place — English order is the trap.' }
+  ] },
+
+{ id: 'b1_12', level: 'B1', title: 'al, nog, pas, net & niet meer',
+  read: [
+    { h: 'al & nog niet', p: 'Al = already; its negative partner is nog niet (not yet): Ben je al klaar? — Nee, nog niet. Crucial bonus use: al + duration with the PRESENT tense for something still going on: Ik woon hier al drie jaar (I have lived here for three years). Never translate that English perfect literally.',
+      ex: [['Heb je al gegeten? — Nee, nog niet.', 'Have you eaten yet? — No, not yet.'],
+           ['Ik leer al zes maanden Nederlands.', 'I have been learning Dutch for six months.']] },
+    { h: 'nog, niet meer, geen … meer', p: 'Nog = still: Woon je nog in Gent? Its negative is niet meer (not anymore): Ik rook niet meer. With a noun the negation wraps around meer: geen geld meer, geen zin meer. The pairs to drill: al ↔ nog niet, nog ↔ niet meer / geen … meer.',
+      ex: [['Zij woont hier niet meer.', 'She no longer lives here.'],
+           ['Ik heb geen geld meer.', 'I have no money left.']] },
+    { h: 'pas & net', p: 'Pas = only/not until, later than expected: De winkel gaat pas om tien uur open (not until ten). Ik ben pas begonnen (I have only just started). Net = just now, moments ago: Hij is net vertrokken. 🦁 In Flanders you will constantly hear juist for net: "Hij is juist weg."',
+      ex: [['De film begint pas om negen uur.', 'The film does not start until nine.'],
+           ['Ze is net thuisgekomen.', 'She has just come home.']] }
+  ],
+  quiz: [
+    { t: 'fill', q: 'Ben je al klaar? — Nee, ___ ___. (two words)', a: ['nog niet'], why: 'The negative of al is nog niet: not yet.' },
+    { t: 'fill', q: 'Ik heb ___ geld meer.', a: ['geen'], why: 'Noun negation with meer: geen geld meer.' },
+    { t: 'mc', q: '"Zij woont hier niet meer" means…', o: ['She does not live here yet', 'She no longer lives here', 'She still lives here'], a: 1, why: 'niet meer = not anymore.' },
+    { t: 'mc', q: '"De film begint pas om 21 uur" means the film starts…', o: ['already at 9 pm', 'not until 9 pm', 'exactly at 9 pm'], a: 1, why: 'pas = later than you might expect: not until nine.' },
+    { t: 'fill', q: 'De trein is ___ vertrokken — twee minuten geleden! (just)', a: ['net', 'juist'], why: 'net = just now (🦁 Flemish speech often uses juist).' },
+    { t: 'mc', q: '"I have been living here for two years" =', o: ['Ik woon hier al twee jaar.', 'Ik heb hier voor twee jaar gewoond.', 'Ik woon hier voor twee jaar.'], a: 0, why: 'Ongoing duration → present tense + al: "Ik woon hier al twee jaar."' },
+    { t: 'fill', q: 'Werk je ___ bij die bakkerij? (still)', a: ['nog'], why: 'nog = still: "Werk je nog…?"' },
+    { t: 'mc', q: 'The opposite pair of "al" is…', o: ['nog niet', 'niet meer', 'geen'], a: 0, why: 'al (already) ↔ nog niet (not yet); nog (still) ↔ niet meer (not anymore).' }
+  ] },
+
+{ id: 'b1_13', level: 'B1', title: 'Cause & contrast: omdat, doordat, vanwege, hoewel…',
+  read: [
+    { h: 'Three ways to say because', p: 'Want (coordinating, V2 stays), omdat (subclause, gives a reason/motive — answers waarom?), doordat (subclause, pure cause, no one chose it): Het feest is afgelast doordat het stormde. In practice omdat is winning ground from doordat, but exams still reward the distinction: intention → omdat, mechanism → doordat.',
+      ex: [['Ik blijf thuis omdat ik moe ben.', 'I am staying home because I am tired.'],
+           ['De trein had vertraging doordat er een boom op het spoor lag.', 'The train was delayed because a tree lay on the track.']] },
+    { h: 'With a noun: door, vanwege, dankzij', p: 'No verb needed: door de storm (cause), vanwege het weer (because of, neutral), dankzij jouw hulp (thanks to — positive). And as sentence adverbs with inversion: daarom (reason, chosen) vs daardoor (cause, mechanical): Ik wil slagen; daarom studeer ik. Het regende; daardoor was de weg glad.',
+      ex: [['Dankzij jouw hulp is het gelukt.', 'Thanks to your help it worked out.'],
+           ['Vanwege de staking rijden er geen treinen.', 'Because of the strike no trains are running.']] },
+    { h: 'Contrast: hoewel / ondanks / toch', p: 'Same meaning, three grammars: hoewel + full clause, verb final (Hoewel het regende, gingen we wandelen); ondanks + noun only (Ondanks de regen gingen we wandelen); toch = adverb in position 1 with inversion (Het regende. Toch gingen we wandelen). Choose by what follows: clause → hoewel, noun → ondanks, new sentence → toch.',
+      ex: [['Hoewel hij weinig slaapt, is hij altijd vrolijk.', 'Although he sleeps little, he is always cheerful.'],
+           ['Ondanks het slechte weer ging de match door.', 'Despite the bad weather the match went ahead.']] }
+  ],
+  quiz: [
+    { t: 'mc', q: 'Ik blijf thuis ___ ik moe ben.', o: ['want', 'omdat'], a: 1, why: '"ik moe ben" is verb-final = a subclause → omdat (want would keep V2: "want ik ben moe").' },
+    { t: 'fill', q: '___ jouw hulp is het gelukt! (thanks to)', a: ['dankzij'], why: 'dankzij + noun = thanks to (positive cause).' },
+    { t: 'mc', q: '___ het slechte weer ging de wedstrijd door.', o: ['Hoewel', 'Ondanks', 'Toch'], a: 1, why: 'A noun follows → ondanks. Hoewel needs a clause, toch starts its own sentence.' },
+    { t: 'mc', q: 'Hij is ziek. ___ komt hij werken.', o: ['Toch', 'Ondanks', 'Hoewel'], a: 0, why: 'New sentence, adverb + inversion → toch = nevertheless.' },
+    { t: 'fill', q: 'De trein had vertraging ___ een ongeval. (because of — one word)', a: ['vanwege', 'door'], why: 'vanwege/door + noun = because of.' },
+    { t: 'mc', q: 'Ik wil het examen halen; ___ studeer ik elke dag.', o: ['daardoor', 'daarom'], a: 1, why: 'A chosen reason/goal → daarom; daardoor is for mechanical causes.' },
+    { t: 'mc', q: '___ hij weinig verdient, is hij gelukkig. (although)', o: ['Hoewel', 'Omdat', 'Doordat'], a: 0, why: 'hoewel = although, verb-final clause follows.' },
+    { t: 'mc', q: 'After "ondanks" you can only put…', o: ['a full clause', 'a noun (group)', 'an infinitive with te'], a: 1, why: 'ondanks is a preposition: ondanks de regen. For a clause use hoewel.' }
+  ] },
+
+{ id: 'b1_14', level: 'B1', title: 'laten: have it done, allow, suggest',
+  read: [
+    { h: 'Have something done', p: 'Laten + infinitive = you don’t do it yourself: Ik laat mijn haar knippen (I have my hair cut). Ik laat mijn fiets repareren. In the perfect, laten joins the double-infinitive club: Ik heb mijn haar laten knippen (never "gelaten").',
+      ex: [['Wij laten ons huis schilderen.', 'We are having our house painted.'],
+           ['Ik heb mijn telefoon laten repareren.', 'I had my phone repaired.']] },
+    { h: 'Allow, leave & fixed chunks', p: 'Laten also means letting/allowing: Ze laten de kinderen buiten spelen. And it lives in must-know chunks: iets laten vallen (to drop), iemand iets laten weten (to let someone know), iets laten zien (to show), iemand met rust laten (to leave alone), Laat maar! (never mind).',
+      ex: [['Laat me even weten of je komt.', 'Let me know if you are coming.'],
+           ['Hij liet zijn glas vallen.', 'He dropped his glass.']] },
+    { h: 'Suggestions: laten we', p: 'First-person suggestions start with laten we + infinitive at the end: Laten we beginnen! Laten we vanavond samen koken! 🦁 In Flanders you will just as often hear "Laat ons beginnen!" — same meaning, typically Belgian; both are fine in speech, laten we is the safest in writing.',
+      ex: [['Laten we een pauze nemen.', 'Let’s take a break.'],
+           ['🦁 Laat ons eerlijk zijn…', 'Let’s be honest… (typically Belgian)']] }
+  ],
+  quiz: [
+    { t: 'mc', q: '"I have my bike repaired" =', o: ['Ik repareer mijn fiets.', 'Ik laat mijn fiets repareren.'], a: 1, why: 'laten + infinitive = someone else does it for you.' },
+    { t: 'fill', q: '___ we vanavond samen koken! (suggestion)', a: ['laten'], why: 'Suggestion frame: "Laten we … koken!"' },
+    { t: 'fill', q: 'Kun je me ___ weten of je komt?', a: ['laten'], why: 'Chunk: iemand iets laten weten = to let someone know.' },
+    { t: 'mc', q: 'Perfect tense: Ik heb mijn haar ___ .', o: ['laten knippen', 'gelaten knippen', 'laten geknipt'], a: 0, why: 'Double infinitive: heb laten knippen — no participle.' },
+    { t: 'fill', q: 'Ze ___ hun zoon alleen naar school gaan. (allow, present)', a: ['laten'], why: 'laten = to let/allow: "Ze laten hun zoon … gaan."' },
+    { t: 'mc', q: '"Laat maar!" means…', o: ['Never mind / don’t bother', 'Hurry up!', 'Watch out!'], a: 0, why: 'Fixed chunk: Laat maar = forget it, never mind.' },
+    { t: 'fill', q: 'Oeps! Hij liet zijn telefoon ___ . (fall)', a: ['vallen'], why: 'Chunk: iets laten vallen = to drop something.' },
+    { t: 'mc', q: '🦁 The typically Belgian suggestion form is…', o: ['Laat ons gaan!', 'Laten wij gegaan!', 'Wij laten gaan!'], a: 0, why: '"Laat ons + infinitive" is the common Flemish variant of "Laten we…".' }
+  ] },
+
+{ id: 'b1_15', level: 'B1', title: 'Time prepositions: sinds, geleden, over, binnen, tijdens…',
+  read: [
+    { h: 'Since & for', p: 'Sinds + starting point: sinds 2020, sinds januari, sinds de verhuizing. Al + duration: al drie jaar. Both combine with the PRESENT tense when it is still going on: Ik werk hier sinds maart / al vier maanden. ⚠️ Never "voor drie jaar" for ongoing duration — that is the classic English calque.',
+      ex: [['Ik woon hier sinds 2019.', 'I have lived here since 2019.'],
+           ['Wij kennen elkaar al tien jaar.', 'We have known each other for ten years.']] },
+    { h: 'Ago, in, within', p: 'Geleden comes AFTER the time phrase: drie jaar geleden (three years ago). Over + time = that much time from now: De trein vertrekt over tien minuten. Binnen + time = within a deadline: Antwoord binnen vijf dagen. Contrast: over een week (in a week’s time) vs binnen een week (before the week is over).',
+      ex: [['We zijn twee jaar geleden verhuisd.', 'We moved two years ago.'],
+           ['De vergadering begint over een kwartier.', 'The meeting starts in fifteen minutes.']] },
+    { h: 'During, until, from', p: 'Tijdens + noun (tijdens de les) vs terwijl + clause (terwijl ik les had). Tot = until: tot zes uur; with a clause: tot(dat) de regen stopt. Vanaf = from/starting: vanaf maandag. Range: van negen tot zes. These preposition/conjunction twins (tijdens/terwijl, tot/totdat, door/doordat) all follow the same logic: noun → preposition, clause → conjunction.',
+      ex: [['Tijdens de vergadering mag je niet bellen.', 'You may not phone during the meeting.'],
+           ['De winkel is open van negen tot zes.', 'The shop is open from nine to six.']] }
+  ],
+  quiz: [
+    { t: 'fill', q: 'Ik woon hier ___ 2019. (since)', a: ['sinds'], why: 'sinds + starting point, present tense.' },
+    { t: 'fill', q: 'Wij zijn twee jaar ___ verhuisd. (ago)', a: ['geleden'], why: 'geleden follows the time phrase: twee jaar geleden.' },
+    { t: 'mc', q: '"The train leaves in ten minutes" =', o: ['De trein vertrekt binnen tien minuten.', 'De trein vertrekt over tien minuten.', 'De trein vertrekt sinds tien minuten.'], a: 1, why: 'A point in the future measured from now → over.' },
+    { t: 'mc', q: 'Je moet dit formulier ___ vijf dagen opsturen. (deadline)', o: ['over', 'binnen', 'sinds'], a: 1, why: 'Deadline = within → binnen vijf dagen.' },
+    { t: 'mc', q: '___ de vergadering mag je niet bellen.', o: ['Terwijl', 'Tijdens', 'Totdat'], a: 1, why: 'A noun follows → tijdens; terwijl needs a clause.' },
+    { t: 'mc', q: 'Correct sentence:', o: ['Ik studeer Nederlands voor zes maanden.', 'Ik studeer al zes maanden Nederlands.'], a: 1, why: 'Ongoing duration → al + present tense, never voor.' },
+    { t: 'fill', q: 'We wachten ___ de regen stopt. (until + clause)', a: ['totdat', 'tot'], why: 'Clause follows → tot(dat): "totdat de regen stopt".' },
+    { t: 'fill', q: 'De winkel is open van negen ___ zes.', a: ['tot'], why: 'Range: van … tot …' }
+  ] },
+
+{ id: 'b1_16', level: 'B1', title: 'iets leuks, iedereen, elk, alle & wat voor',
+  read: [
+    { h: 'iets/niets + adjective-s', p: 'After iets, niets, wat, veel and weinig the adjective takes -s: iets lekkers, niets bijzonders, wat nieuws, veel moois. (Adjectives already ending in -s stay put: iets anders.) This tiny -s is a favourite exam point because English has nothing like it.',
+      ex: [['Wil je iets lekkers bij de koffie?', 'Would you like something tasty with the coffee?'],
+           ['Er is niets bijzonders gebeurd.', 'Nothing special happened.']] },
+    { h: 'People: iemand, niemand, iedereen', p: 'Iemand (someone), niemand (nobody), iedereen (everyone) — all take a SINGULAR verb: Iedereen is welkom. Niemand weet het. Combine with anders: iemand anders (someone else). Alles (everything) is also singular: Alles is klaar.',
+      ex: [['Iedereen is welkom op het feest.', 'Everyone is welcome at the party.'],
+           ['Niemand heeft iets gezien.', 'Nobody saw anything.']] },
+    { h: 'elk/ieder, alle, sommige, allemaal', p: 'Elke/iedere + singular (elke dag, ieder kind); alle + plural (alle kinderen); sommige/enkele + plural (some/a few). Allemaal comes AFTER the word it belongs to: De koekjes zijn allemaal op. Wij gaan allemaal mee.',
+      ex: [['Elk kind krijgt een cadeautje.', 'Each child gets a little present.'],
+           ['De studenten waren allemaal geslaagd.', 'The students had all passed.']] },
+    { h: 'wat voor (een)?', p: 'Wat voor (een) asks about the KIND of thing: Wat voor muziek luister je graag? Wat voor een auto heb je? Welk(e) asks to choose from a known set: Welke film kies je (of these three)? Type → wat voor; choice from a set → welke.',
+      ex: [['Wat voor werk doe je?', 'What kind of work do you do?'],
+           ['Welke jas is van jou — de blauwe of de zwarte?', 'Which coat is yours — the blue or the black one?']] }
+  ],
+  quiz: [
+    { t: 'fill', q: 'Wil je iets ___ drinken? (lekker)', a: ['lekkers'], why: 'After iets the adjective takes -s: iets lekkers.' },
+    { t: 'fill', q: 'Ik heb niets ___ te melden. (bijzonder)', a: ['bijzonders'], why: 'niets + adjective-s: niets bijzonders.' },
+    { t: 'mc', q: 'Iedereen ___ welkom.', o: ['is', 'zijn'], a: 0, why: 'iedereen takes a singular verb.' },
+    { t: 'mc', q: '___ kind krijgt een cadeautje. (each)', o: ['Alle', 'Elk', 'Sommige'], a: 1, why: 'elk + singular het-word: elk kind (alle needs a plural).' },
+    { t: 'mc', q: 'De studenten waren ___ geslaagd. (all)', o: ['allemaal', 'alle', 'elk'], a: 0, why: 'allemaal follows the subject: "De studenten waren allemaal geslaagd."' },
+    { t: 'mc', q: 'You see three coats and ask which one: "___ jas is van jou?"', o: ['Wat voor', 'Welke'], a: 1, why: 'Choice from a visible set → welke.' },
+    { t: 'mc', q: '"___ muziek luister je graag?" (what kind of)', o: ['Welke', 'Wat voor'], a: 1, why: 'Asking about a type/kind → wat voor.' },
+    { t: 'fill', q: 'Er is ___ aan de deur. (someone)', a: ['iemand'], why: 'iemand = someone: "Er is iemand aan de deur."' }
+  ] },
+
+{ id: 'b1_17', level: 'B1', title: 'Comparison II: hoe…hoe, steeds, net zo…als',
+  read: [
+    { h: 'hoe … hoe … & steeds', p: 'Growing together: Hoe meer je oefent, hoe beter je wordt (the more…, the better…) — both halves take subclause order (verb final). Gradual change: steeds + comparative: De dagen worden steeds langer (longer and longer). Also: almaar langer, langer en langer.',
+      ex: [['Hoe meer je leest, hoe groter je woordenschat wordt.', 'The more you read, the bigger your vocabulary gets.'],
+           ['Het wordt steeds kouder.', 'It keeps getting colder.']] },
+    { h: 'Equality: net zo … als', p: 'Equal degree: net zo groot als / even groot als (just as big as). The same + noun: dezelfde (de-words & plural) / hetzelfde (het-words): dezelfde auto, hetzelfde huis. As a pronoun always hetzelfde: Wij willen hetzelfde.',
+      ex: [['Gent is net zo mooi als Brugge.', 'Ghent is just as beautiful as Bruges.'],
+           ['Wij hebben dezelfde leraar.', 'We have the same teacher.']] },
+    { h: 'Superlative in action + ⚠️ dan/als', p: 'Eén van de + superlative + PLURAL: één van de mooiste steden van België. Superlative as adverb takes het: Zij loopt het snelst. ⚠️ Standard comparative uses dan: groter dan ik. In speech (🦁 very much in Flanders too) you will hear "groter als" — understand it, but write dan: exams mark als wrong here.',
+      ex: [['Antwerpen is één van de grootste steden van België.', 'Antwerp is one of the biggest cities in Belgium.'],
+           ['Zij zingt het mooist van iedereen.', 'She sings the most beautifully of all.']] }
+  ],
+  quiz: [
+    { t: 'fill', q: 'Hoe meer je leest, hoe ___ je woordenschat wordt. (groot)', a: ['groter'], why: 'hoe + comparative in both halves: hoe meer …, hoe groter …' },
+    { t: 'fill', q: 'Het wordt ___ kouder. (increasingly)', a: ['steeds'], why: 'steeds + comparative = more and more.' },
+    { t: 'mc', q: 'Gent is ___ mooi als Brugge.', o: ['net zo', 'meer', 'steeds'], a: 0, why: 'Equality: net zo + adjective + als.' },
+    { t: 'mc', q: 'Standard written Dutch:', o: ['Hij is groter als ik.', 'Hij is groter dan ik.'], a: 1, why: 'Comparative + dan is the standard; als is spoken/substandard here.' },
+    { t: 'fill', q: 'Antwerpen is één van de ___ steden van België. (groot)', a: ['grootste'], why: 'één van de + superlative + plural noun.' },
+    { t: 'mc', q: 'Wij hebben ___ auto als jullie. (the same — de auto)', o: ['dezelfde', 'hetzelfde'], a: 0, why: 'de auto → dezelfde; hetzelfde is for het-words.' },
+    { t: 'mc', q: 'Zij loopt ___ snelst van de klas.', o: ['de', 'het', 'een'], a: 1, why: 'Superlative as adverb → het: het snelst.' },
+    { t: 'mc', q: '"Hoe eerder, hoe beter" means…', o: ['the sooner the better', 'how early is it?', 'always earlier'], a: 0, why: 'Fixed hoe…hoe… chunk: the sooner, the better.' }
+  ] },
+
+{ id: 'b1_18', level: 'B1', title: 'Perfect tense: hebben or zijn?',
+  read: [
+    { h: 'The zijn-club', p: 'Zijn goes with movement to a destination and change of state: gaan, komen, vertrekken, aankomen, vallen, worden, blijven, beginnen, stoppen, gebeuren, lukken, sterven, trouwen, verhuizen — plus zijn itself (ik ben geweest). Everything else defaults to hebben. Learn the club as a story: you go, arrive, fall, change, stay, and in the end… you have been.',
+      ex: [['Zij is vorig jaar naar Gent verhuisd.', 'She moved to Ghent last year.'],
+           ['Wat is er gebeurd?', 'What happened?']] },
+    { h: 'Motion verbs: both!', p: 'Fietsen, lopen, rijden, zwemmen, wandelen take BOTH auxiliaries — meaning decides. Destination mentioned → zijn: Ik ben naar huis gefietst. Just the activity/duration → hebben: Ik heb twee uur gefietst. Quick test: is there a "naar …" (or another endpoint) in the sentence? Then zijn.',
+      ex: [['Ik ben naar het station gewandeld.', 'I walked to the station.'],
+           ['Ik heb twee uur gewandeld.', 'I walked for two hours.']] },
+    { h: 'Meaning switchers: vergeten & co', p: 'Some verbs switch auxiliary with meaning. Vergeten: Ik ben je naam vergeten (it slipped from memory) / Ik ben mijn sleutels vergeten (left them behind) — but Ik heb vergeten de deur te sluiten (neglected to DO something) prefers hebben. Verliezen always takes hebben: Ik heb mijn sleutels verloren. When unsure, ask: state change (zijn) or action (hebben)?',
+      ex: [['Ik ben je naam even vergeten, sorry!', 'I have forgotten your name for a moment, sorry!'],
+           ['Ik heb vergeten brood te kopen.', 'I forgot to buy bread.']] }
+  ],
+  quiz: [
+    { t: 'mc', q: 'Ik ___ twee uur gewandeld.', o: ['heb', 'ben'], a: 0, why: 'Only duration, no destination → hebben.' },
+    { t: 'mc', q: 'Ik ___ naar het station gewandeld.', o: ['heb', 'ben'], a: 1, why: 'Destination (naar het station) → zijn.' },
+    { t: 'fill', q: 'Zij ___ vorig jaar naar Gent verhuisd.', a: ['is'], why: 'verhuizen = change of place/state → zijn.' },
+    { t: 'fill', q: 'Het concert ___ om middernacht gestopt.', a: ['is'], why: 'stoppen (come to an end) → zijn: het concert is gestopt.' },
+    { t: 'mc', q: 'Wat ___ er gebeurd?', o: ['is', 'heeft'], a: 0, why: 'gebeuren always takes zijn: Wat is er gebeurd?' },
+    { t: 'mc', q: 'Ik ___ vergeten de deur te sluiten.', o: ['ben', 'heb'], a: 1, why: 'Forgetting to DO something → hebben: heb vergeten te…' },
+    { t: 'mc', q: 'Ik ___ je naam vergeten.', o: ['ben', 'heb'], a: 0, why: 'No longer knowing → zijn: ik ben je naam vergeten.' },
+    { t: 'fill', q: 'Wij ___ gisteren gewoon thuis gebleven.', a: ['zijn'], why: 'blijven belongs to the zijn-club: wij zijn gebleven.' }
   ] },
 
 /* ═══════════════════════ B2 ═══════════════════════ */
