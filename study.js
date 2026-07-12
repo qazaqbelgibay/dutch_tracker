@@ -123,6 +123,7 @@ function openSessionOverlay(kind) {
   document.getElementById('sessTimer').textContent = '00:00';
   document.getElementById('sessTimer').classList.remove('paused');
   document.getElementById('sessPauseBtn').textContent = '⏸';
+  document.getElementById('sessPauseBtn').style.display = '';
   // A previous session may have been closed while paused — always reset
   document.getElementById('sessPausedNote').classList.remove('show');
   document.getElementById('studyBody').classList.remove('sess-paused');
@@ -295,10 +296,11 @@ function renderFlashCard() {
   // single-line fronts (e.g. Refold sentences) render as one big face.
   const lines = c.front.split('\n');
   const headword = lines[0].replace(/\s*\(.*$/, '').trim();
+  const isSentence = lines.length === 1 && c.front.length > 24 && c.front.includes(' ');
   const face = lines.length > 1
     ? `<div class="flash-word">${markerHtml(lines[0])}</div>
        <div class="flash-sentence">${highlightHeadword(markerHtml(lines.slice(1).join('\n')), headword)}</div>`
-    : `<div class="flash-front">${markerHtml(c.front)}</div>`;
+    : `<div class="flash-front ${isSentence ? 'long' : ''}">${markerHtml(c.front)}</div>`;
 
   let html = `
     <div class="sess-meta">
@@ -348,6 +350,9 @@ async function flashRate(grade) {
     cardId: updated.id, date: today(), grade,
     newCard: wasNew, timestamp: Date.now()
   });
+  // Session may have been finished (🏁) while the writes were in flight —
+  // don't render a new card over the summary. The rating itself is kept.
+  if (s.phase !== 'run') { s.rating = false; return; }
   flashUndo = { before: { ...before }, reviewId, grade, prevStreak: s.streak };
 
   s.reviewed++;
@@ -369,6 +374,7 @@ async function flashUndoLast() {
   flashUndo = null;
   await dbPut('cards', u.before);
   await dbDelete('reviews', u.reviewId);
+  if (s.phase !== 'run') return;
   s.reviewed--;
   s.grades[u.grade]--;
   if (u.grade > 1) s.correct--;
@@ -388,6 +394,12 @@ async function finishFlashSession() {
   s.phase = 'done';
   sessRunning = false;
   clearInterval(sessInterval);
+  // Finishing while paused must not leave the summary hidden behind
+  // the paused state — clear all pause UI before rendering it.
+  document.getElementById('sessPausedNote').classList.remove('show');
+  document.getElementById('studyBody').classList.remove('sess-paused');
+  document.getElementById('sessTimer').classList.remove('paused');
+  document.getElementById('sessPauseBtn').style.display = 'none';
   document.getElementById('sessUndoBtn').style.display = 'none';
   document.getElementById('sessFinishBtn').style.display = 'none';
   document.getElementById('sessProgressFill').style.width = '100%';
@@ -1001,7 +1013,7 @@ document.addEventListener('keydown', e => {
       flashUndoLast();
     }
   } else if (sessKind === 'grammar' && grammarSession) {
-    if (e.key === 'Enter' && grammarSession.phase === 'quiz' && grammarSession.answered) {
+    if (e.key === 'Enter' && sessRunning && grammarSession.phase === 'quiz' && grammarSession.answered) {
       grammarNextQuestion();
     }
   }

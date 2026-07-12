@@ -4,14 +4,22 @@ const ASSETS = [
   BASE,
   BASE + 'index.html',
   BASE + 'manifest.json',
-  BASE + 'styles.css?v=7',
-  BASE + 'i18n.js?v=7',
-  BASE + 'srs.js?v=7',
+  BASE + 'styles.css?v=8',
+  BASE + 'i18n.js?v=8',
+  BASE + 'srs.js?v=8',
   BASE + 'grammar_data.js?v=8',
-  BASE + 'app.js?v=7',
-  BASE + 'study.js?v=7',
+  BASE + 'app.js?v=8',
+  BASE + 'study.js?v=8',
   BASE + 'decks/nl_freq_dict.json',
-  BASE + 'decks/nl_refold.json'
+  BASE + 'decks/nl_refold.json',
+  BASE + 'fonts/geist-latin.woff2',
+  BASE + 'fonts/geist-latin-ext.woff2',
+  BASE + 'fonts/instrumentserif-latin.woff2',
+  BASE + 'fonts/instrumentserif-latin-ext.woff2',
+  BASE + 'fonts/instrumentserif-italic-latin.woff2',
+  BASE + 'fonts/instrumentserif-italic-latin-ext.woff2',
+  BASE + 'fonts/jetbrainsmono-latin.woff2',
+  BASE + 'fonts/jetbrainsmono-latin-ext.woff2'
 ];
 
 self.addEventListener('install', e => {

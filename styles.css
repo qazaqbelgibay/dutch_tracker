@@ -4,8 +4,73 @@
    × light/dark (.light-mode), driven by CSS custom properties.
    ════════════════════════════════════════════════════════════ */
 
-/* Web fonts are loaded non-blocking from index.html; system fallbacks below
-   keep the app fully usable offline or when fonts are unavailable. */
+/* Fonts are self-hosted (fonts/ directory, precached by the service
+   worker) so typography is identical online and offline. */
+
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(fonts/geist-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(fonts/geist-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(fonts/instrumentserif-italic-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(fonts/instrumentserif-italic-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(fonts/instrumentserif-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(fonts/instrumentserif-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(fonts/jetbrainsmono-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url(fonts/jetbrainsmono-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 :root {
   --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
@@ -1609,16 +1674,22 @@ body {
 }
 .flash-front {
   font-family: var(--serif); font-size: 28px; line-height: 1.3;
+  letter-spacing: 0.01em;
   white-space: pre-line; word-break: break-word;
+}
+/* Sentence-length fronts (e.g. Refold cards) read better in the sans */
+.flash-front.long {
+  font-family: var(--sans); font-size: 19px; font-weight: 500;
+  line-height: 1.6; letter-spacing: 0; max-width: 44ch;
 }
 .flash-word {
   font-family: var(--serif); font-size: 32px; line-height: 1.2;
-  word-break: break-word;
+  letter-spacing: 0.01em; word-break: break-word;
 }
 .flash-sentence {
-  font-family: var(--serif); font-size: 17px; line-height: 1.5;
+  font-family: var(--sans); font-size: 15.5px; line-height: 1.65;
   color: var(--text2); white-space: pre-line; word-break: break-word;
-  max-width: 46ch;
+  max-width: 44ch;
 }
 .flash-hl {
   color: var(--accent); font-weight: 600;
@@ -1633,8 +1704,8 @@ body {
 .tts-btn:active { opacity: 1; border-color: var(--accent); }
 .flash-divider { width: 46px; border-top: 1px solid var(--hairline); }
 .flash-back {
-  font-size: 17px; line-height: 1.5; color: var(--text2);
-  white-space: pre-line; word-break: break-word;
+  font-size: 16px; line-height: 1.65; color: var(--text2);
+  white-space: pre-line; word-break: break-word; max-width: 44ch;
 }
 .flash-hint { font-size: 11.5px; color: var(--text3); }
 
@@ -1679,16 +1750,16 @@ body {
   line-height: 20px; text-align: center; font-weight: 600;
   background: var(--bg3); color: var(--lv);
 }
-.lesson-sec p { font-size: 13.5px; line-height: 1.7; color: var(--text2); margin-bottom: 11px; }
+.lesson-sec p { font-size: 14px; line-height: 1.75; color: var(--text2); margin-bottom: 11px; }
 .lesson-ex {
-  border-left: 2px solid var(--lv); padding: 9px 13px; margin-bottom: 8px;
+  border-left: 2px solid var(--lv); padding: 10px 13px; margin-bottom: 8px;
   background: var(--bg2); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 .lesson-ex-nl {
-  font-family: var(--serif); font-size: 16px; line-height: 1.45;
+  font-size: 14.5px; font-weight: 500; line-height: 1.6;
   display: flex; align-items: baseline; gap: 8px;
 }
-.lesson-ex-en { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.lesson-ex-en { font-size: 12.5px; color: var(--text3); margin-top: 3px; line-height: 1.5; }
 .tts-mini {
   border: none; background: none; cursor: pointer; font-size: 12px;
   opacity: 0.55; padding: 0 2px; flex: 0 0 auto;
@@ -1697,12 +1768,12 @@ body {
 
 /* ── Quiz ── */
 .quiz-card { margin-bottom: 14px; }
-.quiz-q { font-family: var(--serif); font-size: 20px; line-height: 1.35; margin-bottom: 16px; }
+.quiz-q { font-size: 16.5px; font-weight: 600; line-height: 1.55; margin-bottom: 16px; }
 .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
 .quiz-opt {
   text-align: left; padding: 13px 14px; border-radius: var(--radius-sm);
   border: 1px solid var(--hairline); background: var(--bg2); color: var(--text);
-  font-size: 14px; line-height: 1.4; cursor: pointer; font-family: var(--sans);
+  font-size: 14.5px; line-height: 1.5; cursor: pointer; font-family: var(--sans);
 }
 .quiz-opt:disabled { cursor: default; opacity: 0.75; }
 .quiz-opt.correct { border-color: var(--teal); background: var(--teal-dim); color: var(--teal); opacity: 1; }
@@ -1730,7 +1801,7 @@ body {
 .quiz-verdict.ok { color: var(--teal); }
 .quiz-verdict.bad { color: var(--red); }
 .quiz-answer { font-size: 13px; margin-bottom: 6px; color: var(--text); }
-.quiz-why { font-size: 12.5px; line-height: 1.55; color: var(--text2); }
+.quiz-why { font-size: 13px; line-height: 1.65; color: var(--text2); }
 
 /* ── Import & manage modals ── */
 .import-hint { font-size: 12.5px; line-height: 1.6; color: var(--text2); margin-bottom: 14px; }
