@@ -2222,7 +2222,7 @@ async function init() {
       location.reload();
     });
 
-    navigator.serviceWorker.register('sw.js?v=10', { updateViaCache: 'none' }).then(reg => {
+    navigator.serviceWorker.register('sw.js?v=11', { updateViaCache: 'none' }).then(reg => {
       reg.update().catch(() => {});
       if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
       reg.addEventListener('updatefound', () => {
